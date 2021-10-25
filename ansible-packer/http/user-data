@@ -1,0 +1,41 @@
+#cloud-config
+autoinstall:
+  version: 1
+  apt:
+    geoip: true
+    preserve_sources_list: false
+    primary:
+    - arches: [amd64, i386]
+      uri: http://us.archive.ubuntu.com/ubuntu
+    - arches: [default]
+      uri: http://ports.ubuntu.com/ubuntu-ports
+  identity:
+    hostname: ansible-server
+    username: packer
+    password: '$6$wdAcoXrU039hKYPd$508Qvbe7ObUnxoj15DRCkzC3qO7edjH0VV7BPNRDYK4QR8ofJaEEF2heacn0QgD.f8pO8SNp83XNdWG6tocBM1'
+  ssh:
+    allow-pw: true
+    install-server: true
+  locale: en_US
+  keyboard: 
+    layout: us
+  storage:
+    layout:
+      name: direct
+    config:
+      - type: disk
+        id: disk0
+        match:
+          size: largest
+      - type: partition
+        id: boot-partition
+        device: disk0
+        size: 500M
+      - type: partition
+        id: root-partition
+        device: disk0
+        size: -1
+  late-commands:
+    - "echo 'Defaults:packer !requiretty' > /target/etc/sudoers.d/packer"
+    - "echo 'packer ALL=(ALL) NOPASSWD: ALL' >> /target/etc/sudoers.d/packer"
+    - "chmod 440 /target/etc/sudoers.d/packer"
