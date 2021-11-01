@@ -8,7 +8,7 @@ packer {
 }
 
 source "virtualbox-iso" "seclab-pfsense" {
-  skip_export             = true
+  /*skip_export             = true*/
   communicator            = "none"
   virtualbox_version_file = ""
   guest_additions_mode    = "disable"
