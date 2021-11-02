@@ -11,8 +11,8 @@ autoinstall:
       uri: http://ports.ubuntu.com/ubuntu-ports
   identity:
     hostname: ansible-server
-    username: packer
-    password: '$6$wdAcoXrU039hKYPd$508Qvbe7ObUnxoj15DRCkzC3qO7edjH0VV7BPNRDYK4QR8ofJaEEF2heacn0QgD.f8pO8SNp83XNdWG6tocBM1'
+    username: seclab
+    password: '$6$9yhwPer01vjaaMOI$G5LnT/yt82TkLoTOZOVlyqDK/O6X/Z/pgzlJsDswRre1XQuELgdGs9DvxCZMeZZWyW0uBCjBYgzzyu3LEFQCR/'
   ssh:
     allow-pw: true
     install-server: true
