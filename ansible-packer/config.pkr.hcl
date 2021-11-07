@@ -17,7 +17,7 @@ variable "password" {
   default = "seclab"
 }
 
-source "virtualbox-iso" "ansible-server" {
+source "virtualbox-iso" "seclab-ansible" {
   skip_export            = false
   format                 = "ova"
   guest_os_type          = "Ubuntu_64"
@@ -61,17 +61,17 @@ source "virtualbox-iso" "ansible-server" {
 }
 
 build {
-  sources = ["sources.virtualbox-iso.ansible-server"]
+  sources = ["sources.virtualbox-iso.seclab-ansible"]
   provisioner "file" {
     source = "00-netplan.yaml"
     destination = "/tmp/00-netplan.yaml"
   }
   provisioner "shell" {
     inline = [
-      "echo ${var.password} | sudo -S apt update && sudo apt install -y ansible",
-      "echo ${var.password} | sudo -S ansible-galaxy collection install ansible.windows",
-      "echo ${var.password} | sudo -S mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak",
-      "echo ${var.password} | sudo -S mv /tmp/00-netplan.yaml /etc/netplan/00-netplan.yaml",
+      "sudo apt update && sudo apt install -y ansible",
+      "sudo ansible-galaxy collection install ansible.windows",
+      "sudo mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak",
+      "sudo mv /tmp/00-netplan.yaml /etc/netplan/00-netplan.yaml",
     ]
   }
 }

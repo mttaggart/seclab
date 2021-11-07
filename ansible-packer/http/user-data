@@ -10,7 +10,7 @@ autoinstall:
     - arches: [default]
       uri: http://ports.ubuntu.com/ubuntu-ports
   identity:
-    hostname: ansible-server
+    hostname: seclab-ansible
     username: seclab
     password: '$6$9yhwPer01vjaaMOI$G5LnT/yt82TkLoTOZOVlyqDK/O6X/Z/pgzlJsDswRre1XQuELgdGs9DvxCZMeZZWyW0uBCjBYgzzyu3LEFQCR/'
   ssh:
@@ -36,6 +36,6 @@ autoinstall:
         device: disk0
         size: -1
   late-commands:
-    - "echo 'Defaults:packer !requiretty' > /target/etc/sudoers.d/packer"
-    - "echo 'packer ALL=(ALL) NOPASSWD: ALL' >> /target/etc/sudoers.d/packer"
-    - "chmod 440 /target/etc/sudoers.d/packer"
+    - "echo 'Defaults:seclab !requiretty' > /target/etc/sudoers.d/seclab"
+    - "echo 'seclab ALL=(ALL) NOPASSWD: ALL' >> /target/etc/sudoers.d/seclab"
+    - "chmod 440 /target/etc/sudoers.d/seclab"
