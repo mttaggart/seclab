@@ -28,7 +28,7 @@ source "virtualbox-iso" "seclab-jumpbox" {
   ssh_handshake_attempts = 30
   ssh_timeout            = "4h"
   http_directory         = "http"
-  shutdown_command       = "echo ${var.password} | sudo -S shutdown -P now"
+  shutdown_command       = "sudo shutdown -P now"
   cpus                   = 2
   memory                 = 2048
   vm_name                = "seclab-jumpbox"
@@ -56,7 +56,8 @@ source "virtualbox-iso" "seclab-jumpbox" {
    ["modifyvm", "{{.Name}}", "--vram", "128"],
    ["modifyvm", "{{.Name}}", "--memory", "4096"],
    ["modifyvm", "{{.Name}}", "--cpus", "2"],
-   ["modifyvm", "{{.Name}}", "--nic2", "intnet", "--intnet2", "isolation"],
+   ["modifyvm", "{{.Name}}", "--nic2", "intnet", "--intnet2", "labnet"],
+   ["modifyvm", "{{.Name}}", "--nic3", "intnet", "--intnet3", "isolation"],
   ]
 
 }
