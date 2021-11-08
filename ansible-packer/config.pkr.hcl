@@ -31,7 +31,7 @@ source "virtualbox-iso" "seclab-ansible" {
   shutdown_command       = "echo ${var.password} | sudo -S shutdown -P now"
   cpus                   = 2
   memory                 = 2048
-  vm_name                = "ansible-server"
+  vm_name                = "seclab-ansible"
   boot_wait              = "5s"
   boot_command = [
     " <wait><enter><wait>",
