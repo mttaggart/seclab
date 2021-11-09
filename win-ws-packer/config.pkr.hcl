@@ -9,6 +9,7 @@ packer {
 
 source "virtualbox-iso" "seclab-win-ws" {
   /*skip_export             = true*/
+  format                  = "ova"
   communicator            = "none"
   virtualbox_version_file = ""
   guest_additions_mode    = "disable"
