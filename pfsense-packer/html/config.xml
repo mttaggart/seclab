@@ -90,7 +90,7 @@
 		</lan>
 		<opt1>
 			<if>em2</if>
-			<descr><![CDATA[OPT1]]></descr>
+			<descr><![CDATA[ISOLATION]]></descr>
 			<ipaddr>10.1.99.1</ipaddr>
 			<subnet>24</subnet>
 			<gateway></gateway>
