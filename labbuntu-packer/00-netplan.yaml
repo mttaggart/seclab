@@ -3,9 +3,5 @@ network:
     enp0s3:
       dhcp4: true
     enp0s8:
-      addresses:
-        - 10.1.99.2/24
-      nameservers:
-        search: [zeroday.local]
-        addresses: [10.1.99.2]
+      dhcp4: true
   version: 2
