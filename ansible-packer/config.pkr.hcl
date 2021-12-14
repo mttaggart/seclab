@@ -70,6 +70,7 @@ build {
     inline = [
       "sudo apt update && sudo apt install -y ansible",
       "sudo ansible-galaxy collection install ansible.windows",
+      "sudo ansible-galaxy collection install community.mysql",
       "sudo mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak",
       "sudo mv /tmp/00-netplan.yaml /etc/netplan/00-netplan.yaml",
     ]
