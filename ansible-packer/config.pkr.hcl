@@ -68,6 +68,7 @@ build {
   }
   provisioner "shell" {
     inline = [
+      "git clone https://github.com/mttaggart/seclab-playbooks",
       "sudo apt update && sudo apt install -y ansible",
       "sudo ansible-galaxy collection install ansible.windows",
       "sudo ansible-galaxy collection install community.mysql",
