@@ -7,6 +7,21 @@ packer {
   }
 }
 
+variable "username" {
+  type    = string
+  default = "seclab"
+}
+
+variable "password" {
+  type    = string
+  default = "seclab"
+}
+
+variable "hostname" {
+    type    = string
+    default = "seclab-labbuntu"
+}
+
 source "virtualbox-iso" "seclab-labbuntu" {
   skip_export            = false
   format                 = "ova"
