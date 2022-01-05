@@ -7,16 +7,6 @@ packer {
   }
 }
 
-variable "username" {
-  type    = string
-  default = "seclab"
-}
-
-variable "password" {
-  type    = string
-  default = "seclab"
-}
-
 source "virtualbox-iso" "seclab-labbuntu" {
   skip_export            = false
   format                 = "ova"
@@ -70,6 +60,8 @@ build {
     inline = [
       "sudo mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak",
       "sudo mv /tmp/00-netplan.yaml /etc/netplan/00-netplan.yaml",
+      "sudo sed -i 's/seclab-labbuntu/${var.hostname}/g' /etc/hosts",
+      "sudo sed -i 's/seclab-labbuntu/${var.hostname}/g' /etc/hostname",
     ]
   }
 }

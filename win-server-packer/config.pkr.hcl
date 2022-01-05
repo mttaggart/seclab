@@ -7,11 +7,6 @@ packer {
   }
 }
 
-variable "password" {
-  type    = string
-  default = "Seclab123!"
-}
-
 source "virtualbox-iso" "seclab-win-server" {
   /*skip_export             = true*/
   format                  = "ova"
@@ -43,9 +38,8 @@ source "virtualbox-iso" "seclab-win-server" {
     "<enter><leftSuperOn>r<leftSuperOff><wait3s>",
     "powershell.exe<enter><wait3s>",
     "winrm quickconfig -q<enter><wait3s>",
-    "Set-Item -Path WSMan:\\localhost\\Service\\Auth\\Basic -Value <$>true<enter><wait>"
-    /*"Rename-Computer zd-dc-01<enter><wait>"*/
-    
+    "Set-Item -Path WSMan:\\localhost\\Service\\Auth\\Basic -Value <$>true<enter><wait2s>",
+    "Rename-Computer ${var.hostname}<enter><wait>"
   ]
 
   vboxmanage = [

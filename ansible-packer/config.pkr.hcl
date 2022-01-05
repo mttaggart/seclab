@@ -7,16 +7,6 @@ packer {
   }
 }
 
-variable "username" {
-  type    = string
-  default = "seclab"
-}
-
-variable "password" {
-  type    = string
-  default = "seclab"
-}
-
 source "virtualbox-iso" "seclab-ansible" {
   skip_export            = false
   format                 = "ova"
