@@ -12,7 +12,7 @@ autoinstall:
   identity:
     hostname: seclab-labbuntu
     username: seclab
-    password: '$6$9yhwPer01vjaaMOI$G5LnT/yt82TkLoTOZOVlyqDK/O6X/Z/pgzlJsDswRre1XQuELgdGs9DvxCZMeZZWyW0uBCjBYgzzyu3LEFQCR/'
+    password: '$6$cIwbxpDxmjse58J3$xb2X98WX9PGy8/tOYOpZv6U2gc74yj3zFmuvgHPwmy6Fpd3xIqCbqgeb5tgSeOnm2Ernp8OFzSnI99/tZr2jI1'
   ssh:
     allow-pw: true
     install-server: true
