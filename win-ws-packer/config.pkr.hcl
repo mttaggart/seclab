@@ -7,6 +7,16 @@ packer {
   }
 }
 
+variable "hostname" {
+  type = "string"
+  default = "seclab-win-ws"
+}
+
+variables "password {
+  type = "string",
+  default = "Seclab123!"
+}
+
 source "virtualbox-iso" "seclab-win-ws" {
   /*skip_export             = true*/
   format                  = "ova"
@@ -33,8 +43,8 @@ source "virtualbox-iso" "seclab-win-ws" {
     "<tab><enter><wait>",
     "<tab><tab><tab><tab><enter><wait3s>",
     "seclab<enter><wait>",
-    "seclab<enter><wait>",
-    "seclab<enter><wait>",
+    "${var.password}<enter><wait>",
+    "${var.password}<enter><wait>",
     "<down><tab>SecurityAnswer<enter><wait>",
     "<down><tab>SecurityAnswer<enter><wait>",
     "<down><tab>SecurityAnswer<enter><wait10s>",
@@ -45,7 +55,7 @@ source "virtualbox-iso" "seclab-win-ws" {
     "winrm quickconfig<enter><wait>",
     "y<enter><wait3s>",
     "Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private<enter><wait>",
-    "Rename-Computer zd-ws-01<enter><wait>"
+    "Rename-Computer ${var.hostname}<enter><wait>"
     
   ]
 
