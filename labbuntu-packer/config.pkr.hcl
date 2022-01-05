@@ -25,7 +25,7 @@ source "virtualbox-iso" "seclab-labbuntu" {
   iso_checksum           = "sha256:f8e3086f3cea0fb3fefb29937ab5ed9d19e767079633960ccb50e76153effc98"
   ssh_username           = "${var.username}"
   ssh_password           = "${var.password}"
-  ssh_handshake_attempts = 30
+  ssh_handshake_attempts = 100
   ssh_timeout            = "4h"
   http_directory         = "http"
   shutdown_command       = "sudo shutdown -P now"
