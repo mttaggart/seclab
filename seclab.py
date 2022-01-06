@@ -35,11 +35,6 @@ def add_vm(args):
         os.chdir(f"{vm_type}-packer")
         config_base = "config.pkr.hcl"
         config_copy = "config.copy.pkr.hcl"
-        # vars_base = "variables.pkrvars.hcl"
-        # vars_copy = "variables.copy.pkrvars.hcl"
-        # vars_backup = "variables.pkrvars.bak"
-        # shutil.copyfile(vars_base, vars_copy)
-        # shutil.move(vars_base, vars_backup)
         shutil.copyfile(config_base, config_copy)
         # Replace stuff
         subprocess.run(f"sed -i s/seclab-{vm_type}/{vm_name}/g {config_copy}".split(" "))
@@ -51,9 +46,9 @@ def add_vm(args):
             subprocess.run(f"vboxmanage import output-{vm_name}/{vm_name}.ova".split(" "))
         else:
             logging.critical("Could not build VM! Check Packer errors above")
-        # os.remove(vars_copy)
+        
+        # Cleanup
         os.remove(config_copy)
-        # shutil.move(vars_backup, vars_base)
     else:
         logging.error("Packer not installed!")
 
