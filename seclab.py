@@ -35,28 +35,35 @@ def add_vm(args):
         os.chdir(f"{vm_type}-packer")
         config_base = "config.pkr.hcl"
         config_copy = "config.copy.pkr.hcl"
-        vars_base = "variables.pkrvars.hcl"
-        vars_copy = "variables.copy.pkrvars.hcl"
-        shutil.copyfile(vars_base, vars_copy)
-
+        # vars_base = "variables.pkrvars.hcl"
+        # vars_copy = "variables.copy.pkrvars.hcl"
+        # vars_backup = "variables.pkrvars.bak"
+        # shutil.copyfile(vars_base, vars_copy)
+        # shutil.move(vars_base, vars_backup)
+        shutil.copyfile(config_base, config_copy)
         # Replace stuff
         subprocess.run(f"sed -i s/seclab-{vm_type}/{vm_name}/g {config_copy}".split(" "))
-        subprocess.run(f"sed -i s/seclab-{vm_type}/{vm_name}/g {vars_copy}".split(" "))
-        packer_build = subprocess.run(f"packer build -force -var-file={vars_copy} .".split(" "))
+        # subprocess.run(f"sed -i s/seclab-{vm_type}/{vm_name}/g {vars_copy}".split(" "))
+        packer_build = subprocess.run(f"packer build -force {config_copy}".split(" "))
         
         # On successful build, import the resulting OVA
         if packer_build.returncode == 0:
             subprocess.run(f"vboxmanage import output-{vm_name}/{vm_name}.ova".split(" "))
         else:
             logging.critical("Could not build VM! Check Packer errors above")
-        os.remove(vars_copy)
+        # os.remove(vars_copy)
         os.remove(config_copy)
+        # shutil.move(vars_backup, vars_base)
     else:
         logging.error("Packer not installed!")
 
 def remove_vm(args):
     vm_name = args.vm_name
-    subprocess.run(f"vboxmanage unregistervm --delete {vm_name}".split(" "))
+    remove_result = subprocess.run(f"vboxmanage unregistervm --delete {vm_name}".split(" "))
+    if remove_result.returncode == 0:
+        logging.info(f"{vm_name} removed!")
+    else:
+        logging.error("Could not remove VM")
 
 def main():
     # Set up arg parser
@@ -75,6 +82,7 @@ def main():
     # seclab.py remove [vm_name]
     parser_remove = subparsers.add_parser("remove", help="remove vm from the lab")
     parser_remove.add_argument("vm_name", help="name of VM to remove")
+    parser_remove.set_defaults(func=remove_vm)
 
     # Do the thing
     args = parser.parse_args()
