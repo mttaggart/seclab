@@ -60,11 +60,11 @@
 	<interfaces>
 		<wan>
 			<enable></enable>
-			<if>em0</if>
+			<if>hn0</if>
 			<mtu></mtu>
-			<ipaddr>dhcp</ipaddr>
-			<ipaddrv6>dhcp6</ipaddrv6>
-			<subnet></subnet>
+			<ipaddr>10.1.100.2</ipaddr>
+			<ipaddrv6></ipaddrv6>
+			<subnet>24</subnet>
 			<gateway></gateway>
 			<blockpriv></blockpriv>
 			<blockbogons></blockbogons>
@@ -76,7 +76,7 @@
 		</wan>
 		<lan>
 			<enable></enable>
-			<if>em1</if>
+			<if>hn1</if>
 			<ipaddr>192.168.99.1</ipaddr>
 			<subnet>24</subnet>
 			<ipaddrv6></ipaddrv6>
@@ -89,7 +89,7 @@
 			<gatewayv6></gatewayv6>
 		</lan>
 		<opt1>
-			<if>em2</if>
+			<if>hn2</if>
 			<descr><![CDATA[ISOLATION]]></descr>
 			<ipaddr>10.1.99.1</ipaddr>
 			<subnet>24</subnet>
