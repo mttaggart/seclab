@@ -1,12 +1,3 @@
-// packer {
-//   required_plugins {
-//     virtualbox = {
-//       version = ">= 0.0.1"
-//       source  = "github.com/hashicorp/virtualbox"
-//     }
-//   }
-// }
-
 source "hyperv-iso" "seclab-pfsense" {
   /*skip_export             = true*/
   shutdown_command        = "poweroff"

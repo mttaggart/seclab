@@ -1,12 +1,3 @@
-packer {
-  required_plugins {
-    virtualbox = {
-      version = ">= 0.0.1"
-      source  = "github.com/hashicorp/virtualbox"
-    }
-  }
-}
-
 variable "username" {
   type    = string
   default = "seclab"
@@ -22,7 +13,7 @@ variable "hostname" {
     default = "seclab-labbuntu"
 }
 
-source "virtualbox-iso" "seclab-labbuntu" {
+source "hyperv-iso" "seclab-labbuntu" {
   skip_export            = false
   format                 = "ova"
   guest_os_type          = "Ubuntu_64"
