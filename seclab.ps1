@@ -20,7 +20,7 @@ https://github.com/mttaggart/seclab
 
 Param (
     [Parameter(Mandatory = $true)]
-    [ValidateSet("init","add","remove")]
+    [ValidateSet("init","add","remove","teardown")]
     [String]$Action,
     
     [Parameter(Mandatory = $false, ValueFromPipeline=$true)]
@@ -50,8 +50,11 @@ if ($Action -eq "init") {
     if (! ($switches.Name -contains "Seclab-Internal")) {
         
 
+        # Create Seclab-Internal Switch
         New-VMSwitch -Name "Seclab-Internal" -SwitchType Internal
         $iface = Get-NetAdapter | where {$_.Name -like "*Seclab-Internal*"}
+
+        # Create Seclab-Internal IP
         New-NetIPAddress -IPAddress 10.0.100.1 -PrefixLength 24 -InterfaceIndex $iface.ifIndex
         
     }
@@ -70,15 +73,42 @@ if ($Action -eq "init") {
     cd ..
 
     # Build Ansible
-    # cd ansible-packer
+    cd ansible-packer
+    packer build . -force
 
+    # Import it
+    $vmcx = ls ".\output-seclab-ansible\Virtual Machines\*.vmcx" | Select Name
+    $vmcxPath = ".\output-seclab-ansible\Virtual Machines\" + $vmcx.Name.ToString()
+    Import-VM -Path $vmcxPath -Register
 
+    # Modify VM Net adapters
+    $vm = Get-VM -VMName "seclab-ansible"
+    $vm | Remove-NetworkAdapter
+    Add-VMNetworkAdapter -VMName "seclab-ansible" -SwitchName "Seclab-Internal"
+    Add-VMNetworkAdapter -VMName "seclab-ansible" -SwitchName "Seclab-Isolation"
 
-
+    cd ..
+    
 
 } elseif ($Action -eq "add") {
     if (! (switchCheck($switches))) {
         write-host "Switches not configured. Run init first!"
+    }
+} elseif ($Action -eq "teardown") {
+    if (! (switchCheck($switches))) {
+        # Remove the base VMs
+        $pfsense = Get-VM -Name "seclab-pfsense"
+        $ansible = Get-VM -Name "seclab-ansible"
+
+        # Delete VMs
+        Remove-VM -VMName $pfsense.VMName
+        Remove-VM -VMName $ansible.$VMName
+        # Delete HDs
+        Remove-Item -Path $pfsense.HardDrives.Path
+        Remove-Item -Path $ansible.HardDrives.Path
+        # Remove Switches
+        Remove-VMSwitch -SwitchName "Seclab-Internal"
+        Remove-VMSwitch -SwitchName "Seclab-Isolation"
     }
 } else {
     if (! (switchCheck($switches))) {
