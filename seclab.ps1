@@ -31,10 +31,57 @@ Param (
     [String]$VMName
 )
 
+function switchCheck() {
+
+    param(
+        [string[]]$switches
+    )
+    
+    return ($switches.Name -contains "Seclab-Internal") -and ($switches.Name -contains "Seclab-Isolation")
+}
+
+
+# Load switches
+$switches = Get-VMSwitch | select Name
+
 if ($Action -eq "init") {
     write-host "INIT"
+    # Create Seclab/Isolation Switch
+    if (! ($switches.Name -contains "Seclab-Internal")) {
+        
+
+        New-VMSwitch -Name "Seclab-Internal" -SwitchType Internal
+        $iface = Get-NetAdapter | where {$_.Name -like "*Seclab-Internal*"}
+        New-NetIPAddress -IPAddress 10.0.100.1 -PrefixLength 24 -InterfaceIndex $iface.ifIndex
+        
+    }
+    if (! ($switches.Name -contains "Seclab-Isolation")) {
+        New-VMSwitch -Name "Seclab-Isolation" -SwitchType Private
+    }
+    # Build pfSense
+    cd pfsense-packer
+    packer build -force .
+    # Import VM
+    $vmcx = ls ".\output-seclab-pfsense\Virtual Machines\*.vmcx" | Select Name
+    $vmcxPath = ".\output-seclab-pfsense\Virtual Machines\" + $vmcx.Name.ToString()
+    Import-VM -Path $vmcxPath -Register
+    # Modify VM To add additional Network Adapter
+    Add-VMNetworkAdapter -VMName "seclab-pfsense" -SwitchName "Seclab-Isolation"
+    cd ..
+
+    # Build Ansible
+    # cd ansible-packer
+
+
+
+
+
 } elseif ($Action -eq "add") {
-    write-host "ADD"
+    if (! (switchCheck($switches))) {
+        write-host "Switches not configured. Run init first!"
+    }
 } else {
-    write-host "REMOVE"
+    if (! (switchCheck($switches))) {
+        write-host "Switches not configured. Run init first!"
+    }
 }

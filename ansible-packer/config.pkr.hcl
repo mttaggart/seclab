@@ -1,3 +1,4 @@
+
 variable "username" {
   type    = string
   default = "seclab"
@@ -10,7 +11,7 @@ variable "password" {
 
 variable "hostname" {
     type    = string
-    default = "seclab-labbuntu"
+    default = "seclab-ansible"
 }
 
 source "hyperv-iso" "seclab-ansible" {
@@ -22,12 +23,12 @@ source "hyperv-iso" "seclab-ansible" {
   ssh_handshake_attempts = 100
   ssh_timeout            = "4h"
   http_directory         = "http"
-  switch_name            = "Seclab-Internal"
+  switch_name            = "Default Switch"
   shutdown_command       = "echo ${var.password} | sudo -S shutdown -P now"
   cpus                   = 2
   memory                 = 2048
   vm_name                = "seclab-ansible"
-  boot_wait              = "5s"
+  boot_wait              = "10s"
   boot_command = [
     " <wait><enter><wait>",
     "<f6><esc>",
