@@ -1,4 +1,4 @@
-source "hyperv-iso" "seclab-pfsense" {
+source "proxmox-iso" "seclab-pfsense" {
   /*skip_export             = true*/
   shutdown_command        = "poweroff"
   communicator            = "none"
@@ -35,5 +35,5 @@ source "hyperv-iso" "seclab-pfsense" {
 }
 
 build {
-  sources = ["sources.hyperv-iso.seclab-pfsense"]
+  sources = ["sources.proxmox-iso.seclab-pfsense"]
 }

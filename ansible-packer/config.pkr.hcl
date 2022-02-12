@@ -14,23 +14,35 @@ variable "hostname" {
     default = "seclab-ansible"
 }
 
-source "hyperv-iso" "seclab-ansible" {
-  skip_export            = false
-  iso_url                = "https://releases.ubuntu.com/focal/ubuntu-20.04.3-live-server-amd64.iso"
+source "proxmox-iso" "seclab-ansible" {
+  proxmox_url            = "https://192.168.1.50:8006/api2/json"
+  username               = "mttaggart@pam!mttaggart"
+  token                  = "9525cd7a-66cc-4df9-9bd3-f87e9b0ca2d3"
+  node                   = "starbase"
+  iso_file               = "local:iso/ubuntu-20.04.2-live-server-amd64.iso"
   iso_checksum           = "sha256:f8e3086f3cea0fb3fefb29937ab5ed9d19e767079633960ccb50e76153effc98"
   ssh_username           = "${var.username}"
   ssh_password           = "${var.password}"
   ssh_handshake_attempts = 100
   ssh_timeout            = "4h"
   http_directory         = "http"
-  switch_name            = "Default Switch"
-  shutdown_command       = "echo ${var.password} | sudo -S shutdown -P now"
-  cpus                   = 2
+  cores                  = 2
   memory                 = 2048
   vm_name                = "seclab-ansible"
-  boot_wait              = "10s"
+  network_adapters {
+    bridge = "vmbr1"
+  }
+  network_adapters {
+    bridge = "vmbr2"
+  } 
+  disks {
+    disk_size         = "30G"
+    storage_pool_type = "lvm"
+    storage_pool      =  "local-lvm"
+  }
+  boot_wait              = "20s"
   boot_command = [
-    " <wait><enter><wait>",
+    "<wait><enter><wait>",
     "<f6><esc>",
     "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
     "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
@@ -51,7 +63,7 @@ source "hyperv-iso" "seclab-ansible" {
 }
 
 build {
-  sources = ["sources.hyperv-iso.seclab-ansible"]
+  sources = ["sources.proxmox-iso.seclab-ansible"]
   provisioner "file" {
     source = "00-netplan.yaml"
     destination = "/tmp/00-netplan.yaml"

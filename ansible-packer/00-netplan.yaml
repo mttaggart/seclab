@@ -7,5 +7,5 @@ network:
         - 10.1.99.2/24
       nameservers:
         search: [zeroday.local]
-        addresses: [10.1.99.2]
+        addresses: [10.1.99.3]
   version: 2

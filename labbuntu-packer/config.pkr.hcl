@@ -13,7 +13,7 @@ variable "hostname" {
     default = "seclab-labbuntu"
 }
 
-source "hyperv-iso" "seclab-labbuntu" {
+source "proxmox-iso" "seclab-labbuntu" {
   skip_export            = false
   format                 = "ova"
   guest_os_type          = "Ubuntu_64"
