@@ -14,23 +14,34 @@ variable "hostname" {
 }
 
 source "proxmox-iso" "seclab-labbuntu" {
-  skip_export            = false
-  format                 = "ova"
-  guest_os_type          = "Ubuntu_64"
-  iso_url                = "https://releases.ubuntu.com/focal/ubuntu-20.04.3-live-server-amd64.iso"
+  proxmox_url            = "https://192.168.1.50:8006/api2/json"
+  username               = "mttaggart@pam!mttaggart"
+  token                  = "9525cd7a-66cc-4df9-9bd3-f87e9b0ca2d3"
+  node                   = "starbase"
+  iso_file               = "local:iso/ubuntu-20.04.2-live-server-amd64.iso"
   iso_checksum           = "sha256:f8e3086f3cea0fb3fefb29937ab5ed9d19e767079633960ccb50e76153effc98"
   ssh_username           = "${var.username}"
   ssh_password           = "${var.password}"
   ssh_handshake_attempts = 100
   ssh_timeout            = "4h"
   http_directory         = "http"
-  shutdown_command       = "sudo shutdown -P now"
-  cpus                   = 2
+  cores                  = 2
   memory                 = 2048
   vm_name                = "seclab-labbuntu"
-  boot_wait              = "5s"
+  network_adapters {
+    bridge = "vmbr1"
+  }
+  network_adapters {
+    bridge = "vmbr2"
+  } 
+  disks {
+    disk_size         = "30G"
+    storage_pool_type = "lvm"
+    storage_pool      =  "local-lvm"
+  }
+  boot_wait              = "20s"
   boot_command = [
-    " <wait><enter><wait>",
+    "<wait><enter><wait>",
     "<f6><esc>",
     "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
     "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
@@ -47,17 +58,10 @@ source "proxmox-iso" "seclab-labbuntu" {
     "ds=nocloud-net;s=http://{{.HTTPIP}}:{{.HTTPPort}}/",
     "<enter>"
   ]
-  
-  vboxmanage = [
-   ["modifyvm", "{{.Name}}", "--memory", "1024"],
-   ["modifyvm", "{{.Name}}", "--cpus", "1"],
-   ["modifyvm", "{{.Name}}", "--nic2", "intnet", "--intnet2", "isolation"],
-  ]
-
 }
 
 build {
-  sources = ["sources.virtualbox-iso.seclab-labbuntu"]
+  sources = ["sources.proxmox-iso.seclab-labbuntu"]
   provisioner "file" {
     source = "00-netplan.yaml"
     destination = "/tmp/00-netplan.yaml"
