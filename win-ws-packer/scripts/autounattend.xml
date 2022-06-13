@@ -161,10 +161,10 @@
             </OOBE>
             <AutoLogon>
                 <Password>
-                    <Value>vagrant</Value>
+                    <Value>Seclab123!</Value>
                     <PlainText>true</PlainText>
                 </Password>
-                <Username>vagrant</Username>
+                <Username>seclab</Username>
                 <Enabled>true</Enabled>
             </AutoLogon>
             <FirstLogonCommands>
