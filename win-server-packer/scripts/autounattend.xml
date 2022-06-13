@@ -179,7 +179,7 @@
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <!-- Set IP Address for initial setup -->
-                    <CommandLine>powershell.exe -c $i = (Get-NetIpAddress | where {$_.IpAddress -like "10.1.99.*"}); New-NetIPAddress -InterfaceIndex $i.InterfaceIndex -IpAddress 10.1.99.253 -PrefixLength 24</CommandLine>
+                    <CommandLine>powershell.exe -c (Get-NetIpAddress | where {$_.IpAddress -like "10.1.99.*"}); New-NetIPAddress -InterfaceIndex {$_.InterfaceIndex} -IpAddress 10.1.99.253 -PrefixLength 24</CommandLine>
                     <Order>6</Order>
                     <Description>Set IP Address for initial setup</Description>
                 </SynchronousCommand>
