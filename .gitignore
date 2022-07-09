@@ -2,3 +2,4 @@
 */output-*
 *.iso
 *.swp
+*.terraform.lock.hcl
