@@ -10,14 +10,23 @@ variable "password" {
 
 variable "hostname" {
     type    = string
-    default = "seclab-labbuntu"
+    default = "seclab-ubuntu-server"
 }
 
-source "proxmox-iso" "seclab-labbuntu" {
-  proxmox_url            = "https://192.168.1.50:8006/api2/json"
-  username               = "mttaggart@pam!mttaggart"
-  token                  = "9525cd7a-66cc-4df9-9bd3-f87e9b0ca2d3"
-  node                   = "starbase"
+variable "proxmox_url" {
+    type    = string
+    default = "https://192.168.1.50:8006/api2/json"
+}
+
+variable "proxmox_node" {
+    type    = string
+    default = "starbase"
+}
+
+
+source "proxmox-iso" "seclab-ubuntu-server" {
+  proxmox_url            = "${var.proxmox_url}"
+  node                   = "${var.proxmox_node}"
   iso_file               = "local:iso/ubuntu-20.04.2-live-server-amd64.iso"
   iso_checksum           = "sha256:f8e3086f3cea0fb3fefb29937ab5ed9d19e767079633960ccb50e76153effc98"
   ssh_username           = "${var.username}"
@@ -27,7 +36,7 @@ source "proxmox-iso" "seclab-labbuntu" {
   http_directory         = "http"
   cores                  = 2
   memory                 = 2048
-  vm_name                = "seclab-labbuntu"
+  vm_name                = "seclab-ubuntu-server"
   network_adapters {
     bridge = "vmbr1"
   }
@@ -61,17 +70,15 @@ source "proxmox-iso" "seclab-labbuntu" {
 }
 
 build {
-  sources = ["sources.proxmox-iso.seclab-labbuntu"]
+  sources = ["sources.proxmox-iso.seclab-ubuntu-server"]
   provisioner "file" {
     source = "00-netplan.yaml"
     destination = "/tmp/00-netplan.yaml"
   }
   provisioner "shell" {
     inline = [
-      "sudo mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak",
-      "sudo mv /tmp/00-netplan.yaml /etc/netplan/00-netplan.yaml",
-      "sudo sed -i 's/seclab-labbuntu/${var.hostname}/g' /etc/hosts",
-      "sudo sed -i 's/seclab-labbuntu/${var.hostname}/g' /etc/hostname",
+      "sudo sed -i 's/seclab-ubuntu-server/${var.hostname}/g' /etc/hosts",
+      "sudo sed -i 's/seclab-ubuntu-server/${var.hostname}/g' /etc/hostname",
     ]
   }
 }

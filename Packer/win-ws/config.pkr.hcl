@@ -13,11 +13,14 @@ variable "password" {
   default = "Seclab123!"
 }
 
+variable "proxmox_hostname" {
+  type    = string
+  default = "starbase"
+}
+
 source "proxmox-iso" "seclab-win-ws" {
-  proxmox_url  = "https://192.168.1.50:8006/api2/json"
-  username     = "mttaggart@pam!mttaggart"
-  token        = "9525cd7a-66cc-4df9-9bd3-f87e9b0ca2d3"
-  node         = "starbase"
+  proxmox_url  = "https://${var.proxmox_hostname}:8006/api2/json"
+  node         = "${var.proxmox_hostname}"
   iso_file                 = "local:iso/win10-enterprise.iso"
   iso_checksum            = "sha256:69efac1df9ec8066341d8c9b62297ddece0e6b805533fdb6dd66bc8034fba27a"
   /*skip_export             = true*/

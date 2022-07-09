@@ -13,11 +13,14 @@ variable "password" {
   default = "Seclab123!"
 }
 
+variable "proxmox_hostname" {
+  type    = string
+  default = "starbase"
+}
+
 source "proxmox-iso" "seclab-win-server" {
-  proxmox_url  = "https://192.168.1.50:8006/api2/json"
-  username     = "mttaggart@pam!mttaggart"
-  token        = "9525cd7a-66cc-4df9-9bd3-f87e9b0ca2d3"
-  node         = "starbase"
+  proxmox_url  = "https://${var.proxmox_hostname}:8006/api2/json"
+  node         = "${var.proxmox_hostname}"
   iso_file     = "local:iso/17763.737.190906-2324.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us_1.iso"
   iso_checksum = "sha256:549bca46c055157291be6c22a3aaaed8330e78ef4382c99ee82c896426a1cee1"
 
@@ -40,8 +43,7 @@ source "proxmox-iso" "seclab-win-server" {
   ssh_username = "${var.username}"
   ssh_password = "${var.password}"
   ssh_timeout  = "15m"
-  qemu_agent   = false
-  ssh_host     = "10.1.99.253"
+  qemu_agent   = true
   // winrm_use_ssl           = true
   // guest_os_type           = "Windows2019_64"
   cores                = 2
