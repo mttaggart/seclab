@@ -35,6 +35,8 @@ autoinstall:
         id: root-partition
         device: disk0
         size: -1
+  packages:
+    - qemu-guest-agent
   late-commands:
     - "echo 'Defaults:seclab !requiretty' > /target/etc/sudoers.d/seclab"
     - "echo 'seclab ALL=(ALL) NOPASSWD: ALL' >> /target/etc/sudoers.d/seclab"
