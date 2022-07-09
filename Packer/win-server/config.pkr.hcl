@@ -42,7 +42,7 @@ source "proxmox-iso" "seclab-win-server" {
   communicator = "ssh"
   ssh_username = "${var.username}"
   ssh_password = "${var.password}"
-  ssh_timeout  = "15m"
+  ssh_timeout  = "30m"
   qemu_agent   = true
   // winrm_use_ssl           = true
   // guest_os_type           = "Windows2019_64"
