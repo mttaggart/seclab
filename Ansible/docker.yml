@@ -1,6 +1,6 @@
 ---
 - name: Make a Docker Host
-  hosts: linux-hosts
+  hosts: seclab-docker
   become: yes
   become_user: root
   roles:
