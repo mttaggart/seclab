@@ -178,10 +178,10 @@
                     <Description>Disable password expiration for seclab user</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <!-- Set IP Address for initial setup -->
-                    <CommandLine>powershell.exe -c (Get-NetIpAddress | where {$_.IpAddress -like "10.1.99.*"}); New-NetIPAddress -InterfaceIndex {$_.InterfaceIndex} -IpAddress 10.1.99.253 -PrefixLength 24</CommandLine>
+                    <!-- Install QEMU Agent -->
+                    <CommandLine>msiexec /q /i F:\guest-agent\qemu-ga-x86_64.msi</CommandLine>
                     <Order>6</Order>
-                    <Description>Set IP Address for initial setup</Description>
+                    <Description>Install QEMU Agent</Description>
                 </SynchronousCommand>
             </FirstLogonCommands>
             <UserAccounts>
