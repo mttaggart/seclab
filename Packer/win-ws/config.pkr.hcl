@@ -28,8 +28,7 @@ source "proxmox-iso" "seclab-win-ws" {
   ssh_username = "${var.username}"
   ssh_password = "${var.password}"
   ssh_timeout  = "20m"
-  qemu_agent   = false
-  ssh_host     = "10.1.99.253"
+  qemu_agent   = true
   cores                   = 2
   memory                  = 4096
   vm_name                 = "seclab-win-ws"
