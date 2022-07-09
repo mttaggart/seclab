@@ -1,0 +1,7 @@
+---
+- name: Install Wazuh Agent on Windows
+  hosts: windows-hosts
+  vars:
+    wazuh_manager_ip: 10.1.99.4
+    wazuh_registration_ip: 10.1.99.4
+    win_shell: "Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.2.5-1.msi -OutFile wazuh-agent-4.2.5.msi; ./wazuh-agent-4.2.5.msi /q WAZUH_MANAGER='{{ wazuh_manager_ip }}' WAZUH_REGISTRATION_SERVER='{{ wazuh_registration_ip }}' WAZUH_AGENT_GROUP='windows'"

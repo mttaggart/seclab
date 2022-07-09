@@ -1,0 +1,5 @@
+---
+- name: Initialize Domain Controller
+  hosts: domaincontrollers
+  roles:
+    - domain_controller 

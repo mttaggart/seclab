@@ -1,0 +1,8 @@
+---
+- name: Restart Wazuh on Windows
+  hosts: windows-hosts
+  tasks:
+    - name: Restart Wazuh
+      ansible.windows.win_service:
+        name: Wazuh
+        state: restarted

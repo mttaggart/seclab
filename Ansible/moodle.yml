@@ -1,0 +1,8 @@
+---
+- name: Create a Moodle Server
+  hosts: labservers
+  become: yes
+  become_user: root
+  roles:
+  - lamp
+  - moodle

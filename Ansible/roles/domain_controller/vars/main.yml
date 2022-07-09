@@ -1,0 +1,9 @@
+users:
+  - firstName: "Joe"
+    lastName: "HackMe"
+    username: "jhackme"
+    password: "Winter2022!"
+  - firstName: "Jane"
+    lastName: "Pwnerson"
+    username: "jpwnerson"
+    password: "Eureka4791?"

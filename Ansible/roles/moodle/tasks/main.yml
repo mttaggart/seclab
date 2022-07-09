@@ -1,0 +1,101 @@
+- name: Install PHP-solr
+  ansible.builtin.apt:
+    name: php-solr
+    state: latest
+
+- name: Install PHP-xml
+  ansible.builtin.apt:
+    name: php-xml
+    state: latest
+
+- name: Install PHP-zip
+  ansible.builtin.apt:
+    name: php-zip
+    state: latest
+
+- name: Install PHP-mbstring
+  ansible.builtin.apt:
+    name: php-mbstring
+    state: latest
+ 
+- name: Install PHP-gd
+  ansible.builtin.apt:
+    name: php-gd
+    state: latest
+
+- name: Install PHP-intl
+  ansible.builtin.apt:
+    name: php-intl
+    state: latest
+
+- name: Restart Apache
+  service:
+    name: apache2
+    state: restarted
+
+- name: Install Solr-Common
+  ansible.builtin.apt:
+    name: solr-common
+    state: latest
+
+- name: Install MySQL
+  ansible.builtin.apt:
+    name: mysql-server
+    state: latest
+
+- name: Install Python-MySQL
+  ansible.builtin.apt:
+    name: python3-mysqldb
+    state: latest
+
+- name: Install Unzip
+  ansible.builtin.apt:
+    name: unzip
+    state: latest
+
+- name: Download Moodle
+  get_url:
+    url: https://download.moodle.org/download.php/direct/stable311/moodle-latest-311.zip
+    dest: /tmp/latest.zip
+
+- name: Install Moodle
+  unarchive:
+    src: /tmp/latest.zip
+    remote_src: yes
+    dest: /var/www/html/
+    owner: www-data
+    group: www-data
+
+- name: Create Moodle Data folder
+  file:
+    path: /var/www/moodledata
+    state: directory
+    owner: www-data
+    group: www-data
+
+- name: Create Moodle DB
+  community.mysql.mysql_db:
+    name: moodle
+    state: present
+
+- name: Create Moodle DB User
+  community.mysql.mysql_user:
+    name: "moodle"
+    password: "moodledbpass"
+    priv: "moodle.*:ALL"
+    state: present
+
+- name: Cleanup Install Files 1
+  file: 
+    path: /tmp/moodle
+    state: absent
+
+- name: Cleanup Install Files 1
+  file: 
+    path: /tmp/moodle
+    state: absent
+
+- name: Cleanup Install Files 2
+  file:
+    path: /tmp/latest.zip
+    state: absent
