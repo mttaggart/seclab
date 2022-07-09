@@ -3,3 +3,4 @@
 *.iso
 *.swp
 *.terraform.lock.hcl
+*.terraform.tfstate.*
