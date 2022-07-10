@@ -1,0 +1,43 @@
+#cloud-config
+autoinstall:
+  version: 1
+  apt:
+    geoip: true
+    preserve_sources_list: false
+    primary:
+    - arches: [amd64, i386]
+      uri: http://us.archive.ubuntu.com/ubuntu
+    - arches: [default]
+      uri: http://ports.ubuntu.com/ubuntu-ports
+  identity:
+    hostname: seclab-labbuntu
+    username: seclab
+    password: '$6$cIwbxpDxmjse58J3$xb2X98WX9PGy8/tOYOpZv6U2gc74yj3zFmuvgHPwmy6Fpd3xIqCbqgeb5tgSeOnm2Ernp8OFzSnI99/tZr2jI1'
+  ssh:
+    allow-pw: true
+    install-server: true
+  locale: en_US
+  keyboard: 
+    layout: us
+  storage:
+    layout:
+      name: direct
+    config:
+      - type: disk
+        id: disk0
+        match:
+          size: largest
+      - type: partition
+        id: boot-partition
+        device: disk0
+        size: 500M
+      - type: partition
+        id: root-partition
+        device: disk0
+        size: -1
+  packages:
+    - qemu-guest-agent
+  late-commands:
+    - "echo 'Defaults:seclab !requiretty' > /target/etc/sudoers.d/seclab"
+    - "echo 'seclab ALL=(ALL) NOPASSWD: ALL' >> /target/etc/sudoers.d/seclab"
+    - "chmod 440 /target/etc/sudoers.d/seclab"
