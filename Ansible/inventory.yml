@@ -1,0 +1,12 @@
+infrastructure:
+  hosts:
+    seclab-docker:
+demo:
+  hosts:
+    192.168.99.107:
+  vars:
+    ansible_user: seclab
+    ansible_password: Seclab123!
+    ansible_connection: ssh
+    ansible_shell_type: cmd
+
