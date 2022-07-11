@@ -4,4 +4,4 @@
 *.swp
 *.terraform*
 Terraform/*/terraform.tfstate*
-*/terraform-plugin-proxmox.log
+Terraform/*/terraform-plugin-proxmox.log
