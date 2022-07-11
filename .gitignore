@@ -3,5 +3,5 @@
 *.iso
 *.swp
 *.terraform.lock.hcl
-*.terraform.tfstate.*
+*.terraform.tfstate*
 */terraform-plugin-proxmox.log
