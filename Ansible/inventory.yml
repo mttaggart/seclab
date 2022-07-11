@@ -1,6 +1,8 @@
 infrastructure:
   hosts:
     seclab-docker:
+  vars:
+    ansible_user: seclab
 demo:
   hosts:
     192.168.99.107:
