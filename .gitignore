@@ -2,6 +2,6 @@
 */output-*
 *.iso
 *.swp
-*.terraform.lock.hcl
-*.terraform.tfstate*
+*.terraform*
+Terraform/*/terraform.tfstate*
 */terraform-plugin-proxmox.log
