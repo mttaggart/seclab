@@ -71,6 +71,13 @@ resource "proxmox_vm_qemu" "seclab-soc" {
     bridge = "vmbr2"
     model = "e1000"
   }
+  network {
+    bridge = "vmbr2"
+    model = "e1000"
+    # Default, but explicit for pcap
+    firewall = false
+  }
+
 
   provisioner "file" {
     source      = "./00-netplan.yaml"
