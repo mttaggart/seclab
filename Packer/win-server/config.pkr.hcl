@@ -5,7 +5,7 @@ variable "hostname" {
 
 variable "username" {
   type    = string
-  default = "Administrator"
+  default = "seclab"
 }
 
 variable "password" {
@@ -21,13 +21,13 @@ variable "proxmox_hostname" {
 source "proxmox-iso" "seclab-win-server" {
   proxmox_url  = "https://${var.proxmox_hostname}:8006/api2/json"
   node         = "${var.proxmox_hostname}"
-  iso_file     = "local:iso/17763.737.190906-2324.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us_1.iso"
+  iso_file     = "local:iso/Win-Server-2019.iso"
   iso_checksum = "sha256:549bca46c055157291be6c22a3aaaed8330e78ef4382c99ee82c896426a1cee1"
 
 
   additional_iso_files {
     device       = "ide3"
-    iso_file     = "local:iso/Autounattend-WinServer.iso"
+    iso_file     = "local:iso/Autounattend-Win-Server.iso"
     iso_checksum = "sha256:fe22fada8f98e2355a4bfac558d2e1f0082bfff47ca29ea7bfa87553a44d8ac1"
     unmount      = true
   }

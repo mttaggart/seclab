@@ -21,13 +21,13 @@ variable "proxmox_hostname" {
 source "proxmox-iso" "seclab-win-ws" {
   proxmox_url  = "https://${var.proxmox_hostname}:8006/api2/json"
   node         = "${var.proxmox_hostname}"
-  iso_file                 = "local:iso/win10-enterprise.iso"
+  iso_file                 = "local:iso/Win-10-Enterprise.iso"
   iso_checksum            = "sha256:69efac1df9ec8066341d8c9b62297ddece0e6b805533fdb6dd66bc8034fba27a"
   /*skip_export             = true*/
   communicator            = "ssh"
   ssh_username = "${var.username}"
   ssh_password = "${var.password}"
-  ssh_timeout  = "20m"
+  ssh_timeout  = "30m"
   qemu_agent   = true
   cores                   = 2
   memory                  = 4096

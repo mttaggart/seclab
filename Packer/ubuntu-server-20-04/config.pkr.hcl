@@ -22,7 +22,7 @@ variable "proxmox_node" {
 source "proxmox-iso" "seclab-ubuntu-server" {
   proxmox_url            = "https://${var.proxmox_node}:8006/api2/json"
   node                   = "${var.proxmox_node}"
-  iso_file               = "local:iso/ubuntu-20.04.3-live-server-amd64.iso"
+  iso_file               = "local:iso/ubuntu-20.04-live-server-amd64.iso"
   iso_checksum           = "sha256:f8e3086f3cea0fb3fefb29937ab5ed9d19e767079633960ccb50e76153effc98"
   ssh_username           = "${var.username}"
   ssh_password           = "${var.password}"
@@ -31,7 +31,7 @@ source "proxmox-iso" "seclab-ubuntu-server" {
   http_directory         = "http"
   cores                  = 2
   memory                 = 2048
-  vm_name                = "seclab-ubuntu-server-2004"
+  vm_name                = "seclab-ubuntu-server-20-04"
   qemu_agent             = true
   template_description   = "Seclab Ubuntu Server 20.04.3"
 
