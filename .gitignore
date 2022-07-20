@@ -5,3 +5,4 @@
 *.terraform*
 Terraform/*/terraform.tfstate*
 Terraform/*/terraform-plugin-proxmox.log
+Terraform/demo*
