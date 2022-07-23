@@ -22,4 +22,8 @@ network:
           metric: 100
     ens20:
       dhcp4: true
+      routes:
+        - to: 10.1.99.0/24
+          via: 10.1.99.1
+          metric: 101
   version: 2
