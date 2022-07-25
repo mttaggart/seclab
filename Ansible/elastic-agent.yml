@@ -1,0 +1,18 @@
+---
+- name: Install Elastic Agent on Windows
+  hosts: windows-hosts
+  vars:
+    seclab_soc_ip: 10.1.99.2
+  tasks:
+    - name: Install Agent
+      args:
+        chdir: C:\Users\seclab\Downloads
+      ansible.windows.win_powershell: 
+        script: |
+          $ProgressPreference = 'Continue'
+          Invoke-WebRequest -Uri https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.3.2-windows-x86_64.zip -OutFile elastic-agent-8.3.2-windows-x86_64.zip
+          Expand-Archive .\elastic-agent-8.3.2-windows-x86_64.zip -DestinationPath .
+          cd elastic-agent-8.3.2-windows-x86_64
+          .\elastic-agent.exe install --url=https://{{ seclab_soc_ip }}:8220 --insecure -n --enrollment-token=cHBZdUNJSUJUTVVmVVhiZmN4akQ6WTRSRmZ2VUVRTDYwRXhjOW1NSUl1Zw==
+          cd ..
+          Remove-Item -Path .\elastic-agent-8.3.2-windows-x86_64 -Recurse -Force
