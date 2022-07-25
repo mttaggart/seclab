@@ -1,0 +1,45 @@
+---
+- name: Add Elastic GPG Key
+  ansible.builtin.apt_key:
+  url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+  file: /usr/share/keyrings/elasticsearch-keyring.gpg
+
+- name: Add Elastic Repo
+  ansible.builtin.apt_repository:
+    repo: deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main
+    filename: elastic-8.x.list
+    state: present
+
+- name: Install Elasticsearch
+  ansible.builtin.apt:
+    update_caches: yes
+    name: elasticsearch
+
+- name: Start/Enable Elasticsearch Systemd Service
+  ansible.builtin.systemd:
+    daemon-reload: yes
+    name: elasticsearch
+    state: started
+    enabled: yes
+
+- name: Reset elastic user password
+  ansible.builtin.shell:
+    cmd: /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
+    stdin: "y"
+    warn: no
+  register: ep
+
+- name: Print new password
+  ansible.builtin.debug:
+    msg: "{{ ep.stdout }}"
+
+- name: Install Kibana
+  ansible.builtin.apt:
+    name: kibana
+
+- name: Start/Enable Kibana Systemd Service
+  ansible.builtin.systemd:
+    daemon-reload: yes
+    name: kibana
+    state: started
+    enabled: yes
