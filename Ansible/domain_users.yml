@@ -1,6 +1,6 @@
 ---
 - name: Create Domain Users
-  hosts: domaincontrollers
+  hosts: zd-dc-01
   tasks:
   - name: Create Domain Groups
     community.windows.win_domain_group:
