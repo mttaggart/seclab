@@ -1,5 +1,5 @@
 ---
-- hosts: windows-hosts
+- hosts: zd-ws-01
   gather_facts: no
   tasks:
   - ansible.windows.win_domain_membership:
