@@ -69,10 +69,9 @@ source "proxmox-iso" "seclab-win-server" {
 build {
   sources = ["sources.proxmox-iso.seclab-win-server"]
   provisioner "windows-shell" {
-    inline = ["ipconfig"]
+    inline = [
+      "ipconfig"
+    ]
   }
-  # provisioner "shell-local" {
-  #   pause_before = "15m"
-  #   inline = ["echo Done! Now go make a template from it"]
-  # }
+
 }
