@@ -4,8 +4,8 @@
 *.swp
 *.terraform*
 Ansible/inventory.yml
-./Terraform/*/terraform.tfstate*
-./Terraform/*/terraform-plugin-proxmox.log
-./Terraform/*/*/terraform.tfstate*
-./Terraform/*/*/terraform-plugin-proxmox.log
-./Terraform/my-plans/*
+Terraform/*/terraform.tfstate*
+Terraform/*/terraform-plugin-proxmox.log
+Terraform/*/*/terraform.tfstate*
+Terraform/*/*/terraform-plugin-proxmox.log
+Terraform/my-plans/*
