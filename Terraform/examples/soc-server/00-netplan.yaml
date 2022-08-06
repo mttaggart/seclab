@@ -1,0 +1,29 @@
+network:
+  ethernets:
+    ens18:
+      dhcp4: false
+      addresses:
+        - 192.168.99.2/24
+      nameservers:
+          addresses: [8.8.8.8, 8.8.4.4]
+      routes:
+        - to: 0.0.0.0/0
+          via: 192.168.99.1
+          metric: 99
+    ens19:
+      dhcp4: false
+      addresses:
+        - 10.1.99.2/24
+      nameservers:
+          addresses: [10.1.99.3, 8.8.4.4]
+      routes:
+        - to: 10.1.99.0/24
+          via: 10.1.99.1
+          metric: 100
+    ens20:
+      dhcp4: true
+      routes:
+        - to: 10.1.99.0/24
+          via: 10.1.99.1
+          metric: 101
+  version: 2

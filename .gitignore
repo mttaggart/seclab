@@ -3,6 +3,8 @@
 *.iso
 *.swp
 *.terraform*
-Terraform/*/terraform.tfstate*
-Terraform/*/terraform-plugin-proxmox.log
-Terraform/demo*
+./Terraform/*/terraform.tfstate*
+./Terraform/*/terraform-plugin-proxmox.log
+./Terraform/*/*/terraform.tfstate*
+./Terraform/*/*/terraform-plugin-proxmox.log
+./Terraform/my-plans/*
