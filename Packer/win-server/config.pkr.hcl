@@ -28,7 +28,7 @@ source "proxmox-iso" "seclab-win-server" {
   additional_iso_files {
     device       = "ide3"
     iso_file     = "local:iso/Autounattend-Win-Server.iso"
-    iso_checksum = "sha256:fe22fada8f98e2355a4bfac558d2e1f0082bfff47ca29ea7bfa87553a44d8ac1"
+    iso_checksum = "sha256:3df9eadb27c245c8e420b5d380163debee47efd066f94d3259cf347f58c145a9"
     unmount      = true
   }
 
@@ -70,7 +70,8 @@ build {
   sources = ["sources.proxmox-iso.seclab-win-server"]
   provisioner "windows-shell" {
     inline = [
-      "ipconfig"
+      "ipconfig",
+      "c:\\windows\\system32\\sysprep\\sysprep.exe /generalize /mode:vm /oobe /quiet /unattend:E:\\unattend.xml"
     ]
   }
 
