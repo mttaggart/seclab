@@ -3,7 +3,7 @@
 *.iso
 *.swp
 *.terraform*
-Ansible/inventory.yml
+Ansible/my-playbooks/
 Terraform/*/terraform.tfstate*
 Terraform/*/terraform-plugin-proxmox.log
 Terraform/*/*/terraform.tfstate*
