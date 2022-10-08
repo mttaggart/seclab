@@ -65,4 +65,3 @@
     name: elastic-agent
     state: started
     enabled: yes
-    
