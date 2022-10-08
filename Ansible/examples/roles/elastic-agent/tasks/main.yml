@@ -1,0 +1,18 @@
+---
+- name: Print Fleet Token
+  ansible.builtin.debug:
+    msg: "{{ fleet_server_token }}"
+
+- name: Install Agent on Windows
+  args:
+    chdir: C:\Users\seclab\Downloads
+  ansible.windows.win_powershell: 
+    script: |
+      $ProgressPreference = 'Continue'
+      Invoke-WebRequest -Uri https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.3.2-windows-x86_64.zip -OutFile elastic-agent-8.3.2-windows-x86_64.zip
+      Expand-Archive .\elastic-agent-8.3.2-windows-x86_64.zip -DestinationPath .
+      cd elastic-agent-8.3.2-windows-x86_64
+      .\elastic-agent.exe install --url=https://{{ elk_ip }}:8220 -i -n -f --enrollment-token={{ fleet_server_token }}
+      cd ..
+      Remove-Item -Path .\elastic-agent-8.3.2-windows-x86_64 -Recurse -Force
+  when: ansible_facts["os_family"] == "Windows"
