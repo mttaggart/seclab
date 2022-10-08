@@ -1,0 +1,8 @@
+---
+- name: Print Elastic Password
+  ansible.builtin.debug:
+    msg: "elastic password: {{ ep.stdout.split(': ')[1] }}"
+
+- name: Print Kibana Enrollment Token
+  ansible.builtin.debug:
+    msg: "Kibana Enrollment Token: {{ kibana_token.stdout }}"
