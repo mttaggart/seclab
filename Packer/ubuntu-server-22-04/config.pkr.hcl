@@ -39,6 +39,7 @@ source "proxmox-iso" "seclab-ubuntu-server" {
   vm_name                = "seclab-ubuntu-server-22-04"
   qemu_agent             = true
   template_description   = "Ubuntu 22.04 Server"
+  insecure_skip_tls_verify = true
 
   network_adapters {
     bridge = "vmbr1"
