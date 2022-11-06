@@ -38,21 +38,21 @@ source "proxmox-iso" "seclab-win-ws" {
   additional_iso_files {
     device       = "ide3"
     iso_file     = "local:iso/Autounattend-WinDesktop.iso"
-    iso_checksum = "sha256:3dbf8024b956cd0f5e152cc77ce4e088e1f908e30eb163043a474dbfde268af6"
+    iso_checksum = "sha256:5f6aa4a2c9742c321f042dec7e8ce0aade465400643625f442b9d01836eb6ed4"
     unmount      = true
   }
 
   additional_iso_files {
     device       = "sata0"
     iso_file     = "local:iso/virtio.iso"
-    iso_checksum = "sha256:af2b3cc9fa7905dea5e58d31508d75bba717c2b0d5553962658a47aebc9cc386"
+    iso_checksum = "sha256:8a066741ef79d3fb66e536fb6f010ad91269364bd9b8c1ad7f2f5655caf8acd8"
     unmount      = true
   }
 
   network_adapters {
     bridge = "vmbr2"
   }
-  
+
   disks {
     type              = "virtio"
     disk_size         = "50G"
