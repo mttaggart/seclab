@@ -22,7 +22,7 @@ source "proxmox-iso" "seclab-win-ws" {
   proxmox_url  = "https://${var.proxmox_hostname}:8006/api2/json"
   node         = "${var.proxmox_hostname}"
   iso_file                 = "local:iso/Win-10-Enterprise.iso"
-  iso_checksum            = "sha256:69efac1df9ec8066341d8c9b62297ddece0e6b805533fdb6dd66bc8034fba27a"
+  iso_checksum            = "sha256:ef7312733a9f5d7d51cfa04ac497671995674ca5e1058d5164d6028f0938d668"
   /*skip_export             = true*/
   communicator            = "ssh"
   ssh_username = "${var.username}"
