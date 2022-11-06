@@ -33,6 +33,7 @@ source "proxmox-iso" "seclab-win-ws" {
   memory                  = 4096
   vm_name                 = "seclab-win-ws"
   template_description = "Base Seclab Windows Server"
+  insecure_skip_tls_verify = true
   
   additional_iso_files {
     device       = "ide3"
@@ -49,11 +50,9 @@ source "proxmox-iso" "seclab-win-ws" {
   }
 
   network_adapters {
-    bridge = "vmbr1"
-  }
-  network_adapters {
     bridge = "vmbr2"
   }
+  
   disks {
     type              = "virtio"
     disk_size         = "50G"

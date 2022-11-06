@@ -43,9 +43,6 @@ source "proxmox-iso" "seclab-ubuntu-server" {
 
   network_adapters {
     bridge = "vmbr1"
-  }
-  network_adapters {
-    bridge = "vmbr2"
   } 
   disks {
     disk_size         = "30G"
