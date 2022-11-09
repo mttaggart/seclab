@@ -8,4 +8,4 @@ Terraform/*/terraform.tfstate*
 Terraform/*/terraform-plugin-proxmox.log
 Terraform/*/*/terraform.tfstate*
 Terraform/*/*/terraform-plugin-proxmox.log
-Terraform/my-plans/*
+my-stuff/
