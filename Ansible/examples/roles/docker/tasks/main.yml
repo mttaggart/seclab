@@ -5,18 +5,25 @@
     update_cache: yes
 
 - name: Add Docker GPG Key
-  ansible.builtin.apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg 
+  ansible.builtin.shell: 
+    cmd: wget -qO - https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    creates: /etc/apt/keyrings/docker.gpg
 
-- name: Add Docker Sources
-  ansible.builtin.apt_repository: 
-    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+- name: Add Docker Repo
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    filename: docker
     state: present
+    update_cache: no
 
-- name: Install Docker Engine
+- name: Install Docker components
   ansible.builtin.apt:
-    name: ["docker-ce", "docker-ce-cli", "containerd.io", "docker-compose-plugin"]
     update_cache: yes
+    name: 
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
 
 - name: Add Seclab to Docker
   ansible.builtin.user:
