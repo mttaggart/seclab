@@ -2,7 +2,7 @@ terraform {
   required_providers {
     proxmox = {
       source  = "Telmate/proxmox"
-      version = "2.9.10"
+      version = "2.9.11"
     }
   }
 }
@@ -45,7 +45,7 @@ resource "proxmox_vm_qemu" "seclab-docker" {
   memory      = 4096
   name        = "Seclab-Docker"
   target_node = var.proxmox_host
-  clone       = "seclab-ubuntu-server-20-04"
+  clone       = "seclab-ubuntu-server-22-04"
   full_clone  = false
   onboot      = true
   agent       = 1
