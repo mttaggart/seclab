@@ -183,6 +183,12 @@
                     <Order>6</Order>
                     <Description>Install QEMU Agent</Description>
                 </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <!-- Enable RDP -->
+                    <CommandLine>powershell.exe -c Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 1</CommandLine>
+                    <Order>7</Order>
+                    <Description>Enable RDP</Description>
+                </SynchronousCommand>
             </FirstLogonCommands>
             <OOBE>
                 <HideEULAPage>true</HideEULAPage>
