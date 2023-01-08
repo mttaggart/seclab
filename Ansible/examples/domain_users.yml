@@ -20,7 +20,7 @@
   - name: Add Domain Admins
     community.windows.win_domain_group_membership:
       name: "Domain Admins"
-      members: 
+      members:
         - aminerva
   - name: Populate Domain Groups
     community.windows.win_domain_group_membership:
@@ -28,8 +28,6 @@
       members: "{{ item.members }}"
     loop:
       "{{ domain_groups }}"
-  
-    
   vars:
     domain_users:
       - firstName: "Joe"
@@ -56,23 +54,20 @@
         lastName: "Remedy"
         username: "sdaremedy"
         password: "gracious_fuji_19"
-      
-
     domain_groups:
       - name: "IT Staff"
-        members: 
+        members:
           - "jhackme"
           - "aminerva"
       - name: "Marketing"
-        members: 
+        members:
           - "jpwnerson"
       - name: "Accounting"
-        members: 
+        members:
           - "sdaremedy"
       - name: "HR"
-        members: 
+        members:
           - "fforsale"
       - name: "Software Developers"
-        members: 
-            - "hhacks"
-      
+        members:
+          - "hhacks"
