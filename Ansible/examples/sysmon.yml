@@ -6,7 +6,7 @@
       ansible.windows.win_get_url:
         url: https://live.sysinternals.com/Sysmon64.exe
         dest: C:\Users\seclab\Downloads\Sysmon64.exe
-    
+
     - name: Download Sysmon Config
       ansible.windows.win_get_url:
         url: https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/master/sysmonconfig-export.xml
@@ -24,4 +24,3 @@
       loop: "{{ sysmon_files }}"
       vars:
         sysmon_files: ["Sysmon64.exe", "sysmonconfig-export.xml"]
-
