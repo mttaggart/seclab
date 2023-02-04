@@ -1,6 +1,6 @@
 variable "hostname" {
   type    = string
-  default = "seclab-win-ws"
+  default = "seclab-win-server"
 }
 
 variable "username" {

@@ -1,0 +1,13 @@
+---
+- name: Install Splunk Enterprise Server
+  hosts: splunk-client-2
+  vars_prompt:
+    - name: splunk_server_ip
+      prompt: "Enter Splunk Server_IP"
+      private: false
+    - name: splunk_password
+      prompt: "Enter Splunk Password"
+      private: true
+  roles:
+    # - sysmon
+    - splunk-uf
