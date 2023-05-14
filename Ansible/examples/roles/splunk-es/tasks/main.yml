@@ -15,4 +15,4 @@
       - "9997:9997"
     env:
       SPLUNK_START_ARGS: "--accept-license"
-      SPLUNK_PASSWORD: "{{ splunk_password }}"
+      SPLUNK_PASSWORD: "{{ siem_password }}"

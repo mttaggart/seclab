@@ -10,7 +10,7 @@
     path: C:\Users\seclab\Downloads\splunk-uf.msi
     arguments:
       - "AGREETOLICENSE=YES"
-      - "RECEIVING_INDEXER={{ splunk_server_ip }}:9997"
+      - "RECEIVING_INDEXER={{ siem_ip }}:9997"
   when: ansible_facts["os_family"] == "Windows"
 
 - name: Install Inputs Config (Windows)
@@ -58,7 +58,8 @@
   ansible.builtin.template:
     src: inputs_lin.conf.j2
     dest: /opt/splunk/etc/system/local/inputs.conf
-  # notify: Restart Linux Splunk UF Service
+  notify: Restart Linux Splunk UF Service
+  when: ansible_facts["os_family"] == "Debian"
 
 - name: Make splunk User Owner of Splunk Home
   become: true
@@ -72,7 +73,8 @@
   # become: true
   # become_user: splunk
   ansible.builtin.command:
-    argv: 
+    argv:
       - /opt/splunk/bin/splunk
       - --accept-license
-      - "--seed-passwd {{ splunk_password }}"
+      - "--seed-passwd {{ siem_password }}"
+  when: ansible_facts["os_family"] == "Debian"
