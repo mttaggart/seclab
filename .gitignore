@@ -3,6 +3,7 @@
 *.iso
 *.swp
 *.terraform*
+.vscode/
 Ansible/my-playbooks/
 Terraform/*/terraform.tfstate*
 Terraform/*/terraform-plugin-proxmox.log
