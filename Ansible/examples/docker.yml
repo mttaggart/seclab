@@ -1,7 +1,0 @@
----
-- name: Make a Docker Host
-  hosts: demo
-  become: yes
-  become_user: root
-  roles:
-  - docker
