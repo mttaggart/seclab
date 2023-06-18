@@ -1,0 +1,11 @@
+---
+- name: Initialize Iris
+  hosts: seclab-docker
+  vars:
+    repo_path: /home/seclab/iris-web
+  roles:
+  - name: docker
+    become: true
+  - iris
+
+

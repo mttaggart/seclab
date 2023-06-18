@@ -1,0 +1,80 @@
+---
+- name: Download UF MSI
+  ansible.windows.win_get_url:
+    url: "https://download.splunk.com/products/universalforwarder/releases/9.0.3/windows/splunkforwarder-9.0.3-dd0128b1f8cd-x64-release.msi"
+    dest: C:\Users\seclab\Downloads\splunk-uf.msi
+  when: ansible_facts["os_family"] == "Windows"
+
+- name: Install UF (Windows)
+  ansible.windows.win_package:
+    path: C:\Users\seclab\Downloads\splunk-uf.msi
+    arguments:
+      - "AGREETOLICENSE=YES"
+      - "RECEIVING_INDEXER={{ siem_ip }}:9997"
+  when: ansible_facts["os_family"] == "Windows"
+
+- name: Install Inputs Config (Windows)
+  ansible.builtin.template:
+    src: inputs_win.conf.j2
+    dest: C:\Program Files\SplunkUniversalForwarder\etc\system\local\inputs.conf
+  notify: Restart Windows Splunk UF Service
+  when: ansible_facts["os_family"] == "Windows"
+
+- name: Remove Splunk Install Files
+  ansible.windows.win_file:
+    path: C:\Users\seclab\\Downloads\splunk-uf.msi
+    state: absent
+  when: ansible_facts["os_family"] == "Windows"
+
+- name: Install Auditd
+  become: true
+  ansible.builtin.apt:
+    name: auditd
+  when: ansible_facts["os_family"] == "Debian"
+
+- name: Download UF DEB
+  ansible.builtin.get_url:
+    url: "https://download.splunk.com/products/splunk/releases/9.0.3/linux/splunk-9.0.3-dd0128b1f8cd-linux-2.6-amd64.deb"
+    dest: /tmp/splunk-es.deb
+    mode: 0755
+  when: ansible_facts["os_family"] == "Debian"
+
+- name: Install UF DEB
+  become: true
+  ansible.builtin.apt:
+    deb: /tmp/splunk-es.deb
+  when: ansible_facts["os_family"] == "Debian"
+
+- name: Add Splunk to adm Group
+  become: true
+  ansible.builtin.user:
+    name: splunk
+    groups:
+      - adm
+  when: ansible_facts["os_family"] == "Debian"
+
+- name: Install Inputs Config (Linux)
+  become: true
+  ansible.builtin.template:
+    src: inputs_lin.conf.j2
+    dest: /opt/splunk/etc/system/local/inputs.conf
+  notify: Restart Linux Splunk UF Service
+  when: ansible_facts["os_family"] == "Debian"
+
+- name: Make splunk User Owner of Splunk Home
+  become: true
+  ansible.builtin.file:
+    path: /opt/splunk
+    owner: splunk
+    recurse: true
+  when: ansible_facts["os_family"] == "Debian"
+
+- name: Start Splunk UF (Linux)
+  # become: true
+  # become_user: splunk
+  ansible.builtin.command:
+    argv:
+      - /opt/splunk/bin/splunk
+      - --accept-license
+      - "--seed-passwd {{ siem_password }}"
+  when: ansible_facts["os_family"] == "Debian"

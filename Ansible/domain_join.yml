@@ -1,0 +1,18 @@
+---
+- name: Join Machine to a Domain
+  hosts: [zd-ws-01]
+  gather_facts: true
+  tasks:
+  - name: Join to Domain
+    ansible.windows.win_domain_membership:
+      dns_domain_name: zeroday.local
+      hostname: zd-ws-01
+      domain_admin_user: Administrator@zeroday.local
+      domain_admin_password: Seclab123!
+      state: domain
+      register: domain_state
+  - name: Reboot Machine
+    ansible.windows.win_reboot:
+      msg: "Domain joined. Rebooting"
+      pre_reboot_delay: 15
+      when: domain_state.changed

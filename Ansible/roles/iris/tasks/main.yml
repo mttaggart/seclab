@@ -1,0 +1,15 @@
+---
+- name: Get Iris Repo
+  ansible.builtin.git:
+    repo: https://github.com/dfir-iris/iris-web
+    dest: "{{ repo_path }}"
+- name: Add Env
+  template: 
+    src: .env.j2
+    dest: "{{ repo_path }}/.env"
+    owner: seclab
+    mode: 0644 
+- name: Launch Iris
+  community.docker.docker_compose:
+    build: true
+    project_src: "{{ repo_path }}"

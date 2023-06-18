@@ -1,0 +1,17 @@
+---
+- name: Get Elastic Container Repo
+  ansible.builtin.git:
+    repo: https://github.com/peasead/elastic-container.git
+    dest: /home/seclab/elastic-container
+    force: true
+
+- name: Set up Env file
+  ansible.builtin.template:
+    src: elk-env.j2
+    dest: /home/seclab/elastic-container/.env
+    mode: 0644
+
+- name: Bring up Stack
+  ansible.builtin.command:
+    chdir: /home/seclab/elastic-container
+    cmd: ./elastic-container.sh start

@@ -1,0 +1,73 @@
+---
+- name: Create Domain Users
+  hosts: zd-dc-01
+  tasks:
+  - name: Create Domain Groups
+    community.windows.win_domain_group:
+      name: "{{ item.name }}"
+      scope: "domainlocal"
+      state: present
+    loop:
+      "{{ domain_groups }}"
+  - name: Create Domain Users
+    community.windows.win_domain_user:
+      firstname: "{{ item.firstName }}"
+      lastname: "{{ item.lastName }}"
+      name: "{{ item.username }}"
+      password: "{{ item.password }}"
+    loop:
+      "{{ domain_users }}"
+  - name: Add Domain Admins
+    community.windows.win_domain_group_membership:
+      name: "Domain Admins"
+      members:
+        - aminerva
+  - name: Populate Domain Groups
+    community.windows.win_domain_group_membership:
+      name: "{{ item.name }}"
+      members: "{{ item.members }}"
+    loop:
+      "{{ domain_groups }}"
+  vars:
+    domain_users:
+      - firstName: "Joe"
+        lastName: "HackMe"
+        username: "jhackme"
+        password: "Winter2022!"
+      - firstName: "Jane"
+        lastName: "Pwnerson"
+        username: "jpwnerson"
+        password: "Eureka4791?"
+      - firstName: "Adam"
+        lastName: "Minerva"
+        username: "aminerva"
+        password: "!M1n3rv4!"
+      - firstName: "Husky"
+        lastName: "Hacks"
+        username: "hhacks"
+        password: "fetching_canfield_98"
+      - firstName: "FootPics"
+        lastName: "ForSale"
+        username: "fforsale"
+        password: "swampy_mounties_59"
+      - firstName: "SinDa"
+        lastName: "Remedy"
+        username: "sdaremedy"
+        password: "gracious_fuji_19"
+    domain_groups:
+      - name: "IT Staff"
+        members:
+          - "jhackme"
+          - "aminerva"
+      - name: "Marketing"
+        members:
+          - "jpwnerson"
+      - name: "Accounting"
+        members:
+          - "sdaremedy"
+      - name: "HR"
+        members:
+          - "fforsale"
+      - name: "Software Developers"
+        members:
+          - "hhacks"

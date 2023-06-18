@@ -1,0 +1,10 @@
+---
+- name: Restart Windows Splunk UF Service
+  ansible.windows.win_service:
+    name: SplunkForwarder
+    state: restarted
+
+- name: Restart Linux Splunk UF Service
+  ansible.builtin.systemd:
+    name: splunkforwarder
+    state: restarted

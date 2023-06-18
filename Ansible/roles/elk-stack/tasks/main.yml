@@ -1,0 +1,67 @@
+---
+- name: Add Elastic GPG Key
+  ansible.builtin.shell: 
+    cmd: wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
+    creates: /usr/share/keyrings/elasticsearch-keyring.gpg
+
+- name: Add Elastic Repo
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main"
+    filename: elastic-8.x
+    state: present
+    update_cache: no
+
+- name: Install Elasticsearch
+  ansible.builtin.apt:
+    update_cache: yes
+    name: elasticsearch
+
+- name: Start/Enable Elasticsearch Systemd Service
+  ansible.builtin.systemd:
+    daemon-reload: yes
+    name: elasticsearch
+    state: started
+    enabled: yes
+
+- name: Reset elastic user password
+  ansible.builtin.shell:
+    cmd: /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
+    stdin: "y"
+    warn: no
+  register: ep
+  notify: Print Elastic Password
+
+- name: Install Kibana
+  ansible.builtin.apt:
+    name: kibana
+
+- name: Enable remote access to Kibana
+  ansible.builtin.replace:
+    path: /etc/kibana/kibana.yml
+    regexp: "^#server.host.+$"
+    replace: "server.host: \"0.0.0.0\""
+
+- name: Create Kibana Enrollment Token
+  ansible.builtin.shell:
+    cmd: /usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
+    warn: no
+  register: kibana_token
+  notify: Print Kibana Enrollment Token
+
+- name: Start/Enable Kibana Systemd Service
+  ansible.builtin.systemd:
+    daemon-reload: yes
+    name: kibana
+    state: started
+    enabled: yes
+
+- name: Get Elastic Agent
+  ansible.builtin.apt:
+    name: elastic-agent
+
+- name: Start/Enable Elastic Agent Systemd Service
+  ansible.builtin.systemd:
+    daemon-reload: yes
+    name: elastic-agent
+    state: started
+    enabled: yes

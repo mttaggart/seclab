@@ -1,0 +1,13 @@
+---
+- name: Install Splunk Universal Forwarder
+  hosts: malwarelab-victim
+  vars_prompt:
+    - name: siem_ip
+      prompt: "Enter Splunk Server_IP"
+      private: false
+    - name: siem_password
+      prompt: "Enter Splunk Password"
+      private: true
+  roles:
+    # - sysmon
+    - splunk-uf
