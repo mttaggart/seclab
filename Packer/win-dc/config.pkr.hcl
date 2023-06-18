@@ -1,16 +1,25 @@
+packer {
+  required_plugins {
+    proxmox = {
+      version = ">= 1.1.2"
+      source  = "github.com/hashicorp/proxmox"
+    }
+  }
+}
+
+variable "hostname" {
+  type = string
+  default = "seclab-win-ws-2"
+}
+
+locals {
+  username = vault("/kv2/data/seclab/", "seclab_username")
+  password = vault("/kv2/data/seclab/", "seclab_windows_password")
+}
+
 variable "hostname" {
   type    = string
   default = "seclab-win-dc"
-}
-
-variable "username" {
-  type    = string
-  default = "seclab"
-}
-
-variable "password" {
-  type    = string
-  default = "Seclab123!"
 }
 
 variable "proxmox_hostname" {
@@ -41,8 +50,8 @@ source "proxmox-iso" "seclab-win-dc" {
 
   insecure_skip_tls_verify  = true
   communicator = "ssh"
-  ssh_username = "${var.username}"
-  ssh_password = "${var.password}"
+  ssh_username = "${local.username}"
+  ssh_password = "${local.password}"
   ssh_timeout  = "30m"
   qemu_agent   = true
   // winrm_use_ssl           = true
@@ -50,7 +59,7 @@ source "proxmox-iso" "seclab-win-dc" {
   cores                = 2
   memory               = 4096
   vm_name              = "seclab-win-dc"
-  template_description = "Base Seclab Windows Server"
+  template_description = "Base Seclab Windows Domain Controller"
   
   network_adapters {
     bridge = "vmbr2"
@@ -71,7 +80,7 @@ build {
   provisioner "windows-shell" {
     inline = [
       "ipconfig",
-      "c:\\windows\\system32\\sysprep\\sysprep.exe /generalize /mode:vm /oobe /quiet /unattend:E:\\unattend.xml"
+      "c:\\windows\\system32\\sysprep\\sysprep.exe /generalize /mode:vm /oobe /quiet /quit /unattend:E:\\unattend.xml"
     ]
   }
 

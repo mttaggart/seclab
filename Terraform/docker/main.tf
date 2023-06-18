@@ -2,29 +2,19 @@ terraform {
   required_providers {
     proxmox = {
       source  = "Telmate/proxmox"
-      version = "2.9.10"
+      version = "2.9.13"
+    }
+    vault = {
+      source = "hashicorp/vault"
+      version = "3.16.0"
     }
   }
 }
-
 variable "proxmox_host" {
   type        = string
   default     = "starbase"
   description = "description"
 }
-
-variable "username" {
-  type        = string
-  default     = "seclab"
-  description = "username"
-}
-
-variable "password" {
-  type        = string
-  default     = "seclab"
-  description = "password"
-}
-
 
 
 provider "proxmox" {
@@ -34,20 +24,30 @@ provider "proxmox" {
   pm_log_enable   = true
 }
 
+provider "vault" {
+
+}
+
+data "vault_kv_secret_v2" "seclab" {
+  mount = "kv2"
+  name  = "seclab"
+}
+
+
 resource "proxmox_vm_qemu" "seclab-docker-main" {
   cores       = 2
   memory      = 4096
   name        = "Docker-Demo-Main"
   target_node = var.proxmox_host
-  clone       = "seclab-ubuntu-server-20-04"
+  clone       = "seclab-ubuntu-server-22-04"
   full_clone  = false
   onboot      = true
   agent       = 1
 
   connection {
     type = "ssh"
-    user = "${var.username}"
-    password = "${var.password}"
+    user = data.vault_kv_secret_v2.seclab.data.seclab_username
+    password = data.vault_kv_secret_v2.seclab.data.seclab_password
     host = self.default_ipv4_address
   }
 

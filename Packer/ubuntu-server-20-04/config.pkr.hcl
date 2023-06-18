@@ -1,11 +1,10 @@
-variable "username" {
-  type    = string
-  default = "seclab"
-}
-
-variable "password" {
-  type    = string
-  default = "seclab"
+packer {
+  required_plugins {
+    proxmox = {
+      version = ">= 1.1.2"
+      source  = "github.com/hashicorp/proxmox"
+    }
+  }
 }
 
 variable "hostname" {
@@ -19,13 +18,18 @@ variable "proxmox_node" {
 }
 
 
+locals {
+  username = vault("/kv2/data/seclab/", "seclab_username")
+  password = vault("/kv2/data/seclab/", "seclab_password")
+}
+
 source "proxmox-iso" "seclab-ubuntu-server" {
   proxmox_url            = "https://${var.proxmox_node}:8006/api2/json"
   node                   = "${var.proxmox_node}"
   iso_file               = "local:iso/ubuntu-20.04-live-server-amd64.iso"
   iso_checksum           = "sha256:f8e3086f3cea0fb3fefb29937ab5ed9d19e767079633960ccb50e76153effc98"
-  ssh_username           = "${var.username}"
-  ssh_password           = "${var.password}"
+  ssh_username           = "${local.username}"
+  ssh_password           = "${local.password}"
   ssh_handshake_attempts = 100
   ssh_timeout            = "4h"
   http_directory         = "http"

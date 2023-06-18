@@ -3,20 +3,17 @@ variable "hostname" {
   default = "seclab-win-server"
 }
 
-variable "username" {
-  type    = string
-  default = "seclab"
-}
-
-variable "password" {
-  type    = string
-  default = "Seclab123!"
-}
-
 variable "proxmox_hostname" {
   type    = string
   default = "starbase"
 }
+
+
+locals {
+  username = vault("/kv2/data/seclab/", "seclab_username")
+  password = vault("/kv2/data/seclab/", "seclab_windows_password")
+}
+
 
 source "proxmox-iso" "seclab-win-server" {
   proxmox_url  = "https://${var.proxmox_hostname}:8006/api2/json"
@@ -41,8 +38,8 @@ source "proxmox-iso" "seclab-win-server" {
 
   insecure_skip_tls_verify  = true
   communicator = "ssh"
-  ssh_username = "${var.username}"
-  ssh_password = "${var.password}"
+  ssh_username = "${local.username}"
+  ssh_password = "${local.password}"
   ssh_timeout  = "30m"
   qemu_agent   = true
   // winrm_use_ssl           = true
@@ -71,7 +68,7 @@ build {
   provisioner "windows-shell" {
     inline = [
       "ipconfig",
-      "c:\\windows\\system32\\sysprep\\sysprep.exe /generalize /mode:vm /oobe /quiet /unattend:E:\\unattend.xml"
+      "c:\\windows\\system32\\sysprep\\sysprep.exe /generalize /mode:vm /quiet /quit /unattend:E:\\unattend.xml"
     ]
   }
 

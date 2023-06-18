@@ -1,16 +1,20 @@
+packer {
+  required_plugins {
+    proxmox = {
+      version = ">= 1.1.2"
+      source  = "github.com/hashicorp/proxmox"
+    }
+  }
+}
+
 variable "hostname" {
   type = string
-  default = "seclab-win-ws"
+  default = "seclab-win-ws-2"
 }
 
-variable "username" {
-  type = string
-  default = "seclab"
-}
-
-variable "password" {
-  type = string
-  default = "Seclab123!"
+locals {
+  username = vault("/kv2/data/seclab/", "seclab_username")
+  password = vault("/kv2/data/seclab/", "seclab_windows_password")
 }
 
 variable "proxmox_hostname" {
@@ -25,8 +29,8 @@ source "proxmox-iso" "seclab-win-ws" {
   iso_checksum            = "sha256:ef7312733a9f5d7d51cfa04ac497671995674ca5e1058d5164d6028f0938d668"
   /*skip_export             = true*/
   communicator            = "ssh"
-  ssh_username = "${var.username}"
-  ssh_password = "${var.password}"
+  ssh_username = "${local.username}"
+  ssh_password = "${local.password}"
   ssh_timeout  = "30m"
   qemu_agent   = true
   cores                   = 2

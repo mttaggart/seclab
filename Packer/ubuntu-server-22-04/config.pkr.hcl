@@ -1,11 +1,10 @@
-variable "username" {
-  type    = string
-  default = "seclab"
-}
-
-variable "password" {
-  type    = string
-  default = "seclab"
+packer {
+  required_plugins {
+    proxmox = {
+      version = ">= 1.1.2"
+      source  = "github.com/hashicorp/proxmox"
+    }
+  }
 }
 
 variable "hostname" {
@@ -16,6 +15,12 @@ variable "hostname" {
 variable "proxmox_node" {
     type    = string
     default = "starbase"
+}
+
+locals {
+  username = vault("/kv2/data/seclab/", "seclab_username")
+  password = vault("/kv2/data/seclab/", "seclab_password")
+  ssh_key =  vault("/kv2/data/seclab/", "seclab_ssh_key")
 }
 
 variable "ssh_key" {
@@ -29,8 +34,8 @@ source "proxmox-iso" "seclab-ubuntu-server" {
   node                   = "${var.proxmox_node}"
   iso_file               = "local:iso/ubuntu-22.04-live-server-amd64.iso"
   iso_checksum           = "sha256:10f19c5b2b8d6db711582e0e27f5116296c34fe4b313ba45f9b201a5007056cb"
-  ssh_username           = "${var.username}"
-  ssh_password           = "${var.password}"
+  ssh_username           = "${local.username}"
+  ssh_password           = "${local.password}"
   ssh_handshake_attempts = 100
   ssh_timeout            = "4h"
   http_directory         = "http"
@@ -78,10 +83,10 @@ build {
   
   provisioner "shell" {
     inline = [
-      "sudo sed -i 's/seclab-ubuntu-server/${var.hostname}/g' /etc/hosts",
-      "sudo sed -i 's/seclab-ubuntu-server/${var.hostname}/g' /etc/hostname",
+      "sudo sed -i 's/seclab-ubuntu-server/${local.hostname}/g' /etc/hosts",
+      "sudo sed -i 's/seclab-ubuntu-server/${local.hostname}/g' /etc/hostname",
       "mkdir /home/seclab/.ssh",
-      "echo '${var.ssh_key}' > /home/seclab/.ssh/authorized_keys",
+      "echo '${local.ssh_key}' > /home/seclab/.ssh/authorized_keys",
       "chmod 0600 /home/seclab/.ssh/authorized_keys"
     ]
   }

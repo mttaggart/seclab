@@ -1,0 +1,6 @@
+---
+- name: Demo Vault Access
+  hosts: seclab-soc
+  tasks:
+    - ansible.builtin.debug:
+        msg: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=kv2/data/seclab url=http://127.0.0.1:8200') }}"

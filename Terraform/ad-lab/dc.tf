@@ -36,8 +36,8 @@ resource "proxmox_vm_qemu" "zd-dc" {
 
   connection {
     type = "ssh"
-    user = "Administrator"
-    password = "${var.password}"
+    user = data.vault_kv_secret_v2.seclab.data.seclab_username
+    password = data.vault_kv_secret_v2.seclab.data.seclab_windows_password
     host = self.default_ipv4_address
     target_platform = "windows"
   }
