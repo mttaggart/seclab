@@ -1,0 +1,2 @@
+  ansible_user: seclab
+  ansible_password: seclab
