@@ -11,3 +11,4 @@ Terraform/*/*/terraform.tfstate*
 Terraform/*/*/terraform-plugin-proxmox.log
 my-stuff/
 inventory/
+Vault/data/
