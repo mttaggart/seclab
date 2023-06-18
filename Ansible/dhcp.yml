@@ -1,0 +1,6 @@
+---
+- name: Set up DHCP
+  hosts: 10.1.99.5
+  become: true
+  roles:
+    - dhcp_server

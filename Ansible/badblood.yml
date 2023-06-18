@@ -1,0 +1,17 @@
+---
+- name: Configure BadBlood AD Environment
+  hosts: zd-dc-01
+  vars:
+    ansible_user: Administrator
+  tasks:
+    - name: Download BadBlood Zip
+      ansible.windows.win_get_url:
+        url: https://github.com/davidprowe/BadBlood/archive/refs/heads/master.zip
+        dest: C:\Users\Administrator\Downloads\BadBlood.zip
+    - name: Unzip BadBlood
+      community.windows.win_unzip:
+        src: C:\Users\Administrator\Downloads\BadBlood.zip
+        dest: C:\Users\Administrator\Downloads\BadBlood
+        delete_archive: yes
+    - name: Execute a command in the remote shell, stdout goes to the specified file on the remote
+      ansible.windows.win_shell: C:\Users\Administrator\Downloads\BadBlood\invoke-badblood.ps1

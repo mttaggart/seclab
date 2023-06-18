@@ -1,0 +1,14 @@
+---
+- name: Configure Tailscale Router
+  hosts: seclab-tailscale
+  vars_prompt:
+    - name: tailscale_auth_key
+      prompt: Tailscale Auth Key
+    - name: tailscale_subnet
+      prompt: Tailscale Subnet
+      private: false
+  roles:
+    - role: tailscale
+      become: true
+    - role: tailscale-router
+      become: true

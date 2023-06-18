@@ -1,0 +1,11 @@
+[monitor:///var/log/syslog]
+disabled = 0
+start_from = oldest
+index = syslog
+sourcetype = syslog
+
+[monitor:///var/log/audit.log]
+disabled = 0
+start_from = oldest
+index = syslog
+sourcetype = auditd

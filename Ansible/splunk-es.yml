@@ -1,0 +1,12 @@
+---
+- name: Install Splunk Enterprise Server
+  hosts: malwarelab-splunk
+  vars_prompt:
+    - name: siem_password
+      prompt: "Enter Splunk Admin Password"
+      private: true
+  become: true
+  become_user: root
+  roles:
+    - docker
+    - splunk-es

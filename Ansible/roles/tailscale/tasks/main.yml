@@ -1,0 +1,29 @@
+---
+- name: Download Windows MSI Installer
+  ansible.windows.win_get_url:
+    url: "{{ win_installer_ url}}"
+    dest: C:\Users\seclab\Downloads\install_tailscale.msi
+  when: ansible_facts["os_family"] == "Windows"
+
+- name: Install TailScale on Windows
+  ansible.windows.win_package:
+    path: C:\Users\seclab\Downloads\install_tailscale.msi
+  when: ansible_facts["os_family"] == "Windows"
+
+- name: Add Tailscale GPG Key
+  ansible.builtin.get_url:
+    url: https://pkgs.tailscale.com/stable/ubuntu/jammy.noarmor.gpg
+    dest: /etc/apt/keyrings/tailscale-archive-keyring.gpg
+  when: ansible_facts["distribution"] == "Ubuntu"
+
+- name: Add Tailscale Repo
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/ubuntu {{ ansible_distribution_release }} main"
+    filename: tailscale
+    state: present
+  when: ansible_facts["distribution"] == "Ubuntu"
+
+- name: Download Tailscale for Linux 
+  ansible.builtin.apt:
+    name: tailscale
+  when: ansible_facts["distribution"] == "Ubuntu"
