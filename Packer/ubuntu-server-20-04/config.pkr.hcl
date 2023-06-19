@@ -21,6 +21,7 @@ variable "proxmox_node" {
 locals {
   username = vault("/kv2/data/seclab/", "seclab_username")
   password = vault("/kv2/data/seclab/", "seclab_password")
+  ssh_key =  vault("/kv2/data/seclab/", "seclab_ssh_key")
 }
 
 source "proxmox-iso" "seclab-ubuntu-server" {
@@ -79,7 +80,7 @@ build {
       "sudo sed -i 's/seclab-ubuntu-server/${var.hostname}/g' /etc/hosts",
       "sudo sed -i 's/seclab-ubuntu-server/${var.hostname}/g' /etc/hostname",
       "mkdir /home/seclab/.ssh",
-      "echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDIb5yqCWIgscV/Rv/gA8bieryhaTKsdrvAY1Jw7LbP1wB8RD0lOjj52Xt+FScGvKiFw4HHk2KUjZ8RwGFFtA7KIZ08ZeiJKXCTsO4DFjznrFf8Gmb1A2g3m8lv3hT35S+zehcI2gQHSbBrrywjSgogN5iTTqZepDb7CBvy35cmy1573Le3ib59jhoH0fUvclnThR/nvZv/kzlsIQ+XNFDLVYBfWMswsxa10RmygjbU6XP2i/CzxIbnPptF1S98h4vSbCjLZ+6rV29+Ir1VAg9r5nJ4fFSlFs5g8+QdQxx/2WJDGpCUaix/gAV9235cTEeqPKah/t7pI+X+XhNqMy9OvgUi+heCu8e3skoPZl5a3JYS+DjGHz4q5pjAtd3itZ7mqq0JMD07Pa1/gi6Fy9F291PooZReY9nAhQLKHQIaV8PD98Ss+kLOOegcidLxzMc/HeiCFXB0TbYUtUs0PohB5WBdGSQK7bRhBZYyRQC/lF+QamzNM2aCvK1o/7aRYGU= mttaggart@seclab-jumpbox' > /home/seclab/.ssh/authorized_keys",
+      "echo '${local.ssh_key}' > /home/seclab/.ssh/authorized_keys",
       "chmod 0600 /home/seclab/.ssh/authorized_keys"
     ]
   }
