@@ -23,10 +23,6 @@ resource "proxmox_vm_qemu" "zd-fs" {
   }
 
   network {
-    bridge = "vmbr1"
-    model = "e1000"
-  }
-  network {
     bridge = "vmbr2"
     model = "e1000"
   }
