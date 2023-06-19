@@ -10,7 +10,7 @@ autoinstall:
     - arches: [default]
       uri: http://ports.ubuntu.com/ubuntu-ports
   identity:
-    hostname: seclab-labbuntu
+    hostname: seclab-ubuntu20
     username: seclab
     password: '$6$cIwbxpDxmjse58J3$xb2X98WX9PGy8/tOYOpZv6U2gc74yj3zFmuvgHPwmy6Fpd3xIqCbqgeb5tgSeOnm2Ernp8OFzSnI99/tZr2jI1'
   ssh:
