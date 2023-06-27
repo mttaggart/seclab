@@ -4,12 +4,6 @@ variable "dc_hostname" {
   description = "description"
 }
 
-# variable "sidchg_key" {
-#   type        = string
-#   default     = "77JAY-XeVvv-2OiL4-LJ"
-#   description = "SIDCHG Trial key"
-# }
-
 resource "proxmox_vm_qemu" "zd-dc" {
   cores       = 2
   memory      = 4096
