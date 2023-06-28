@@ -1,15 +1,18 @@
 #!/bin/bash
 
+VSCODE_URL='https://az764295.vo.msecnd.net/stable/695af097c7bd098fbf017ce3ac85e09bbc5dda06/code_1.79.2-1686734195_amd64.deb'
+VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_6.1.3035.100-1_amd64.deb'
+
 install_vscode() {
     echo "[+] Installing Visual Studio Code"
-    wget 'https://az764295.vo.msecnd.net/stable/695af097c7bd098fbf017ce3ac85e09bbc5dda06/code_1.79.2-1686734195_amd64.deb' -O code.deb
+    wget -O code.deb $VSCODE_URL 
     sudo dpkg -i code.deb
     rm code.deb
 }
 
 install_vivaldi() {
     echo "[+] Installing Vivaldi"
-    wget -O vivaldi.deb https://downloads.vivaldi.com/stable/vivaldi-stable_6.1.3035.100-1_amd64.deb
+    wget -O vivaldi.deb $VIVALDI_URL
     sudo dpkg -i vivaldi.deb
     rm vivaldi.deb
 }
@@ -142,12 +145,12 @@ create_creds() {
 }
 
 append_rcs() {
-
     echo "export VAULT_TOKEN=$vault_token" >> ~/.bashrc
+    echo "export VAULT_ADDR='http://127.0.0.1:8200'" >> ~/.bashrc
     if [[ $fish_confirm == "" ]] || [[ $fish_confirm == "Y" ]]; then
         echo "set -x VAULT_TOKEN $vault_token" >> ~/.config/fish/config.fish
+        echo "set -x VAULT_ADDR 'http://127.0.0.1:8200'" >> ~/.config/fish/config.fish
     fi
-
 }
 
 
