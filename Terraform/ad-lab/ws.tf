@@ -8,7 +8,7 @@ resource "proxmox_vm_qemu" "zd-ws" {
   cores       = 2
   memory      = 4096
   name        = "ZD-WS-01"
-  target_node = "starbase"
+  target_node = "proxmox"
   clone       = "seclab-win-ws"
   full_clone  = false
   agent       = 1

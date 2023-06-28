@@ -14,7 +14,7 @@ variable "hostname" {
 
 variable "proxmox_node" {
     type    = string
-    default = "starbase"
+    default = "proxmox"
 }
 
 
