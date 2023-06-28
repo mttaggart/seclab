@@ -8,6 +8,10 @@ This repo aims to provide a lightly-automated starting point for creating virtua
 * **Vault**: Secrets management
 * **Ansible**: VM post-provisioning
 
+## Intended Usage
+
+While this repo can be used independently, it is designed to be used in conjunction with _The Homelab Almanac_.
+
 ## Getting Started
 
 Before cloning this repo, make sure you have:
@@ -17,4 +21,20 @@ Before cloning this repo, make sure you have:
 3. A jumpbox on the Proxmox server.
 4. Packer, Terraform, Vault, and Ansible installed, ideally on the jumpbox.
 
-Some light setup is required for each section. See each `README.md` to configure.
+Some light setup is required for each section. See each `README.md` for details. Below are the basic steps.
+
+## Steps
+
+1. Head to [Vault](Vault/README.md) and initialize your vault and secrets!
+2. Generate a Proxmox API key with permission to create VMs.
+3. Head to [Packer](Packer/README.md) and configure your templates, then build them.
+4. Head to [Terraform](Terraform/README.md) to set environment variables and deploy your first VMs.
+5. Use [Ansible](Ansible/README.md) to create an inventory and provision your VMs with the provided playbooks—or your own!
+
+## Contributing
+
+Pull requests will be considered, but this project is intended as a directed project from [The Taggart Institute](https://taggartinstitute.org), and as such we reserve the right to accept/reject PRs based on project direction.
+
+## Support
+
+For support using this repo, join our [Discord](https://discord.gg/QRqEqEUqHC)! We'd love to have you in our learning community.
