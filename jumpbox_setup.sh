@@ -35,7 +35,7 @@ install_tools() {
 }
 
 install_fish() {
-    printf "[!] Do you want to configure fish as your default shell?"
+    printf "[?] Do you want to configure fish as your default shell?"
     read fish_confirm
     if [[ $fish_confirm == "" ]] || [[ $fish_confirm == "Y" ]]; then
         echo "[+] Installing Powerline fonts"
@@ -69,26 +69,85 @@ initialize_vault() {
     echo "[+] Starting Vault Systemd Service"
     sudo systemctl start vault.service
     echo "[+] Initializing Vault"
-    echo "[+] This will create a vault_creds.txt file that you MUST remove and store elsewhere!"
-    vault operator init | tee vault_creds.txt
+    echo "[+] This command will output data that you MUST store elsewhere!"
+    vault operator init
     echo "[+] Unsealing Vault"
     echo "[+] You will be prompted to enter 3 unseal keys in order."
-    printf "[+] Press any key when ready"
+    printf "[!] Press any key when ready"
     read vault_confirm
     for i in $(seq 3); do
         vault operator unseal
     done
     echo "[+] Logging in to Vault"
-    echo "[+] You will be prompted to enter the Vault root token. Get it ready."
-    printf "[+] Press any key when ready"
-    read vault_confirm
+    printf "[?] Enter the Vault Root Token"
+    read vault_token
+    export VAULT_TOKEN=$vault_token
     vault login
-
-    
+    echo "[+] Initializing KV Secrets Engine"
+    vault secrets enable -version=2 -path=seclab kv
 }
 
 create_creds() {
     echo "[+] Creating Lab Credentials"
+    printf "[?] Enter the default lab username: "
+    read seclab_username
+    get_seclab_password() {
+        printf "[?] Enter the default lab password: "
+        read seclab_password
+        printf "[?] Confirm the default lab password: "
+        read seclab_password_confirm
+        if [ $seclab_password != $seclab_password_confirm ]; then
+            echo "[!] Passwords don't match!"
+            get_seclab_password
+        fi
+    }
+    get_seclab_windows_password() {
+        printf "[?] Enter the default lab Windows password: "
+        read seclab_windows_password
+        printf "[?] Confirm the default lab Windows password: "
+        read seclab_windows_password_confirm
+        if [ $seclab_windows_password != $seclab_windows_password_confirm ]; then
+            echo "[!] Passwords don't match!"
+            get_seclab_windows_password
+        fi
+    }
+    get_seclab_windows_domain_password() {
+        printf "[?] Enter the lab Windows domain admin password: "
+        read seclab_windows_domain_password
+        printf "[?] Confirm the default lab Windows domain admin password: "
+        read seclab_windows_domain_password_confirm
+        if [ $seclab_windows_domain_password != $seclab_windows_domain_password_confirm ]; then
+            echo "[!] Passwords don't match!"
+            get_seclab_windows_domain_password
+        fi
+    }
+
+    get_seclab_password
+    get_seclab_windows_password
+    get_seclab_windows_domain_password
+
+    echo "[+] Setting the following:"
+    echo "[!] Seclab username: $seclab_username"
+    echo "[!] Seclab password: $seclab_password"
+    echo "[!] Seclab Windows password: $seclab_windows_password"
+    echo "[!] Seclab Windows Domain Admin password: $seclab_windows_domain_password"
+    printf "[?] Does this look correct? [Y/n]"
+    read create_creds_confirm
+    if [ $create_creds_confirm == "n" ]; then
+        echo "[!] Restarting credential wizard..."
+        create_creds
+    fi
+    echo "[+] Setting Vault data"
+    vault kv put -mount=seclab seclab seclab_user=$seclab_user seclab_password=$seclab_password seclab_windows_password=$seclab_windows_password seclab_windows_domain_password=$seclab_windows_domain_password
+}
+
+append_rcs() {
+
+    echo "export VAULT_TOKEN=$vault_token" >> ~/.bashrc
+    if [[ $fish_confirm == "" ]] || [[ $fish_confirm == "Y" ]]; then
+        echo "set -x VAULT_TOKEN $vault_token" >> ~/.config/fish/config.fish
+    fi
+
 }
 
 
@@ -116,7 +175,10 @@ if [[ $confirm == "" ]] || [[ $confirm == "Y" ]]; then
     install_ansible
     install_tools
     initialize_vault
+    create_creds
     install_fish
+    append_rcs
+    echo "[+] Setup finished! Time to configure Proxmox credentials!"
 else
     exit 0
 fi
