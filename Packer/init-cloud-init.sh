@@ -12,6 +12,6 @@ encrypted_pw=$(openssl passwd -6 $seclab_pw)
 echo "[+] Adding encrypted secret to user-data files"
 for f in $(find ./ -name user-data); do
     sed -i "s/SECLAB_USER/$seclab_user/g" $f
-    sed -i "s/SECLAB_PASSWORD/${encrypted_pw%/}/g" $f
+    sed -i "s/SECLAB_PASSWORD/${encrypted_pw%/.}/g" $f
 done
 exit 0
