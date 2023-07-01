@@ -147,9 +147,9 @@
                             <PlainText>true</PlainText>
                         </Password>
                         <Description>Seclab User</Description>
-                        <DisplayName>Seclab</DisplayName>
+                        <DisplayName>SECLAB_USER</DisplayName>
                         <Group>administrators</Group>
-                        <Name>seclab</Name>
+                        <Name>SECLAB_USER</Name>
                     </LocalAccount>
                 </LocalAccounts>
             </UserAccounts>
