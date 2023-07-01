@@ -18,5 +18,5 @@ mkisofs -J -l -R -V "Autounattend" -iso-level 4 -o Autounattend.iso $1
 echo "[+] Cleaning up"
 rm -rf $1
 mv $1.bak $1
-
+exit 0
 
