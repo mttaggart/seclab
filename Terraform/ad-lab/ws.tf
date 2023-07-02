@@ -8,7 +8,7 @@ resource "proxmox_vm_qemu" "zd-ws" {
   cores       = 2
   memory      = 4096
   name        = "ZD-WS-01"
-  target_node = "starbase"
+  target_node = "proxmox"
   clone       = "seclab-win-ws"
   full_clone  = false
   agent       = 1
@@ -24,18 +24,14 @@ resource "proxmox_vm_qemu" "zd-ws" {
   }
 
   network {
-    bridge = "vmbr1"
-    model = "e1000"
-  }
-  network {
     bridge = "vmbr2"
     model = "e1000"
   }
 
   connection {
     type = "ssh"
-    user = "${var.username}"
-    password = "${var.password}"
+    user = data.vault_kv_secret_v2.seclab.data.seclab_username
+    password = data.vault_kv_secret_v2.seclab.data.seclab_windows_password
     host = self.default_ipv4_address
     target_platform = "windows"
   }

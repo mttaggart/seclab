@@ -8,7 +8,7 @@ resource "proxmox_vm_qemu" "zd-fs" {
   cores       = 2
   memory      = 4096
   name        = "ZD-FS-01"
-  target_node = "starbase"
+  target_node = "proxmox"
   clone       = "seclab-win-server"
   full_clone  = false
   agent       = 1
@@ -23,39 +23,16 @@ resource "proxmox_vm_qemu" "zd-fs" {
   }
 
   network {
-    bridge = "vmbr1"
-    model = "e1000"
-  }
-  network {
     bridge = "vmbr2"
     model = "e1000"
   }
 
   connection {
     type = "ssh"
-    user = "${var.username}"
-    password = "${var.password}"
+    user = data.vault_kv_secret_v2.seclab.data.seclab_username
+    password = data.vault_kv_secret_v2.seclab.data.seclab_windows_password
     host = self.default_ipv4_address
     target_platform = "windows"
   }
-
-  # provisioner "file" {
-  #   source = "./configure-fs.ps1"
-  #   destination = "C:/Windows/Temp"
-  # }
-
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "powershell.exe -ep Bypass -File C:\\Windows\\Temp\\configure-dc.ps1"
-  #   ]
-  # }
-
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "powershell.exe -c Rename-Computer ${var.fs_hostname}",
-  #     "ipconfig"
-  #   ]
-  # }
-
 
 }

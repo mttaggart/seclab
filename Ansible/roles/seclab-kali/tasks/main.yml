@@ -7,7 +7,7 @@
 
 - name: Install prereqs
   ansible.builtin.apt:
-    update_cache: yes
+    update_cache: true
     name:
       - python3-pip
       - terminator

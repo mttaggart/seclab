@@ -9,7 +9,7 @@ terraform {
 
 variable proxmox_host {
   type        = string
-  default     = "starbase"
+  default     = "proxmox"
   description = "description"
 }
 
@@ -26,7 +26,7 @@ resource "proxmox_vm_qemu" "demo-ws" {
   cores       = 2
   memory      = 4096
   name        = "WS-TF-Demo"
-  target_node = "starbase"
+  target_node = "proxmox"
   clone       = "seclab-win-ws"
   full_clone  = false
   agent       = 1

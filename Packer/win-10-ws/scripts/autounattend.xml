@@ -137,19 +137,19 @@
         <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <UserAccounts>
                 <AdministratorPassword>
-                    <Value>Seclab123!</Value>
+                    <Value>SECLAB_WINDOWS_PASSWORD</Value>
                     <PlainText>true</PlainText>
                 </AdministratorPassword>
                 <LocalAccounts>
                     <LocalAccount wcm:action="add">
                         <Password>
-                            <Value>Seclab123!</Value>
+                            <Value>SECLAB_WINDOWS_PASSWORD</Value>
                             <PlainText>true</PlainText>
                         </Password>
                         <Description>Seclab User</Description>
-                        <DisplayName>Seclab</DisplayName>
+                        <DisplayName>SECLAB_USER</DisplayName>
                         <Group>administrators</Group>
-                        <Name>seclab</Name>
+                        <Name>SECLAB_USER</Name>
                     </LocalAccount>
                 </LocalAccounts>
             </UserAccounts>
@@ -161,7 +161,7 @@
             </OOBE>
             <AutoLogon>
                 <Password>
-                    <Value>Seclab123!</Value>
+                    <Value>SECLAB_WINDOWS_PASSWORD</Value>
                     <PlainText>true</PlainText>
                 </Password>
                 <Username>seclab</Username>
