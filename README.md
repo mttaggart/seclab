@@ -21,15 +21,16 @@ Before cloning this repo, make sure you have:
 3. A jumpbox on the Proxmox server.
 4. Packer, Terraform, Vault, and Ansible installed, ideally on the jumpbox.
 
-Some light setup is required for each section. See each `README.md` for details. Below are the basic steps.
+Some assembly required. These steps meant are meant to be executed on a Debian/Ubuntu jumpbox within a Proxmox hypervisor. Full details are in the book, but here are the basic steps.
 
 ## Steps
 
-1. Head to [Vault](Vault/README.md) and initialize your vault and secrets!
-2. Generate a Proxmox API key with permission to create VMs.
-3. Head to [Packer](Packer/README.md) and configure your templates, then build them.
-4. Head to [Terraform](Terraform/README.md) to set environment variables and deploy your first VMs.
-5. Use [Ansible](Ansible/README.md) to create an inventory and provision your VMs with the provided playbooks—or your own!
+1. Generate a Proxmox API key with permission to create VMs.
+2. Save the username and API Token to environment variables. Username is `PROXMOX_USERNAME` and `PM_API_TOKEN_ID`, and API Token is `PROXMOX_TOKEN` and `PM_API_TOKEN_SECRET`
+3. Run `jumpbox_setup.sh` to set up the requisite tools. This installs Packer, Terraform, Vault, and Ansible, and sets up your Vault server.
+4. Use [Packer](Packer/README.md) to create VM templates for your lab. The `mkiso.sh` and `init-cloud-init.sh` scripts ensure your static files never contain unencrypted secrets.
+5. Use [Terraform](Terraform/README.md) to provision VMs. The provided plans are good starting points.
+4. Use [Ansible](Ansible/README.md) to create an inventory and provision your VMs with the provided playbooks—or your own!
 
 ## Contributing
 
