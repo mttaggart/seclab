@@ -34,7 +34,7 @@ install_ansible() {
 
 install_tools() {
     echo "[+] Installing other tools"
-    sudo apt install -y tmux vim-gtk3 terminator krdc fish
+    sudo apt install -y tmux vim-gtk3 terminator krdc fish sshpass
 }
 
 install_fish() {
