@@ -65,7 +65,7 @@ initialize_vault() {
     export VAULT_ADDR='http://127.0.0.1:8200'
     echo "[+] Creating Vault Systemd Service"
     sudo cp /etc/vault.d/vault.hcl /etc/vault.d/vault.hcl.bak
-    sudo cp config.hcl /etc/vault.d/vault.hcl
+    sudo cp vault.hcl /etc/vault.d/vault.hcl
     sudo cp vault.service /etc/systemd/system/vault.service
     echo "[+] Enabling Vault Systemd Service"
     sudo systemctl enable vault.service
@@ -88,6 +88,7 @@ initialize_vault() {
     vault login
     echo "[+] Initializing KV Secrets Engine"
     vault secrets enable -version=2 -path=seclab kv
+    cd ..
 }
 
 create_creds() {
