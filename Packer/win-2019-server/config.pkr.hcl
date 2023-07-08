@@ -10,8 +10,8 @@ variable "proxmox_hostname" {
 
 
 locals {
-  username = vault("/kv2/data/seclab/", "seclab_username")
-  password = vault("/kv2/data/seclab/", "seclab_windows_password")
+  username = vault("/seclab/data/seclab/", "seclab_username")
+  password = vault("/seclab/data/seclab/", "seclab_windows_password")
 }
 
 
