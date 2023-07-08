@@ -16,6 +16,8 @@ autoinstall:
   ssh:
     allow-pw: true
     install-server: true
+    authorized-keys: 
+      - SECLAB_SSH_KEY
   locale: en_US
   keyboard: 
     layout: us
@@ -38,6 +40,6 @@ autoinstall:
   packages:
     - qemu-guest-agent
   late-commands:
-    - "echo 'Defaults:seclab !requiretty' > /target/etc/sudoers.d/seclab"
-    - "echo 'seclab ALL=(ALL) NOPASSWD: ALL' >> /target/etc/sudoers.d/seclab"
-    - "chmod 440 /target/etc/sudoers.d/seclab"
+    - "echo 'Defaults:SECLAB_USER !requiretty' > /target/etc/sudoers.d/SECLAB_USER"
+    - "echo 'SECLAB_USER ALL=(ALL) NOPASSWD: ALL' >> /target/etc/sudoers.d/SECLAB_USER"
+    - "chmod 440 /target/etc/sudoers.d/SECLAB_USER"
