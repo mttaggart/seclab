@@ -92,6 +92,10 @@ initialize_vault() {
 
 create_creds() {
     echo "[+] Creating Lab Credentials"
+    if [ ! -f ~/.ssh/id_rsa.pub ]; then
+        echo "[+] Generating SSH Key" 
+        ssh-keygen -f ~/.ssh/id_rsa -b 4096 -P ''
+    fi
     printf "[?] Enter the default lab username: "
     read seclab_username
     get_seclab_password() {
