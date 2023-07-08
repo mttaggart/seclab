@@ -146,7 +146,12 @@ create_creds() {
         create_creds
     fi
     echo "[+] Setting Vault data"
-    vault kv put -mount=seclab seclab seclab_user=$seclab_user seclab_password=$seclab_password seclab_windows_password=$seclab_windows_password seclab_windows_domain_password=$seclab_windows_domain_password
+    vault kv put -mount=seclab seclab \ 
+    seclab_user=$seclab_user \ 
+    seclab_password=$seclab_password \ 
+    seclab_windows_password=$seclab_windows_password \ 
+    seclab_windows_domain_password=$seclab_windows_domain_password \
+    seclab_ssh_key=$(cat ~/.ssh/id_rsa.pub)
 }
 
 append_rcs() {
