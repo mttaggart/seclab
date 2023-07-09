@@ -34,7 +34,7 @@ install_ansible() {
 
 install_tools() {
     echo "[+] Installing other tools"
-    sudo apt install -y tmux vim-gtk3 terminator krdc fish
+    sudo apt install -y tmux vim-gtk3 terminator krdc fish sshpass
 }
 
 install_fish() {
@@ -65,7 +65,7 @@ initialize_vault() {
     export VAULT_ADDR='http://127.0.0.1:8200'
     echo "[+] Creating Vault Systemd Service"
     sudo cp /etc/vault.d/vault.hcl /etc/vault.d/vault.hcl.bak
-    sudo cp config.hcl /etc/vault.d/vault.hcl
+    sudo cp vault.hcl /etc/vault.d/vault.hcl
     sudo cp vault.service /etc/systemd/system/vault.service
     echo "[+] Enabling Vault Systemd Service"
     sudo systemctl enable vault.service
@@ -88,10 +88,15 @@ initialize_vault() {
     vault login
     echo "[+] Initializing KV Secrets Engine"
     vault secrets enable -version=2 -path=seclab kv
+    cd ..
 }
 
 create_creds() {
     echo "[+] Creating Lab Credentials"
+    if [ ! -f ~/.ssh/id_rsa.pub ]; then
+        echo "[+] Generating SSH Key" 
+        ssh-keygen -f ~/.ssh/id_rsa -b 4096 -P ''
+    fi
     printf "[?] Enter the default lab username: "
     read seclab_username
     get_seclab_password() {
@@ -141,7 +146,12 @@ create_creds() {
         create_creds
     fi
     echo "[+] Setting Vault data"
-    vault kv put -mount=seclab seclab seclab_user=$seclab_user seclab_password=$seclab_password seclab_windows_password=$seclab_windows_password seclab_windows_domain_password=$seclab_windows_domain_password
+    vault kv put -mount=seclab seclab \ 
+    seclab_user=$seclab_user \ 
+    seclab_password=$seclab_password \ 
+    seclab_windows_password=$seclab_windows_password \ 
+    seclab_windows_domain_password=$seclab_windows_domain_password \
+    seclab_ssh_key=$(cat ~/.ssh/id_rsa.pub)
 }
 
 append_rcs() {

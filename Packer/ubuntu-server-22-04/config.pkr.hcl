@@ -1,7 +1,7 @@
 packer {
   required_plugins {
     proxmox = {
-      version = ">= 1.1.2"
+      version = ">= 1.1.3"
       source  = "github.com/hashicorp/proxmox"
     }
   }
@@ -14,13 +14,12 @@ variable "hostname" {
 
 variable "proxmox_node" {
     type    = string
-    default = "proxmox"
+    default = "starbase"
 }
 
 locals {
-  username = vault("/kv2/data/seclab/", "seclab_username")
-  password = vault("/kv2/data/seclab/", "seclab_password")
-  ssh_key =  vault("/kv2/data/seclab/", "seclab_ssh_key")
+  username = vault("/seclab/data/seclab/", "seclab_user")
+  password = vault("/seclab/data/seclab/", "seclab_password")
 }
 
 
@@ -36,7 +35,7 @@ source "proxmox-iso" "seclab-ubuntu-server" {
   http_directory         = "http"
   cores                  = 2
   memory                 = 2048
-  vm_name                = "seclab-ubuntu-server-22-04"
+  vm_name                = "seclab-ubuntu-server-22-04-test"
   qemu_agent             = true
   template_description   = "Ubuntu 22.04 Server"
   insecure_skip_tls_verify = true
@@ -46,7 +45,6 @@ source "proxmox-iso" "seclab-ubuntu-server" {
   } 
   disks {
     disk_size         = "30G"
-    storage_pool_type = "lvm"
     storage_pool      =  "local-lvm"
   }
   boot_wait              = "10s"
@@ -65,7 +63,7 @@ source "proxmox-iso" "seclab-ubuntu-server" {
     "<del><del><del><del><del><del><del><del>",
     "<del><del><del><del><del><del><del><del>",
     "<del><del><del><del><del><del><del><del>",
-    "<del><del><del><del><del><del><del><del>",
+    "<del><del><del><del><del><del><del><del><del>",
     "linux /casper/vmlinuz --- autoinstall ds=\"nocloud-net;seedfrom=http://{{.HTTPIP}}:{{.HTTPPort}}/\"<enter><wait>",
     "initrd /casper/initrd<enter><wait>",
     "boot<enter>",
@@ -74,15 +72,5 @@ source "proxmox-iso" "seclab-ubuntu-server" {
 }
 
 build {
-  sources = ["sources.proxmox-iso.seclab-ubuntu-server"]
-  
-  provisioner "shell" {
-    inline = [
-      "sudo sed -i 's/seclab-ubuntu-server/${local.hostname}/g' /etc/hosts",
-      "sudo sed -i 's/seclab-ubuntu-server/${local.hostname}/g' /etc/hostname",
-      "mkdir /home/seclab/.ssh",
-      "echo '${local.ssh_key}' > /home/seclab/.ssh/authorized_keys",
-      "chmod 0600 /home/seclab/.ssh/authorized_keys"
-    ]
-  }
+  sources = ["sources.proxmox-iso.seclab-ubuntu-server"] 
 }

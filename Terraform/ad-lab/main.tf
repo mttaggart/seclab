@@ -16,7 +16,7 @@ provider "vault" {
 }
 
 data "vault_kv_secret_v2" "seclab" {
-  mount = "kv2"
+  mount = "seclab"
   name  = "seclab"
 }
 
