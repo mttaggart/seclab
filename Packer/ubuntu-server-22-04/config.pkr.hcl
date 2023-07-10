@@ -21,7 +21,7 @@ variable "proxmox_node" {
 locals {
   username          = vault("/seclab/data/seclab/", "seclab_user")
   password          = vault("/seclab/data/seclab/", "seclab_password")
-  proxmox_user      = vault("/seclab/data/seclab/", "proxmox_user")
+  proxmox_api_id      = vault("/seclab/data/seclab/", "proxmox_api_id")
   proxmox_api_token = vault("/seclab/data/seclab/", "proxmox_api_token")
 =======
     type    = string
@@ -39,7 +39,7 @@ source "proxmox-iso" "seclab-ubuntu-server" {
 <<<<<<< HEAD
   proxmox_url              = "https://${var.proxmox_node}:8006/api2/json"
   node                     = "${var.proxmox_node}"
-  username                 = "${local.proxmox_user}"
+  username                 = "${local.proxmox_api_id}"
   token                    = "${local.proxmox_api_token}"
   iso_file                 = "local:iso/ubuntu-22.04-live-server-amd64.iso"
   iso_checksum             = "sha256:10f19c5b2b8d6db711582e0e27f5116296c34fe4b313ba45f9b201a5007056cb"

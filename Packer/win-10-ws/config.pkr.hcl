@@ -15,7 +15,7 @@ variable "hostname" {
 locals {
   username          = vault("/seclab/data/seclab/", "seclab_user")
   password          = vault("/seclab/data/seclab/", "seclab_password")
-  proxmox_user      = vault("/seclab/data/seclab/", "proxmox_user")
+  proxmox_api_id      = vault("/seclab/data/seclab/", "proxmox_api_id")
   proxmox_api_token = vault("/seclab/data/seclab/", "proxmox_api_token")
 }
 
@@ -27,7 +27,7 @@ variable "proxmox_hostname" {
 source "proxmox-iso" "seclab-win-ws" {
   proxmox_url  = "https://${var.proxmox_node}:8006/api2/json"
   node         = "${var.proxmox_node}"
-  username     = "${local.proxmox_user}"
+  username     = "${local.proxmox_api_id}"
   token        = "${local.proxmox_api_token}"
   iso_file     = "local:iso/Win-10-Enterprise.iso"
   iso_checksum = "sha256:ef7312733a9f5d7d51cfa04ac497671995674ca5e1058d5164d6028f0938d668"
