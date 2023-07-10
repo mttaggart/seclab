@@ -8,13 +8,15 @@ packer {
 }
 
 variable "hostname" {
-  type = string
+  type    = string
   default = "seclab-win-ws-2"
 }
 
 locals {
-  username = vault("/seclab/data/seclab/", "seclab_username")
-  password = vault("/seclab/data/seclab/", "seclab_windows_password")
+  username          = vault("/seclab/data/seclab/", "seclab_user")
+  password          = vault("/seclab/data/seclab/", "seclab_password")
+  proxmox_user      = vault("/seclab/data/seclab/", "proxmox_user")
+  proxmox_api_token = vault("/seclab/data/seclab/", "proxmox_api_token")
 }
 
 variable "proxmox_hostname" {
@@ -23,22 +25,24 @@ variable "proxmox_hostname" {
 }
 
 source "proxmox-iso" "seclab-win-ws" {
-  proxmox_url  = "https://${var.proxmox_hostname}:8006/api2/json"
-  node         = "${var.proxmox_hostname}"
-  iso_file                 = "local:iso/Win-10-Enterprise.iso"
-  iso_checksum            = "sha256:ef7312733a9f5d7d51cfa04ac497671995674ca5e1058d5164d6028f0938d668"
+  proxmox_url  = "https://${var.proxmox_node}:8006/api2/json"
+  node         = "${var.proxmox_node}"
+  username     = "${local.proxmox_user}"
+  token        = "${local.proxmox_api_token}"
+  iso_file     = "local:iso/Win-10-Enterprise.iso"
+  iso_checksum = "sha256:ef7312733a9f5d7d51cfa04ac497671995674ca5e1058d5164d6028f0938d668"
   /*skip_export             = true*/
-  communicator            = "ssh"
-  ssh_username = "${local.username}"
-  ssh_password = "${local.password}"
-  ssh_timeout  = "30m"
-  qemu_agent   = true
-  cores                   = 2
-  memory                  = 4096
-  vm_name                 = "seclab-win-ws"
-  template_description = "Base Seclab Windows Server"
+  communicator             = "ssh"
+  ssh_username             = "${local.username}"
+  ssh_password             = "${local.password}"
+  ssh_timeout              = "30m"
+  qemu_agent               = true
+  cores                    = 2
+  memory                   = 4096
+  vm_name                  = "seclab-win-ws"
+  template_description     = "Base Seclab Windows Server"
   insecure_skip_tls_verify = true
-  
+
   additional_iso_files {
     device       = "ide3"
     iso_file     = "local:iso/Autounattend-WinDesktop.iso"

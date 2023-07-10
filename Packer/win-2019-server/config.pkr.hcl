@@ -10,17 +10,30 @@ variable "proxmox_hostname" {
 
 
 locals {
-  username = vault("/seclab/data/seclab/", "seclab_username")
-  password = vault("/seclab/data/seclab/", "seclab_windows_password")
+  username          = vault("/seclab/data/seclab/", "seclab_user")
+  password          = vault("/seclab/data/seclab/", "seclab_password")
+  proxmox_user      = vault("/seclab/data/seclab/", "proxmox_user")
+  proxmox_api_token = vault("/seclab/data/seclab/", "proxmox_api_token")
 }
 
 
 source "proxmox-iso" "seclab-win-server" {
-  proxmox_url  = "https://${var.proxmox_hostname}:8006/api2/json"
-  node         = "${var.proxmox_hostname}"
-  iso_file     = "local:iso/Win-Server-2019.iso"
-  iso_checksum = "sha256:549bca46c055157291be6c22a3aaaed8330e78ef4382c99ee82c896426a1cee1"
-
+  proxmox_url              = "https://${var.proxmox_node}:8006/api2/json"
+  node                     = "${var.proxmox_node}"
+  username                 = "${local.proxmox_user}"
+  token                    = "${local.proxmox_api_token}"
+  iso_file                 = "local:iso/Win-Server-2019.iso"
+  iso_checksum             = "sha256:549bca46c055157291be6c22a3aaaed8330e78ef4382c99ee82c896426a1cee1"
+  insecure_skip_tls_verify = true
+  communicator             = "ssh"
+  ssh_username             = "${local.username}"
+  ssh_password             = "${local.password}"
+  ssh_timeout              = "30m"
+  qemu_agent               = true
+  cores                    = 2
+  memory                   = 4096
+  vm_name                  = "seclab-win-server"
+  template_description     = "Base Seclab Windows Server"
 
   additional_iso_files {
     device       = "ide3"
@@ -36,19 +49,7 @@ source "proxmox-iso" "seclab-win-server" {
     unmount      = true
   }
 
-  insecure_skip_tls_verify  = true
-  communicator = "ssh"
-  ssh_username = "${local.username}"
-  ssh_password = "${local.password}"
-  ssh_timeout  = "30m"
-  qemu_agent   = true
-  // winrm_use_ssl           = true
-  // guest_os_type           = "Windows2019_64"
-  cores                = 2
-  memory               = 4096
-  vm_name              = "seclab-win-server"
-  template_description = "Base Seclab Windows Server"
-  
+
   network_adapters {
     bridge = "vmbr2"
   }
