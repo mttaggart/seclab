@@ -13,10 +13,15 @@ variable "hostname" {
 }
 
 locals {
+<<<<<<< HEAD
   username          = vault("/seclab/data/seclab/", "seclab_user")
   password          = vault("/seclab/data/seclab/", "seclab_password")
   proxmox_user      = vault("/seclab/data/seclab/", "proxmox_user")
   proxmox_api_token = vault("/seclab/data/seclab/", "proxmox_api_token")
+=======
+  username = vault("/seclab/data/seclab/", "seclab_username")
+  password = vault("/seclab/data/seclab/", "seclab_windows_password")
+>>>>>>> main
 }
 
 variable "proxmox_hostname" {
