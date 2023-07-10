@@ -23,14 +23,6 @@ variable "hostname" {
   description = "description"
 }
 
-
-provider "proxmox" {
-  # Configuration options
-  pm_api_url      = "https://${var.proxmox_host}:8006/api2/json"
-  pm_tls_insecure = true
-  pm_log_enable   = true
-}
-
 provider "vault" {
 
 }
@@ -40,10 +32,20 @@ data "vault_kv_secret_v2" "seclab" {
   name  = "seclab"
 }
 
+provider "proxmox" {
+  # Configuration options
+  pm_api_url      = "https://${var.proxmox_host}:8006/api2/json"
+  pm_tls_insecure = true
+  pm_log_enable   = true
+  pm_api_token_id = data.vault_kv_secret_v2.seclab.data.proxmox_user
+  pm_api_token_secret = data.vault_kv_secret_v2.seclab.data.proxmox_api_token
+}
+
+
 resource "proxmox_vm_qemu" "seclab-docker" {
   cores       = 2
   memory      = 4096
-  name        = "Seclab-Docker"
+  name        = "Seclab-Docker2"
   target_node = var.proxmox_host
   clone       = "seclab-ubuntu-server-22-04"
   full_clone  = false

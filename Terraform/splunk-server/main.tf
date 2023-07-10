@@ -2,7 +2,11 @@ terraform {
   required_providers {
     proxmox = {
       source  = "Telmate/proxmox"
-      version = "2.9.11"
+      version = "2.9.13"
+    }
+    vault = {
+      source = "hashicorp/vault"
+      version = "3.16.0"
     }
   }
 }
@@ -15,29 +19,26 @@ variable "proxmox_host" {
 
 variable "hostname" {
   type        = string
-  default     = "seclab-splunk"
+  default     = "seclab-docker"
   description = "description"
 }
 
-variable "username" {
-  type        = string
-  default     = "seclab"
-  description = "username"
+provider "vault" {
+
 }
 
-variable "password" {
-  type        = string
-  default     = "seclab"
-  description = "password"
+data "vault_kv_secret_v2" "seclab" {
+  mount = "seclab"
+  name  = "seclab"
 }
-
-
 
 provider "proxmox" {
   # Configuration options
   pm_api_url      = "https://${var.proxmox_host}:8006/api2/json"
   pm_tls_insecure = true
   pm_log_enable   = true
+  pm_api_token_id = data.vault_kv_secret_v2.seclab.data.proxmox_user
+  pm_api_token_secret = data.vault_kv_secret_v2.seclab.data.proxmox_api_token
 }
 
 resource "proxmox_vm_qemu" "seclab-splunk" {
@@ -52,8 +53,8 @@ resource "proxmox_vm_qemu" "seclab-splunk" {
 
   connection {
     type = "ssh"
-    user = "${var.username}"
-    password = "${var.password}"
+    user = data.vault_kv_secret_v2.seclab.data.seclab_username
+    password = data.vault_kv_secret_v2.seclab.data.seclab_password
     host = self.default_ipv4_address
   }
 
