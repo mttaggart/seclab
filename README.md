@@ -26,7 +26,7 @@ Some assembly required. These steps meant are meant to be executed on a Debian/U
 ## Steps
 
 1. Generate a Proxmox API key with permission to create VMs.
-2. Save the username and API Token to environment variables. Username is `PROXMOX_USERNAME` and `PM_API_TOKEN_ID`, and API Token is `PROXMOX_TOKEN` and `PM_API_TOKEN_SECRET`
+2. Save the username and API Token for use in the next step.
 3. Run `jumpbox_setup.sh` to set up the requisite tools. This installs Packer, Terraform, Vault, and Ansible, and sets up your Vault server.
 4. Use [Packer](Packer/README.md) to create VM templates for your lab. The `mkiso.sh` and `init-cloud-init.sh` scripts ensure your static files never contain unencrypted secrets. You'll need OS install disks and the VirtIO disk (instructions provided).
 5. Use [Terraform](Terraform/README.md) to provision VMs. The provided plans are good starting points.

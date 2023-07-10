@@ -99,6 +99,14 @@ create_creds() {
     fi
     printf "[?] Enter the default lab username: "
     read seclab_username
+    get_proxmox_api_id() {
+        printf "[?] Enter the Proxmox API Token ID: "
+        read proxmox_api_id     
+    }
+    get_proxmox_api_token() {
+        printf "[?] Enter the Proxmox API Token Secret: "
+        read proxmox_api_token     
+    }
     get_seclab_password() {
         printf "[?] Enter the default lab password: "
         read seclab_password
@@ -130,6 +138,8 @@ create_creds() {
         fi
     }
 
+    get_proxmox_api_id
+    get_proxmox_api_token
     get_seclab_password
     get_seclab_windows_password
     get_seclab_windows_domain_password
@@ -147,6 +157,8 @@ create_creds() {
     fi
     echo "[+] Setting Vault data"
     vault kv put -mount=seclab seclab \ 
+    proxmox_api_id=$proxmox_api_id
+    proxmox_api_token=$proxmox_api_token \
     seclab_user=$seclab_user \ 
     seclab_password=$seclab_password \ 
     seclab_windows_password=$seclab_windows_password \ 
