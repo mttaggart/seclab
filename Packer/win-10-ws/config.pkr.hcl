@@ -21,7 +21,7 @@ locals {
 
 variable "proxmox_hostname" {
   type    = string
-  default = "proxmox"
+  default = "starbase"
 }
 
 source "proxmox-iso" "seclab-win-ws" {
