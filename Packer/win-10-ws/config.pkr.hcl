@@ -1,7 +1,7 @@
 packer {
   required_plugins {
     proxmox = {
-      version = ">= 1.1.2"
+      version = ">= 1.1.3"
       source  = "github.com/hashicorp/proxmox"
     }
   }
@@ -9,7 +9,7 @@ packer {
 
 variable "hostname" {
   type    = string
-  default = "seclab-win-ws-2"
+  default = "seclab-win-ws"
 }
 
 locals {
@@ -19,7 +19,7 @@ locals {
   proxmox_api_token = vault("/seclab/data/seclab/", "proxmox_api_token")
 }
 
-variable "proxmox_hostname" {
+variable "proxmox_node" {
   type    = string
   default = "starbase"
 }
@@ -64,7 +64,6 @@ source "proxmox-iso" "seclab-win-ws" {
   disks {
     type              = "virtio"
     disk_size         = "50G"
-    storage_pool_type = "lvm"
     storage_pool      = "local-lvm"
   }
   scsi_controller = "virtio-scsi-pci"
