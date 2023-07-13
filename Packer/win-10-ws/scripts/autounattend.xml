@@ -206,7 +206,7 @@
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <!-- Enable RDP -->
-                    <CommandLine>powershell.exe -c Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0</CommandLine>
+                    <CommandLine>powershell.exe -c Set-ItemProperty 'Registry::HKLM\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0</CommandLine>
                     <Order>7</Order>
                     <Description>Enable RDP</Description>
                 </SynchronousCommand>
