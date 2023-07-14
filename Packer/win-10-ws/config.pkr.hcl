@@ -45,8 +45,8 @@ source "proxmox-iso" "seclab-win-ws" {
 
   additional_iso_files {
     device       = "ide3"
-    iso_file     = "local:iso/Autounattend-WinDesktop.iso"
-    iso_checksum = "sha256:af310ffd34260c94c1fd06267abcc14153872d46f1a78a3a728320cb27584d44"
+    iso_file     = "local:iso/Autounattend-Win10.iso"
+    iso_checksum = "sha256:5449f28869918dd237d3f14c4c1b4cb799064964effb851e6c90b34bc86be850"
     unmount      = true
   }
 
