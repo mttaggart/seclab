@@ -164,7 +164,7 @@
                     <Value>SECLAB_WINDOWS_PASSWORD</Value>
                     <PlainText>true</PlainText>
                 </Password>
-                <Username>seclab</Username>
+                <Username>SECLAB_USER</Username>
                 <Enabled>true</Enabled>
             </AutoLogon>
             <FirstLogonCommands>
@@ -194,7 +194,7 @@
                     <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c wmic useraccount where "name='seclab'" set PasswordExpires=FALSE</CommandLine>
+                    <CommandLine>cmd.exe /c wmic useraccount where "name='SECLAB_USER'" set PasswordExpires=FALSE</CommandLine>
                     <Order>5</Order>
                     <Description>Disable password expiration for seclab user</Description>
                 </SynchronousCommand>
