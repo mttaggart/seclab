@@ -14,7 +14,7 @@ variable "hostname" {
 
 locals {
   username          = vault("/seclab/data/seclab/", "seclab_user")
-  password          = vault("/seclab/data/seclab/", "seclab_password")
+  password          = vault("/seclab/data/seclab/", "seclab_windows_password")
   proxmox_api_id      = vault("/seclab/data/seclab/", "proxmox_api_id")
   proxmox_api_token = vault("/seclab/data/seclab/", "proxmox_api_token")
 }
@@ -40,7 +40,7 @@ source "proxmox-iso" "seclab-win-ws" {
   cores                    = 2
   memory                   = 4096
   vm_name                  = "seclab-win-ws"
-  template_description     = "Base Seclab Windows Server"
+  template_description     = "Base Seclab Windows Workstation"
   insecure_skip_tls_verify = true
 
   additional_iso_files {

@@ -20,7 +20,7 @@ variable "proxmox_hostname" {
 
 locals {
   username          = vault("/seclab/data/seclab/", "seclab_user")
-  password          = vault("/seclab/data/seclab/", "seclab_password")
+  password          = vault("/seclab/data/seclab/", "seclab_windows_password")
   proxmox_api_id      = vault("/seclab/data/seclab/", "proxmox_api_id")
   proxmox_api_token = vault("/seclab/data/seclab/", "proxmox_api_token")
 }
@@ -78,7 +78,7 @@ build {
   provisioner "windows-shell" {
     inline = [
       "ipconfig",
-      "c:\\windows\\system32\\sysprep\\sysprep.exe /generalize /mode:vm /quiet /quit /unattend:E:\\unattend.xml"
+      // "c:\\windows\\system32\\sysprep\\sysprep.exe /generalize /mode:vm /quiet /quit /unattend:E:\\unattend.xml"
     ]
   }
 
