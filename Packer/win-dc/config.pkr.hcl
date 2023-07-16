@@ -1,7 +1,7 @@
 packer {
   required_plugins {
     proxmox = {
-      version = ">= 1.1.2"
+      version = ">= 1.1.3"
       source  = "github.com/hashicorp/proxmox"
     }
   }
@@ -9,7 +9,7 @@ packer {
 
 variable "hostname" {
   type = string
-  default = "seclab-win-ws-2"
+  default = "seclab-win-dc"
 }
 
 locals {
