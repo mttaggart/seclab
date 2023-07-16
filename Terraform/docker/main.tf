@@ -54,7 +54,7 @@ resource "proxmox_vm_qemu" "seclab-docker-main" {
 
   connection {
     type = "ssh"
-    user = data.vault_kv_secret_v2.seclab.data.seclab_username
+    user = data.vault_kv_secret_v2.seclab.data.seclab_user
     password = data.vault_kv_secret_v2.seclab.data.seclab_password
     host = self.default_ipv4_address
   }
@@ -94,7 +94,7 @@ resource "proxmox_vm_qemu" "seclab-docker-node" {
 
   connection {
     type = "ssh"
-    user = data.vault_kv_secret_v2.seclab.data.seclab_username
+    user = data.vault_kv_secret_v2.seclab.data.seclab_user
     password = data.vault_kv_secret_v2.seclab.data.seclab_password
     host = self.default_ipv4_address
   }
