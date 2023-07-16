@@ -29,7 +29,7 @@ resource "proxmox_vm_qemu" "zd-fs" {
 
   connection {
     type = "ssh"
-    user = data.vault_kv_secret_v2.seclab.data.seclab_username
+    user = data.vault_kv_secret_v2.seclab.data.seclab_user
     password = data.vault_kv_secret_v2.seclab.data.seclab_windows_password
     host = self.default_ipv4_address
     target_platform = "windows"
