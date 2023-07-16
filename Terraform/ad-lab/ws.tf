@@ -7,8 +7,8 @@ variable "ws_hostname" {
 resource "proxmox_vm_qemu" "zd-ws" {
   cores       = 2
   memory      = 4096
-  name        = "ZD-WS-01"
-  target_node = "proxmox"
+  name        = "${var.ws_hostname}"
+  target_node = "${var.proxmox_host}"
   clone       = "seclab-win-ws"
   full_clone  = false
   agent       = 1
