@@ -80,7 +80,6 @@ build {
   provisioner "windows-shell" {
     inline = [
       "ipconfig",
-      "c:\\windows\\system32\\sysprep\\sysprep.exe /generalize /mode:vm /oobe /quiet /quit /unattend:E:\\unattend.xml"
     ]
   }
 
