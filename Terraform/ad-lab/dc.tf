@@ -9,7 +9,7 @@ resource "proxmox_vm_qemu" "zd-dc" {
   memory      = 4096
   name        = "${var.dc_hostname}"
   target_node = "${var.proxmox_host}"
-  clone       = "seclab-win-dc"
+  clone       = "seclab-win-server"
   full_clone  = false
   agent       = 1
 
@@ -35,7 +35,6 @@ resource "proxmox_vm_qemu" "zd-dc" {
   provisioner "remote-exec" {
     inline = [
       "powershell.exe -c Rename-Computer ${var.dc_hostname}",
-      "C:\\Windows\\System32\\sysprep\\sysprep.exe /generalize /mode:vm /reboot"
     ]
   }
 
