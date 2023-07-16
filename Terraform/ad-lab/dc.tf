@@ -7,8 +7,8 @@ variable "dc_hostname" {
 resource "proxmox_vm_qemu" "zd-dc" {
   cores       = 2
   memory      = 4096
-  name        = "ZD-DC-01"
-  target_node = "proxmox"
+  name        = "${var.dc_hostname}"
+  target_node = "${var.proxmox_host}"
   clone       = "seclab-win-dc"
   full_clone  = false
   agent       = 1
@@ -26,10 +26,17 @@ resource "proxmox_vm_qemu" "zd-dc" {
 
   connection {
     type = "ssh"
-    user = data.vault_kv_secret_v2.seclab.data.seclab_username
+    user = data.vault_kv_secret_v2.seclab.data.seclab_user
     password = data.vault_kv_secret_v2.seclab.data.seclab_windows_password
     host = self.default_ipv4_address
     target_platform = "windows"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "powershell.exe -c Rename-Computer ${var.dc_hostname}",
+      "C:\\Windows\\System32\\sysprep\\sysprep.exe /generalize /mode:vm /reboot"
+    ]
   }
 
 }
