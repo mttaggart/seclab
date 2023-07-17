@@ -19,6 +19,6 @@
     ansible.windows.win_reboot:
       msg: "Domain joined. Rebooting"
       pre_reboot_delay: 15
-      when: domain_state.changed
+    when: domain_state.changed
   roles:
     - rdp
