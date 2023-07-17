@@ -3,7 +3,7 @@
   ansible.builtin.apt:
     name: xrdp
     update_cache: true
-  when: ansible_facts["os_family"] == "Windows"
+  when: ansible_facts["os_family"] == "Ubuntu"
 
 - name: Start/Enable XRDP Systemd Service
   ansible.builtin.systemd:
@@ -11,7 +11,7 @@
     name: xrdp
     state: started
     enabled: true
-  when: ansible_facts["os_family"] == "Windows"
+  when: ansible_facts["os_family"] == "Ubuntu"
 
 - name: Set fDenyTsConnections
   ansible.windows.win_regedit:
@@ -28,7 +28,6 @@
     action: allow
     direction: in
     protocol: tcp
-    profiles: private
     state: present
     enabled: true
   when: ansible_facts["os_family"] == "Windows"
