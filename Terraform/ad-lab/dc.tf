@@ -39,3 +39,9 @@ resource "proxmox_vm_qemu" "zd-dc" {
   }
 
 }
+
+output "zd-dc-ip" {
+  value       = proxmox_vm_qemu.zd-dc.default_ipv4_address
+  sensitive   = false
+  description = "Domain Controller IP (Change me!)"
+}
