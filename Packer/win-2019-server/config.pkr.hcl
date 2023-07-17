@@ -47,7 +47,7 @@ source "proxmox-iso" "seclab-win-server" {
   additional_iso_files {
     device       = "ide3"
     iso_file     = "local:iso/Autounattend-Win-Server.iso"
-    iso_checksum = "sha256:4c03361a05481de09d3ce69a1cfb2d6f6e9d1cfbfcdf19d8f2dfb88fe6a7a23f"
+    iso_checksum = "sha256:bf44c536d84e62ae5b1d83eca44b4725644578ddeb11d55f78fe0f4e5849f196"
     unmount      = true
   }
 
