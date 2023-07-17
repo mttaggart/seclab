@@ -7,10 +7,10 @@
 
 - name: Start/Enable XRDP Systemd Service
   ansible.builtin.systemd:
-    daemon-reload: yes
+    daemon-reload: true
     name: xrdp
     state: started
-    enabled: yes
+    enabled: true
   when: ansible_facts["os_family"] == "Windows"
 
 - name: Set fDenyTsConnections
