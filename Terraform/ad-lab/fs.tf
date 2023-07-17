@@ -35,4 +35,16 @@ resource "proxmox_vm_qemu" "zd-fs" {
     target_platform = "windows"
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "powershell.exe -c Rename-Computer ${var.fs_hostname}"
+    ]
+  }
+
+}
+
+output "zd-fs-ip" {
+  value       = proxmox_vm_qemu.zd-fs.default_ipv4_address
+  sensitive   = false
+  description = "File Server IP"
 }

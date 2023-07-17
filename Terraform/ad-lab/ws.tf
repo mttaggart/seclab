@@ -39,9 +39,14 @@ resource "proxmox_vm_qemu" "zd-ws" {
   provisioner "remote-exec" {
     inline = [
       "powershell.exe -c Rename-Computer ${var.ws_hostname}",
-      "ipconfig"
     ]
   }
 
 
+}
+
+output "zd-ws-ip" {
+  value       = proxmox_vm_qemu.zd-ws.default_ipv4_address
+  sensitive   = false
+  description = "Workstation IP (Change me!)"
 }
