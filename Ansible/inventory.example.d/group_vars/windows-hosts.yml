@@ -3,3 +3,4 @@ ansible_user: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=seclab/dat
 ansible_password: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=seclab/data/seclab url=http://127.0.0.1:8200')['seclab_windows_password'] }}"
 ansible_connection: ssh
 ansible_shell_type: cmd
+ssh_args: -o ServerAliveInterval=10
