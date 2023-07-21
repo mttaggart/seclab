@@ -46,7 +46,7 @@ resource "proxmox_vm_qemu" "demo-ws" {
   cores       = 2
   memory      = 4096
   name        = "WS-TF-Demo"
-  target_node = "proxmox"
+  target_node = "${var.proxmox_host}"
   clone       = "seclab-win-ws"
   full_clone  = false
   agent       = 1
