@@ -66,6 +66,20 @@ resource "proxmox_vm_qemu" "demo-ws" {
     model = "e1000"
   }
 
+  connection {
+    type = "ssh"
+    user = data.vault_kv_secret_v2.seclab.data.seclab_user
+    password = data.vault_kv_secret_v2.seclab.data.seclab_windows_password
+    host = self.default_ipv4_address
+    target_platform = "windows"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "powershell.exe -c Rename-Computer ${var.hostname}"
+    ]
+  }
+
 
 }
 
