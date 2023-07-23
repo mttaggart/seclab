@@ -19,7 +19,7 @@ variable "proxmox_host" {
 
 variable "hostname" {
   type        = string
-  default     = "seclab-workstation"
+  default     = "seclab-ws"
   description = "description"
 }
 
@@ -76,7 +76,8 @@ resource "proxmox_vm_qemu" "demo-ws" {
 
   provisioner "remote-exec" {
     inline = [
-      "powershell.exe -c Rename-Computer ${var.hostname}"
+      "powershell.exe -c Rename-Computer '${var.hostname}'",
+      "ipconfig"
     ]
   }
 
