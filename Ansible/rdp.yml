@@ -1,0 +1,5 @@
+---
+- name: Enable RDP
+  hosts: windows-hosts
+  roles:
+    - rdp
