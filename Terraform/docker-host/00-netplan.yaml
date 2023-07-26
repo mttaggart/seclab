@@ -2,6 +2,7 @@ network:
   ethernets:
     ens18:
       dhcp4: false
+      dhcp-identifier: mac
       addresses:
         - 192.168.99.3/24
       nameservers:
@@ -10,6 +11,4 @@ network:
       - to: 0.0.0.0/0
         via: 192.168.99.1
         metric: 99
-    ens19:
-      dhcp4: true
   version: 2
