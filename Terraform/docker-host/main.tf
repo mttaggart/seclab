@@ -45,7 +45,7 @@ provider "proxmox" {
 resource "proxmox_vm_qemu" "seclab-docker" {
   cores       = 2
   memory      = 4096
-  name        = "Seclab-Docker2"
+  name        = "Seclab-Docker"
   target_node = var.proxmox_host
   clone       = "seclab-ubuntu-server-22-04"
   full_clone  = false
