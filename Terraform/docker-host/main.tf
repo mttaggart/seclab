@@ -13,7 +13,7 @@ terraform {
 
 variable "proxmox_host" {
   type        = string
-  default     = "proxmox"
+  default     = "starbase"
   description = "description"
 }
 
