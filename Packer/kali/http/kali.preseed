@@ -131,5 +131,10 @@ d-i cdrom-detect/eject boolean true
 
 # Post-install commands
 d-i preseed/late_command string \
-    in-target systemctl enable ssh
+    in-target systemctl enable ssh; \
+    in-target mkdir /home/SECLAB_USER/.ssh; \
+    in-target echo 'SECLAB_SSH_KEY' > /home/SECLAB_USER/.ssh/authorized_keys; \
+    in-target chown -R SECLAB_USER:SECLAB_USER /home/SECLAB/USER/.ssh; \
+    in-target chmod 0600 /home/SECLAB_USER/.ssh/authorized_keys;
+
     
