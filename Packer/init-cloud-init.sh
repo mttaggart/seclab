@@ -12,7 +12,7 @@ seclab_ssh_key=$(vault kv get -field=seclab_ssh_key seclab/seclab)
 encrypted_pw=$(openssl passwd -6 $seclab_pw)
 echo $encrypted_pw
 echo "[+] Adding encrypted secret to user-data files"
-for f in $(find ./ -name user-data); do
+for f in $(find ./ -name user-data -or -name "*.preseed); do
     cp $f $f.bak
     sed -i "s/SECLAB_USER/$seclab_user/g" $f
     sed -i "s:SECLAB_PASSWORD:${encrypted_pw}:g" $f
