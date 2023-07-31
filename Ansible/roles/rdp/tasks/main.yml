@@ -1,9 +1,12 @@
 ---
 - name: Install XRDP
+  become: true
+  vars:
+    ansible_become_pass: "{{ ansible_password }}"
   ansible.builtin.apt:
     name: xrdp
     update_cache: true
-  when: ansible_facts["os_family"] == "Ubuntu"
+  when: ansible_facts["os_family"] == "Ubuntu" or ansible_facts["os_family"] == "Debian"
 
 - name: Start/Enable XRDP Systemd Service
   ansible.builtin.systemd:
@@ -11,7 +14,7 @@
     name: xrdp
     state: started
     enabled: true
-  when: ansible_facts["os_family"] == "Ubuntu"
+  when: ansible_facts["os_family"] == "Ubuntu" or ansible_facts["os_family"] == "Debian"
 
 - name: Set fDenyTsConnections
   ansible.windows.win_regedit:
