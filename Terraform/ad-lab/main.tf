@@ -22,7 +22,7 @@ data "vault_kv_secret_v2" "seclab" {
 
 variable "proxmox_host" {
   type        = string
-  default     = "starbase"
+  default     = "proxmox"
   description = "proxmox node"
 }
 
