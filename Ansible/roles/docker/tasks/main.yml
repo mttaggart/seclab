@@ -25,11 +25,11 @@
       - containerd.io
       - docker-compose-plugin
 
-- name: Add Seclab to Docker
+- name: Add Seclab User to Docker
   ansible.builtin.user:
     groups: docker
     append: true
-    name: seclab
+    name: "{{ ansible_user }}"
 
 - name: Install Pip
   ansible.builtin.apt:

@@ -183,18 +183,6 @@
                     <Order>6</Order>
                     <Description>Install QEMU Agent</Description>
                 </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <!-- Enable RDP -->
-                    <CommandLine>powershell.exe -c Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0</CommandLine>
-                    <Order>7</Order>
-                    <Description>Enable RDP</Description>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <!-- Enable RDP Firewall Rule -->
-                    <CommandLine>powershell.exe -c Disable-NetFirewallRule -DisplayGroup "Remote Desktop"</CommandLine>
-                    <Order>8</Order>
-                    <Description>Enable RDP Firewall Rule</Description>
-                </SynchronousCommand>
             </FirstLogonCommands>
             <OOBE>
                 <HideEULAPage>true</HideEULAPage>
@@ -218,7 +206,7 @@
                         </Password>
                         <Group>administrators</Group>
                         <DisplayName>Seclab</DisplayName>
-                        <Name>seclab</Name>
+                        <Name>SECLAB_USER</Name>
                         <Description>Seclab User</Description>
                     </LocalAccount>
                 </LocalAccounts>

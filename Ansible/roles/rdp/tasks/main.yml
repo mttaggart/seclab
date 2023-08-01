@@ -1,0 +1,39 @@
+---
+- name: Install XRDP
+  become: true
+  vars:
+    ansible_become_pass: "{{ ansible_password }}"
+  ansible.builtin.apt:
+    name: xrdp
+    update_cache: true
+  when: ansible_facts["os_family"] == "Ubuntu" or ansible_facts["os_family"] == "Debian"
+
+- name: Start/Enable XRDP Systemd Service
+  become: true
+  vars:
+    ansible_become_pass: "{{ ansible_password }}"
+  ansible.builtin.systemd:
+    daemon-reload: true
+    name: xrdp
+    state: started
+    enabled: true
+  when: ansible_facts["os_family"] == "Ubuntu" or ansible_facts["os_family"] == "Debian"
+
+- name: Set fDenyTsConnections
+  ansible.windows.win_regedit:
+    path: HKLM:\System\CurrentControlSet\Control\Terminal Server
+    name: fDenyTSConnections
+    data: 0x0
+    type: dword
+  when: ansible_facts["os_family"] == "Windows"
+
+- name: Firewall rule to allow RDP on TCP port 3389
+  community.windows.win_firewall_rule:
+    name: Remote Desktop
+    localport: 3389
+    action: allow
+    direction: in
+    protocol: tcp
+    state: present
+    enabled: true
+  when: ansible_facts["os_family"] == "Windows"

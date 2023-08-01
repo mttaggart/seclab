@@ -7,8 +7,8 @@ variable "ws_hostname" {
 resource "proxmox_vm_qemu" "zd-ws" {
   cores       = 2
   memory      = 4096
-  name        = "ZD-WS-01"
-  target_node = "proxmox"
+  name        = "${var.ws_hostname}"
+  target_node = "${var.proxmox_host}"
   clone       = "seclab-win-ws"
   full_clone  = false
   agent       = 1
@@ -30,7 +30,7 @@ resource "proxmox_vm_qemu" "zd-ws" {
 
   connection {
     type = "ssh"
-    user = data.vault_kv_secret_v2.seclab.data.seclab_username
+    user = data.vault_kv_secret_v2.seclab.data.seclab_user
     password = data.vault_kv_secret_v2.seclab.data.seclab_windows_password
     host = self.default_ipv4_address
     target_platform = "windows"
@@ -39,9 +39,14 @@ resource "proxmox_vm_qemu" "zd-ws" {
   provisioner "remote-exec" {
     inline = [
       "powershell.exe -c Rename-Computer ${var.ws_hostname}",
-      "ipconfig"
     ]
   }
 
 
+}
+
+output "zd-ws-ip" {
+  value       = proxmox_vm_qemu.zd-ws.default_ipv4_address
+  sensitive   = false
+  description = "Workstation IP (Change me!)"
 }

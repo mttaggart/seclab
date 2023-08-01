@@ -4,7 +4,7 @@
       "Get-ComputerInfo"
 - name: Set upstream DNS server 
   win_dns_client:
-    adapter_names: 'Ethernet Instance 0 2'
+    adapter_names: 'Ethernet'
     ipv4_addresses:
      - '{{ upstream_dns_1 }}'
      - '{{ upstream_dns_2 }}'
@@ -48,7 +48,7 @@
 
 - name: Set internal DNS server
   win_dns_client:
-    adapter_names: "Ethernet Instance 0 2"
+    adapter_names: "Ethernet"
     ipv4_addresses:
     - '127.0.0.1'
 

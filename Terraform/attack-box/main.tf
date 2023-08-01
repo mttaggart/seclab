@@ -19,7 +19,7 @@ variable "proxmox_host" {
 
 variable "hostname" {
   type        = string
-  default     = "seclab-docker"
+  default     = "seclab-kali"
   description = "description"
 }
 
@@ -42,12 +42,12 @@ provider "proxmox" {
 }
 
 
-resource "proxmox_vm_qemu" "seclab-docker" {
-  cores       = 2
-  memory      = 4096
-  name        = "Seclab-Docker"
+resource "proxmox_vm_qemu" "seclab-kali" {
+  cores       = 4
+  memory      = 8192
+  name        = "Seclab-Kali"
   target_node = var.proxmox_host
-  clone       = "seclab-ubuntu-server-22-04"
+  clone       = "seclab-kali"
   full_clone  = false
   onboot      = true
   agent       = 1
@@ -66,27 +66,12 @@ resource "proxmox_vm_qemu" "seclab-docker" {
   }
 
   network {
-    bridge = "vmbr1"
-    model  = "e1000"
-  }
-  network {
     bridge = "vmbr2"
     model  = "e1000"
   }
 
-  provisioner "file" {
-    source      = "./00-netplan.yaml"
-    destination = "/tmp/00-netplan.yaml"
-  }
-
   provisioner "remote-exec" {
     inline = [
-      "sudo sed -i 's/seclab-ubuntu-server/${var.hostname}/g' /etc/hosts",
-      "sudo sed -i 's/seclab-ubuntu-server/${var.hostname}/g' /etc/hostname",
-      "sudo mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak",
-      "sudo mv /tmp/00-netplan.yaml /etc/netplan/00-netplan.yaml",
-      "sudo hostname ${var.hostname}",
-      "sudo netplan apply && sudo ip addr add dev ens18 ${self.default_ipv4_address}",
       "ip a s"
     ]
   }
@@ -95,7 +80,7 @@ resource "proxmox_vm_qemu" "seclab-docker" {
 }
 
 output "vm_ip" {
-  value       = proxmox_vm_qemu.seclab-docker.default_ipv4_address
+  value       = proxmox_vm_qemu.seclab-kali.default_ipv4_address
   sensitive   = false
   description = "VM IP"
 }

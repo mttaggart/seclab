@@ -13,3 +13,4 @@ my-stuff/
 inventory/
 Vault/data/
 user-data.bak
+*.preseed.bak

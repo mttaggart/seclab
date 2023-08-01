@@ -1,3 +1,12 @@
+packer {
+  required_plugins {
+    proxmox = {
+      version = ">= 1.1.3"
+      source  = "github.com/hashicorp/proxmox"
+    }
+  }
+}
+
 variable "hostname" {
   type    = string
   default = "seclab-win-server"
@@ -11,7 +20,7 @@ variable "proxmox_hostname" {
 
 locals {
   username          = vault("/seclab/data/seclab/", "seclab_user")
-  password          = vault("/seclab/data/seclab/", "seclab_password")
+  password          = vault("/seclab/data/seclab/", "seclab_windows_password")
   proxmox_api_id      = vault("/seclab/data/seclab/", "proxmox_api_id")
   proxmox_api_token = vault("/seclab/data/seclab/", "proxmox_api_token")
 }
@@ -38,7 +47,7 @@ source "proxmox-iso" "seclab-win-server" {
   additional_iso_files {
     device       = "ide3"
     iso_file     = "local:iso/Autounattend-Win-Server.iso"
-    iso_checksum = "sha256:730e592b2f9da8d489bf4bea607a15035ff9fc4fa5be928421000d1d14bc86fe"
+    iso_checksum = "sha256:bf44c536d84e62ae5b1d83eca44b4725644578ddeb11d55f78fe0f4e5849f196"
     unmount      = true
   }
 
@@ -69,7 +78,6 @@ build {
   provisioner "windows-shell" {
     inline = [
       "ipconfig",
-      "c:\\windows\\system32\\sysprep\\sysprep.exe /generalize /mode:vm /quiet /quit /unattend:E:\\unattend.xml"
     ]
   }
 

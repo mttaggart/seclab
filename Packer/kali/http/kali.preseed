@@ -1,0 +1,144 @@
+# This file replaces preseed.cfg embedded in the initrd by
+# debian-installer. It should be kept in sync except with the
+# mirror/{codename,suite} dropped so that the image installs
+# what's available on the CD instead of hardcoding a specific
+# release.
+
+# Default repository information (don't include codename data, d-i figures it
+# out from what's available in the ISO)
+d-i mirror/country string enter information manually
+d-i mirror/http/hostname string http.kali.org
+d-i mirror/http/directory string /kali
+
+# Disable security, updates and backports
+d-i apt-setup/services-select multiselect 
+
+# Enable contrib and non-free
+d-i apt-setup/non-free boolean true
+d-i apt-setup/contrib boolean true
+
+# Disable CDROM entries after install
+d-i apt-setup/disable-cdrom-entries boolean true
+
+# Disable source repositories too
+d-i apt-setup/enable-source-repositories boolean false
+
+# Insecure repositories
+#d-i debian-installer/allow_unauthenticated boolean true
+
+# Add proper source repositories
+d-i apt-setup/local0/repository string http://http.kali.org/kali kali-rolling main contrib non-free
+
+d-i apt-setup/local0/comment string Main repo
+d-i apt-setup/local0/source boolean false
+
+# Upgrade installed packages
+d-i pkgsel/upgrade select full-upgrade
+
+# Change default hostname
+# DISABLED: We take care of this by forking netcfg until #719101 is fixed
+# d-i netcfg/get_hostname string kali
+# d-i netcfg/get_hostname seen false
+
+# Disable the root user entirely
+d-i passwd/root-login boolean false
+
+# Enable eatmydata in kali-installer to boost speed installation
+d-i preseed/early_command string anna-install eatmydata-udeb
+
+# Disable question about automatic security updates
+d-i pkgsel/update-policy select none
+
+# Disable question about extra media
+d-i apt-setup/cdrom/set-first boolean false
+
+## Questions from regular packages
+
+# Disable popularity-contest
+popularity-contest popularity-contest/participate boolean false
+
+# Random other questions
+console-setup console-setup/charmap47 select UTF-8
+samba-common samba-common/dhcp boolean false
+macchanger macchanger/automatically_run boolean false
+kismet-capture-common kismet-capture-common/install-users string 
+kismet-capture-common kismet-capture-common/install-setuid boolean true
+wireshark-common wireshark-common/install-setuid boolean true
+sslh sslh/inetd_or_standalone select standalone
+atftpd atftpd/use_inetd boolean false
+
+################################
+# Custom preseed configuration #
+################################
+
+# Network
+d-i netcfg/get_hostname string kali
+d-i netcfg/get_domain string unassigned-domain
+d-i netcfg/choose_interface select eth0
+d-i netcfg/dhcp_timeout string 60
+
+# Locale
+d-i debian-installer/locale string en_AU.UTF-8
+d-i console-keymaps-at/keymap select us
+d-i keyboard-configuration/xkb-keymap select us
+
+# Timezone
+d-i clock-setup/utc boolean true
+d-i time/zone string Australia/Queensland
+
+# Don't ask for proxy settings
+d-i mirror/http/proxy string
+
+# Partitioning
+d-i partman-auto/method string regular
+d-i partman-lvm/device_remove_lvm boolean true
+d-i partman-md/device_remove_md boolean true
+d-i partman-lvm/confirm boolean true
+d-i partman-auto/expert_recipe string \
+    single-part ::                          \
+        5000 10000 -1 $default_filesystem   \
+            $primary{ }                     \
+            $bootable{ }                    \
+            method{ format }                \
+            format{ }                       \
+            use_filesystem{ }               \
+            $default_filesystem{ }          \
+            mountpoint{ / } .
+d-i partman-auto/disk string /dev/sda
+d-i partman/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman-basicfilesystems/no_swap boolean false
+
+# Packages
+tasksel tasksel/first multiselect standard
+d-i pkgsel/include string \
+    curl git kali-linux-default kali-desktop-xfce openssh-server qemu-guest-agent
+
+# User Stuff
+# Skip creation of a root account (normal user account will be able to
+# use sudo).
+d-i passwd/root-login boolean false
+# To create a normal user account.
+d-i passwd/user-fullname string SECLAB_USER
+d-i passwd/username string SECLAB_USER
+# or encrypted using a crypt(3) hash.
+d-i passwd/user-password-crypted password SECLAB_PASSWORD
+
+# Grub
+d-i grub-installer/only_debian boolean true
+d-i grub-installer/with_other_os boolean false
+d-i grub-installer/bootdev string /dev/sda
+
+# Automatically reboot after installation
+d-i finish-install/reboot_in_progress note
+
+# Eject media after installation
+d-i cdrom-detect/eject boolean true
+
+# Post-install commands
+d-i preseed/late_command string \
+    in-target systemctl enable ssh;
+    in-target systemctl enable xrdp;

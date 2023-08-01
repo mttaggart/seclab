@@ -1,8 +1,12 @@
 ---
 - name: Join Machine to a Domain
-  hosts: [zd-ws-01]
+  hosts: [zd-fs-01, zd-ws-01]
   gather_facts: true
   tasks:
+  - name: Reboot Machine for Rename
+    ansible.windows.win_reboot:
+      msg: "Rebooting for Provisioning Name Change"
+      pre_reboot_delay: 15
   - name: Join to Domain
     ansible.windows.win_domain_membership:
       dns_domain_name: zeroday.local
@@ -15,4 +19,6 @@
     ansible.windows.win_reboot:
       msg: "Domain joined. Rebooting"
       pre_reboot_delay: 15
-      when: domain_state.changed
+    when: domain_state.changed
+  roles:
+    - rdp
