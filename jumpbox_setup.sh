@@ -26,6 +26,8 @@ install_hashicorp() {
 }
 
 install_ansible() {
+    echo "[+] Installing Pip"
+    sudo apt install -y python3-pip
     echo "[+] Installing Ansible"
     pip3 install ansible
     echo "[+] Installing Ansible Galaxy Plugins"
