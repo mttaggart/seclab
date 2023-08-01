@@ -23,6 +23,15 @@ d-i apt-setup/disable-cdrom-entries boolean true
 # Disable source repositories too
 d-i apt-setup/enable-source-repositories boolean false
 
+# Insecure repositories
+#d-i debian-installer/allow_unauthenticated boolean true
+
+# Add proper source repositories
+d-i apt-setup/local0/repository string http://http.kali.org/kali kali-rolling main contrib non-free
+
+d-i apt-setup/local0/comment string Main repo
+d-i apt-setup/local0/source boolean false
+
 # Upgrade installed packages
 d-i pkgsel/upgrade select full-upgrade
 
@@ -131,10 +140,5 @@ d-i cdrom-detect/eject boolean true
 
 # Post-install commands
 d-i preseed/late_command string \
-    in-target systemctl enable ssh; \
-    in-target mkdir /home/SECLAB_USER/.ssh; \
-    in-target echo 'SECLAB_SSH_KEY' > /home/SECLAB_USER/.ssh/authorized_keys; \
-    in-target chown -R SECLAB_USER:SECLAB_USER /home/SECLAB/USER/.ssh; \
-    in-target chmod 0600 /home/SECLAB_USER/.ssh/authorized_keys;
-
-    
+    in-target systemctl enable ssh;
+    in-target systemctl enable xrdp;
