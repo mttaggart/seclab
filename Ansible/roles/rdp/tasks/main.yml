@@ -9,6 +9,9 @@
   when: ansible_facts["os_family"] == "Ubuntu" or ansible_facts["os_family"] == "Debian"
 
 - name: Start/Enable XRDP Systemd Service
+  become: true
+  vars:
+    ansible_become_pass: "{{ ansible_password }}"
   ansible.builtin.systemd:
     daemon-reload: true
     name: xrdp
