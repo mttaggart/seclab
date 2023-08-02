@@ -32,7 +32,6 @@
           - org.ghidra_sre.Ghidra
           - org.nmap.Zenmap
           - re.rizin.cutter
-          
-
+          - org.chromium.Chromium
   roles:
     - rdp
