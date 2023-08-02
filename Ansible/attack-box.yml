@@ -16,7 +16,6 @@
           - fish
           - 7zip
           - rizin
-          - rizin-cutter
           - code-oss
           - flatpak
     - name: Add the flathub flatpak repository remote to the user installation
@@ -30,6 +29,10 @@
         method: user
         name:
           - rest.insomnia.Insomnia
+          - org.ghidra_sre.Ghidra
+          - org.nmap.Zenmap
+          - re.rizin.cutter
+          
 
   roles:
     - rdp
