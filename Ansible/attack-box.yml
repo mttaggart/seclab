@@ -1,0 +1,38 @@
+---
+- name: Configure Attack Box
+  hosts: seclab-kali
+  vars:
+    ansible_become_pass: "{{ ansible_password }}"
+  tasks:
+    - name: Install Apt Packages
+      become: true
+      ansible.builtin.apt:
+        update_cache: true
+        name:
+          - zaproxy
+          - python3-pip
+          - sqlmap
+          - terminator
+          - fish
+          - 7zip
+          - rizin
+          - code-oss
+          - flatpak
+    - name: Add the flathub flatpak repository remote to the user installation
+      community.general.flatpak_remote:
+        name: flathub
+        state: present
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        method: user
+    - name: Install Flatpaks
+      community.general.flatpak:
+        method: user
+        name:
+          - rest.insomnia.Insomnia
+          - org.ghidra_sre.Ghidra
+          - org.nmap.Zenmap
+          - re.rizin.cutter
+          
+
+  roles:
+    - rdp
