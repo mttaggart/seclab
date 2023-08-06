@@ -20,6 +20,7 @@
           - flatpak
           - metasploit-framework
           - searchsploit
+
     - name: Add the flathub flatpak repository remote to the user installation
       community.general.flatpak_remote:
         name: flathub
