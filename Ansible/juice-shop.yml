@@ -1,0 +1,15 @@
+---
+- name: Deploy OWASP Juice Shop
+  hosts: seclab-docker
+  tasks:
+    - name: Pull Juice Shop Image
+      community.docker.docker_image:
+        name: bkimminich/juice-shop
+        source: pull
+    - name: Run Juice Shop
+      community.docker.docker_container:
+        name: juice-shop
+        image: bkimminich/juice-shop
+        state: started
+        ports:
+          - 8000:3000
