@@ -18,6 +18,9 @@
           - rizin
           - code-oss
           - flatpak
+          - metasploit-framework
+          - searchsploit
+
     - name: Add the flathub flatpak repository remote to the user installation
       community.general.flatpak_remote:
         name: flathub
@@ -32,7 +35,6 @@
           - org.ghidra_sre.Ghidra
           - org.nmap.Zenmap
           - re.rizin.cutter
-          
-
+          - org.chromium.Chromium
   roles:
     - rdp

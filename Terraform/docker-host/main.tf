@@ -81,8 +81,8 @@ resource "proxmox_vm_qemu" "seclab-docker" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo sed -i 's/seclab-ubuntu-server/${var.hostname}/g' /etc/hosts",
-      "sudo sed -i 's/seclab-ubuntu-server/${var.hostname}/g' /etc/hostname",
+      "sudo sed -i 's/seclab-ubuntu22/${var.hostname}/g' /etc/hosts",
+      "sudo sed -i 's/seclab-ubuntu22/${var.hostname}/g' /etc/hostname",
       "sudo mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak",
       "sudo mv /tmp/00-netplan.yaml /etc/netplan/00-netplan.yaml",
       "sudo hostname ${var.hostname}",

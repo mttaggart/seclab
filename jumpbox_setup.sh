@@ -165,7 +165,7 @@ create_creds() {
     seclab_password=$seclab_password \ 
     seclab_windows_password=$seclab_windows_password \ 
     seclab_windows_domain_password=$seclab_windows_domain_password \
-    seclab_ssh_key=$(cat ~/.ssh/id_rsa.pub)
+    seclab_ssh_key="$(cat ~/.ssh/id_rsa.pub)"
 }
 
 append_rcs() {
