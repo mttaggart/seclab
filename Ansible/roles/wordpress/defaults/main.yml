@@ -1,0 +1,3 @@
+wordpress_db_password: wordpress
+wordpress_db_root_password: wordpress_root
+wordpress_port: 8888
