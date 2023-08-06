@@ -1,0 +1,7 @@
+---
+- name: Set up Wordpress
+  hosts: seclab-docker
+  become: true
+  roles:
+    - docker
+    - wordpress
