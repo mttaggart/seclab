@@ -9,4 +9,4 @@
   become_user: root
   roles:
     - docker
-    - splunk-es
+    - splunk-server
