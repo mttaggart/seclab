@@ -1,8 +1,8 @@
 # Local Kibana URL
-LOCAL_KBN_URL=https://{{ siem_ip }}:5601
+LOCAL_KBN_URL=https://{{ ansible_facts["default_ipv4"]["address"] }}:5601
 
 # Local ES URL
-LOCAL_ES_URL=https://{{ siem_ip }}:9200
+LOCAL_ES_URL=https://{{ ansible_facts["default_ipv4"]["address"] }}:9200
 
 # Username for Kibana
 ELASTIC_USERNAME=elastic
