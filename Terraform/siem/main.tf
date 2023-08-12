@@ -5,7 +5,7 @@ terraform {
       version = "2.9.13"
     }
     vault = {
-      source = "hashicorp/vault"
+      source  = "hashicorp/vault"
       version = "3.16.0"
     }
   }
@@ -19,7 +19,7 @@ variable "proxmox_host" {
 
 variable "hostname" {
   type        = string
-  default     = "seclab-docker"
+  default     = "seclab-siem"
   description = "description"
 }
 
@@ -34,18 +34,18 @@ data "vault_kv_secret_v2" "seclab" {
 
 provider "proxmox" {
   # Configuration options
-  pm_api_url      = "https://${var.proxmox_host}:8006/api2/json"
-  pm_tls_insecure = true
-  pm_log_enable   = true
-  pm_api_token_id = data.vault_kv_secret_v2.seclab.data.proxmox_api_id
+  pm_api_url          = "https://${var.proxmox_host}:8006/api2/json"
+  pm_tls_insecure     = true
+  pm_log_enable       = true
+  pm_api_token_id     = data.vault_kv_secret_v2.seclab.data.proxmox_api_id
   pm_api_token_secret = data.vault_kv_secret_v2.seclab.data.proxmox_api_token
 }
 
 
-resource "proxmox_vm_qemu" "seclab-soc" {
+resource "proxmox_vm_qemu" "seclab-siem" {
   cores       = 4
   memory      = 8192
-  name        = "Seclab-SOC"
+  name        = "Seclab-SIEM"
   target_node = var.proxmox_host
   clone       = "seclab-ubuntu-server-22-04"
   full_clone  = false
@@ -53,29 +53,25 @@ resource "proxmox_vm_qemu" "seclab-soc" {
   agent       = 1
 
   connection {
-    type = "ssh"
-    user = data.vault_kv_secret_v2.seclab.data.seclab_user
+    type     = "ssh"
+    user     = data.vault_kv_secret_v2.seclab.data.seclab_user
     password = data.vault_kv_secret_v2.seclab.data.seclab_password
-    host = self.default_ipv4_address
+    host     = self.default_ipv4_address
   }
 
   disk {
-    type         = "virtio"
-    size         = "50G"
-    storage      = "local-lvm"
+    type    = "virtio"
+    size    = "50G"
+    storage = "local-lvm"
   }
 
   network {
     bridge = "vmbr1"
-    model = "e1000"
+    model  = "e1000"
   }
   network {
     bridge = "vmbr2"
-    model = "e1000"
-  }
-  network {
-    bridge = "vmbr2"
-    model = "e1000"
+    model  = "e1000"
     # Default, but explicit for pcap
     firewall = false
   }
@@ -102,7 +98,7 @@ resource "proxmox_vm_qemu" "seclab-soc" {
 }
 
 output "vm_ip" {
-  value       = proxmox_vm_qemu.seclab-soc.default_ipv4_address
+  value       = proxmox_vm_qemu.seclab-siem.default_ipv4_address
   sensitive   = false
   description = "VM IP"
 }
