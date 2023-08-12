@@ -1,6 +1,6 @@
 ---
 - name: Install ELK Stack
-  hosts: seclab-soc
+  hosts: seclab-siem
   roles:
     - role: docker
       become: true
