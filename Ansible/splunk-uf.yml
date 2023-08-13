@@ -1,6 +1,6 @@
 ---
 - name: Install Splunk Universal Forwarder
-  hosts: malwarelab-victim
+  hosts: all
   vars_prompt:
     - name: siem_ip
       prompt: "Enter Splunk Server_IP"

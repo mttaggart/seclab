@@ -1,7 +1,7 @@
 ---
 - name: Download UF MSI
   ansible.windows.win_get_url:
-    url: "https://download.splunk.com/products/universalforwarder/releases/9.0.3/windows/splunkforwarder-9.0.3-dd0128b1f8cd-x64-release.msi"
+    url: "https://download.splunk.com/products/universalforwarder/releases/9.1.0.1/windows/splunkforwarder-9.1.0.1-77f73c9edb85-x64-release.msi"
     dest: C:\Users\seclab\Downloads\splunk-uf.msi
   when: ansible_facts["os_family"] == "Windows"
 
@@ -28,53 +28,113 @@
 
 - name: Install Auditd
   become: true
+  vars:
+    ansible_become_password: "{{ ansible_password }}"
   ansible.builtin.apt:
     name: auditd
-  when: ansible_facts["os_family"] == "Debian"
+  when: ansible_facts["os_family"] == "Debian" or ansible_facts["os_family"] == "Kali"
+
+- name: Start Auditd
+  become: true
+  vars:
+    ansible_become_password: "{{ ansible_password }}"
+  ansible.builtin.systemd:
+    name: auditd
+    state: started
+    enabled: true
+  when: ansible_facts["os_family"] == "Debian" or ansible_facts["os_family"] == "Kali"
 
 - name: Download UF DEB
   ansible.builtin.get_url:
-    url: "https://download.splunk.com/products/splunk/releases/9.0.3/linux/splunk-9.0.3-dd0128b1f8cd-linux-2.6-amd64.deb"
-    dest: /tmp/splunk-es.deb
+    url: "https://download.splunk.com/products/universalforwarder/releases/9.1.0.1/linux/splunkforwarder-9.1.0.1-77f73c9edb85-linux-2.6-amd64.deb"
+    dest: /tmp/splunk-uf.deb
     mode: 0755
-  when: ansible_facts["os_family"] == "Debian"
+  when: ansible_facts["os_family"] == "Debian" or ansible_facts["os_family"] == "Kali"
 
 - name: Install UF DEB
   become: true
+  vars:
+    ansible_become_password: "{{ ansible_password }}"
   ansible.builtin.apt:
-    deb: /tmp/splunk-es.deb
-  when: ansible_facts["os_family"] == "Debian"
+    deb: /tmp/splunk-uf.deb
+  when: ansible_facts["os_family"] == "Debian" or ansible_facts["os_family"] == "Kali"
+
+- name: Remove UF Deb
+  ansible.builtin.file:
+    path: /tmp/splunk-uf.deb
+    state: absent
+  when: ansible_facts["os_family"] == "Debian" or ansible_facts["os_family"] == "Kali"
 
 - name: Add Splunk to adm Group
   become: true
+  vars:
+    ansible_become_password: "{{ ansible_password }}"
   ansible.builtin.user:
-    name: splunk
+    name: splunkfwd
     groups:
       - adm
-  when: ansible_facts["os_family"] == "Debian"
-
-- name: Install Inputs Config (Linux)
-  become: true
-  ansible.builtin.template:
-    src: inputs_lin.conf.j2
-    dest: /opt/splunk/etc/system/local/inputs.conf
-  notify: Restart Linux Splunk UF Service
-  when: ansible_facts["os_family"] == "Debian"
+  when: ansible_facts["os_family"] == "Debian" or ansible_facts["os_family"] == "Kali"
 
 - name: Make splunk User Owner of Splunk Home
   become: true
+  vars:
+    ansible_become_password: "{{ ansible_password }}"
   ansible.builtin.file:
-    path: /opt/splunk
-    owner: splunk
+    path: /opt/splunkforwarder
+    owner: splunkfwd
     recurse: true
-  when: ansible_facts["os_family"] == "Debian"
+  when: ansible_facts["os_family"] == "Debian" or ansible_facts["os_family"] == "Kali"
 
-- name: Start Splunk UF (Linux)
-  # become: true
-  # become_user: splunk
+
+- name: Install Inputs Config (Linux)
+  become: true
+  vars:
+    ansible_become_password: "{{ ansible_password }}"
+  ansible.builtin.template:
+    src: inputs_lin.conf.j2
+    dest: /opt/splunkforwarder/etc/system/local/inputs.conf
+    owner: splunkfwd
+    group: splunkfwd
+  
+  when: ansible_facts["os_family"] == "Debian" or ansible_facts["os_family"] == "Kali"
+
+- name: Install Outputs Config (Linux)
+  become: true
+  vars:
+    ansible_become_password: "{{ ansible_password }}"
+  ansible.builtin.template:
+    src: outputs_lin.conf.j2
+    dest: /opt/splunkforwarder/etc/system/local/outputs.conf
+    owner: splunkfwd
+    group: splunkfwd
+  when: ansible_facts["os_family"] == "Debian" or ansible_facts["os_family"] == "Kali"
+
+- name: Install User Seed Config (Linux)
+  become: true
+  vars:
+    ansible_become_password: "{{ ansible_password }}"
+  ansible.builtin.template:
+    src: user-seed_lin.conf.j2
+    dest: /opt/splunkforwarder/etc/system/local/user-seed.conf
+    owner: splunkfwd
+    group: splunkfwd
+  when: ansible_facts["os_family"] == "Debian" or ansible_facts["os_family"] == "Kali"
+
+- name: Initial Startup
+  become: true
+  vars:
+    ansible_become_password: "{{ ansible_password }}"
   ansible.builtin.command:
-    argv:
-      - /opt/splunk/bin/splunk
-      - --accept-license
-      - "--seed-passwd {{ siem_password }}"
-  when: ansible_facts["os_family"] == "Debian"
+    cmd: /opt/splunkforwarder/bin/splunk start --accept-license --answer-yes --no-prompt; /opt/splunkforwarder/bin/splunk stop 
+  when: ansible_facts["os_family"] == "Debian" or ansible_facts["os_family"] == "Kali"
+
+- name: Enable Systemd Service and Setup Auth
+  become: true
+  vars:
+    ansible_become_password: "{{ ansible_password }}"
+  ansible.builtin.command:
+    cmd: /opt/splunkforwarder/bin/splunk enable boot-start -systemd-managed 1 -user splunkfwd -group splunkfwd
+  notify: Start Linux Splunk UF Service
+  when: ansible_facts["os_family"] == "Debian" or ansible_facts["os_family"] == "Kali"
+
+

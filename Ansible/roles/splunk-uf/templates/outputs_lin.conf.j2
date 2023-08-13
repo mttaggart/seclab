@@ -1,0 +1,7 @@
+[tcpout]
+defaultGroup = default-autolb-group
+
+[tcpout:default-autolb-group]
+server = {{ siem_ip }}:9997
+
+[tcpout-server://{{ siem_ip }}:9997]
