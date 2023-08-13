@@ -1,0 +1,17 @@
+---
+- name: Create Directory
+  ansible.builtin.file:
+    path: "/home/{{ ansible_user }}/wordpress"
+    state: directory
+    mode: 0644
+    owner: "{{ ansible_user }}"
+- name: Set up Env file
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "/home/{{ ansible_user }}/wordpress/docker-compose.yml"
+    mode: 0644
+    owner: "{{ ansible_user }}"
+- name: Run Compose
+  community.docker.docker_compose:
+    build: true
+    project_src: "/home/{{ ansible_user }}/wordpress"

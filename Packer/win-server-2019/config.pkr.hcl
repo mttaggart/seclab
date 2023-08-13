@@ -12,9 +12,9 @@ variable "hostname" {
   default = "seclab-win-server"
 }
 
-variable "proxmox_hostname" {
+variable "proxmox_node" {
   type    = string
-  default = "proxmox"
+  default = "starbase"
 }
 
 
@@ -66,7 +66,6 @@ source "proxmox-iso" "seclab-win-server" {
   disks {
     type              = "virtio"
     disk_size         = "50G"
-    storage_pool_type = "lvm"
     storage_pool      = "local-lvm"
   }
   scsi_controller = "virtio-scsi-pci"

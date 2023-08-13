@@ -1,7 +1,0 @@
----
-- name: Install ELK Stack
-  hosts: seclab-soc
-  become: yes
-  become_user: root
-  roles:
-    - elk-stack
