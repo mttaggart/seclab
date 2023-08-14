@@ -3,4 +3,4 @@
   hosts: zd-dc-01
   roles:
     - rdp
-    - domain_controller
+    - domain-controller
