@@ -24,6 +24,11 @@ resource "proxmox_vm_qemu" "zd-dc" {
     model = "e1000"
   }
 
+  network {
+    bridge = "vmbr2"
+    model = "e1000"
+  }
+
   connection {
     type = "ssh"
     user = data.vault_kv_secret_v2.seclab.data.seclab_user
@@ -34,7 +39,9 @@ resource "proxmox_vm_qemu" "zd-dc" {
 
   provisioner "remote-exec" {
     inline = [
-      "powershell.exe -c Rename-Computer ${var.dc_hostname}"
+      "powershell.exe -c Rename-Computer ${var.dc_hostname}",
+      "powershell.exe -c Get-NetIpAddress",
+      "powershell.exe -c New-NetIpAddress -InterfaceAlias 'Ethernet 2' -IpAddress 10.1.99.3 -PrefixLength 24",
     ]
   }
 
