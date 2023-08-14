@@ -1,6 +1,6 @@
 ---
 - name: Join Machine to a Domain
-  hosts: [zd-fs-01, zd-ws-01]
+  hosts: windows-hosts
   gather_facts: true
   tasks:
   - name: Reboot Machine for Rename
