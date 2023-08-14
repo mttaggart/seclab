@@ -14,7 +14,7 @@
       domain_admin_user: Administrator@zeroday.local
       domain_admin_password: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=seclab/data/seclab url=http://127.0.0.1:8200')['seclab_windows_domain_password'] }}"
       state: domain
-      register: domain_state
+    register: domain_state
   - name: Reboot Machine
     ansible.windows.win_reboot:
       msg: "Domain joined. Rebooting"
