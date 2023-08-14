@@ -46,13 +46,13 @@
         lastName: "Hacks"
         username: "hhacks"
         password: "fetching_canfield_98"
-      - firstName: "FootPics"
-        lastName: "ForSale"
-        username: "fforsale"
+      - firstName: "Prax "
+        lastName: "Aeus"
+        username: "paeus"
         password: "swampy_mounties_59"
-      - firstName: "SinDa"
-        lastName: "Remedy"
-        username: "sdaremedy"
+      - firstName: "Chance"
+        lastName: "Chancerson"
+        username: "cchancerson"
         password: "gracious_fuji_19"
     domain_groups:
       - name: "IT Staff"
@@ -64,10 +64,10 @@
           - "jpwnerson"
       - name: "Accounting"
         members:
-          - "sdaremedy"
+          - "cchancerson"
       - name: "HR"
         members:
-          - "fforsale"
+          - "paeus"
       - name: "Software Developers"
         members:
           - "hhacks"
