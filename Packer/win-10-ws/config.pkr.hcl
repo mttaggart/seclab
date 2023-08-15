@@ -21,7 +21,7 @@ locals {
 
 variable "proxmox_node" {
   type    = string
-  default = "starbase"
+  default = "proxmox"
 }
 
 source "proxmox-iso" "seclab-win-ws" {
