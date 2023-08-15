@@ -1,0 +1,15 @@
+- name: Create an IIS Web Server
+  hosts: windows-hosts
+  gather_facts: true
+  tasks:
+  - name: Add IIS Web Server Feature
+    win_feature: >
+      name=Web-Server
+      include_management_tools=yes
+      include_sub_features=yes
+      state=present
+    register: res
+    
+  - name: Reboot
+    win_reboot:
+    when: res.reboot_required
