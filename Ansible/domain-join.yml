@@ -1,6 +1,5 @@
----
 - name: Join Machine to a Domain
-  hosts: [zd-fs-01, zd-ws-01]
+  hosts: windows-hosts
   gather_facts: true
   tasks:
   - name: Reboot Machine for Rename
@@ -10,11 +9,11 @@
   - name: Join to Domain
     ansible.windows.win_domain_membership:
       dns_domain_name: zeroday.local
-      hostname: zd-ws-01
+      hostname: "{{ ansible_facts['hostname'] }}"
       domain_admin_user: Administrator@zeroday.local
       domain_admin_password: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=seclab/data/seclab url=http://127.0.0.1:8200')['seclab_windows_domain_password'] }}"
       state: domain
-      register: domain_state
+    register: domain_state
   - name: Reboot Machine
     ansible.windows.win_reboot:
       msg: "Domain joined. Rebooting"

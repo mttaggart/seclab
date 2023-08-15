@@ -4,7 +4,7 @@
     name: SplunkForwarder
     state: restarted
 
-- name: Restart Linux Splunk UF Service
+- name: Start Linux Splunk UF Service
   ansible.builtin.systemd:
-    name: splunkforwarder
-    state: restarted
+    name: SplunkForwarder
+    state: started
