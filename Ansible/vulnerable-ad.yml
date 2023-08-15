@@ -1,0 +1,20 @@
+- name: Run WazeHell's Vulnerable-AD Script
+  gather_facts: true
+  hosts: zd-dc-01
+  vars:
+    users_limit: 100
+  tasks:
+  - name: Execute Script
+    ansible.windows.win_powershell:
+      script: | 
+        IEX((new-object net.webclient).downloadstring("https://raw.githubusercontent.com/wazehell/vulnerable-AD/master/vulnad.ps1"));
+        Invoke-VulnAD -UsersLimit {{ users_limit }} -DomainName "zeroday.local"
+    register: result
+  
+  - name: Show Output
+    ansible.builtin.debug:
+      msg: "{{ result['host_out'] }}"
+
+  - name: Show Errors
+    ansible.builtin.debug:
+      msg: "{{ result['host_err'] }}"
