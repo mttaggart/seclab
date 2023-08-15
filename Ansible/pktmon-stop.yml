@@ -1,0 +1,24 @@
+- name: Stop Pktmon; Get PCAPs
+  gather_facts: true
+  hosts: windows-hosts
+  tasks:
+  - name: Execute Script
+    ansible.windows.win_powershell:
+      script: | 
+        PktMon stop
+        PktMon etl2pcap .\PktMon.etl
+      chdir: C:\Users\{{ ansible_user }}\Downloads
+    register: result
+  
+  - name: Show Output
+    ansible.builtin.debug:
+      msg: "{{ result['host_out'] }}"
+
+  - name: Show Errors
+    ansible.builtin.debug:
+      msg: "{{ result['host_err'] }}"
+  
+  - name: Fetch PCAPs
+    ansible.builtin.fetch:
+      dest: /tmp
+      src: C:\Users\{{ ansible_user }}\Downloads\PktMon.pcapng
