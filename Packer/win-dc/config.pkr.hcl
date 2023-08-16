@@ -22,7 +22,7 @@ variable "hostname" {
 
 variable "proxmox_hostname" {
   type    = string
-  default = "starbase"
+  default = "proxmox"
 }
 
 source "proxmox-iso" "seclab-win-dc" {
