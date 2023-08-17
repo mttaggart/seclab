@@ -1,0 +1,45 @@
+- name: Install Zeek
+  hosts: seclab-zeek
+  vars:
+    siem_ip: 192.168.99.2  
+    zeek_base: /opt/zeek
+    zeek_files: [
+      "conn",
+      "dhcp",
+      "dns",
+      "file",
+      "ftp",
+      "http",
+      "smtp",
+      "ssh",
+      "ssl",
+      "x509"
+    ]
+  vars_prompt:
+    - name: siem_password
+      prompt: Splunk Password (Blank for Elastic)
+      private: false
+    - name: enrollment_token
+      prompt: Elastic Enrollment Token (Blank for Splunk)
+      private: false
+  tasks:
+    - name: Initial Creation of Zeek Logfiles
+      become: true
+      tags: ["splunk"]
+      ansible.builtin.file:
+        path: "{{ zeek_base }}/logs/current/{{ item }}.log"
+        state: touch
+      loop: "{{ zeek_files }}"
+    - name: Add Zeek Monitors to Splunk
+      tags: ["splunk"]
+      become: true
+      ansible.builtin.shell:
+        cmd: "/opt/splunkforwarder/bin/splunk add monitor {{ zeek_base }}/logs/current/{{ item }}.log -index zeek -sourcetype bro:{{ item }}:json -auth admin:{{ siem_password }}"
+      loop: "{{ zeek_files }}"
+  roles:
+    - role: splunk-uf
+      tags: ["splunk"]
+    - role: elastic-agent
+      tags: ["elastic"]
+    - role: zeek
+      tags: ["always"]
