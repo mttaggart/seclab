@@ -1,0 +1,2 @@
+zeek_base: /opt/zeek
+listen_interface: ens18
