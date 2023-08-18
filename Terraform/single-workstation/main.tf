@@ -51,12 +51,6 @@ resource "proxmox_vm_qemu" "demo-ws" {
   full_clone  = false
   agent       = 1
 
-  disk {
-    type         = "virtio"
-    size         = "50G"
-    storage      = "local-lvm"
-  }
-
   network {
     bridge = "vmbr1"
     model = "e1000"

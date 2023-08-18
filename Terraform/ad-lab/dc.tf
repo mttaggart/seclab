@@ -13,12 +13,6 @@ resource "proxmox_vm_qemu" "zd-dc" {
   full_clone  = false
   agent       = 1
 
-  disk {
-    type         = "virtio"
-    size         = "50G"
-    storage      = "local-lvm"
-  }
-
   network {
     bridge = "vmbr2"
     model = "e1000"

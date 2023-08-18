@@ -17,12 +17,6 @@ resource "proxmox_vm_qemu" "zd-ws" {
     proxmox_vm_qemu.zd-fs
   ]
 
-  disk {
-    type         = "virtio"
-    size         = "50G"
-    storage      = "local-lvm"
-  }
-
   network {
     bridge = "vmbr2"
     model = "e1000"
