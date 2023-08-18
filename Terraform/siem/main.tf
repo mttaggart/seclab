@@ -59,12 +59,6 @@ resource "proxmox_vm_qemu" "seclab-siem" {
     host     = self.default_ipv4_address
   }
 
-  disk {
-    type    = "virtio"
-    size    = "50G"
-    storage = "local-lvm"
-  }
-
   network {
     bridge = "vmbr1"
     model  = "e1000"
