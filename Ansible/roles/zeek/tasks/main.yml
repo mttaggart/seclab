@@ -1,0 +1,34 @@
+- name: Add Zeek Repo
+  ansible.builtin.shell:
+    cmd: echo 'deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/security:zeek.list
+    creates: /etc/apt/sources.list.d/security:zeek.list
+
+- name: Add Zeek Key
+  ansible.builtin.shell:
+    cmd: curl -fsSL https://download.opensuse.org/repositories/security:zeek/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/security_zeek.gpg > /dev/null
+    creates: /etc/apt/trusted.gpg.d/security_zeek.gpg
+
+- name: Install Zeek
+  become: true
+  ansible.builtin.apt:
+    name:
+      - zeek-lts
+    update_cache: true
+
+- name: Install Zeek Template
+  become: true
+  ansible.builtin.template:
+    src: node.cfg.j2
+    dest: "{{ zeek_base }}/etc/node.cfg"
+    mode: 0644
+
+- name: Add JSON Logging Config
+  become: true
+  ansible.builtin.lineinfile:
+    line: "@load policy/tuning/json-logs.zeek"
+    path: /opt/zeek/share/zeek/site/local.zeek
+
+- name: Zeekctl Deploy
+  become: true
+  ansible.builtin.shell:
+    cmd: "{{ zeek_base }}/bin/zeekctl deploy"
