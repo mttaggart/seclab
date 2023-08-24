@@ -31,7 +31,7 @@ install_ansible() {
     echo "[+] Installing Ansible"
     pip3 install ansible
     echo "[+] Installing Ansible Galaxy Plugins"
-    ansible-galaxy collection install community.docker community.hashi.vault community.windows community.general microsoft.ad
+    ansible-galaxy collection install community.docker community.hashi_vault community.windows community.general microsoft.ad
 }
 
 install_tools() {
