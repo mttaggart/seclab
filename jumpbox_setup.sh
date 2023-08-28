@@ -98,7 +98,7 @@ create_creds() {
 	printf "[?] Enter the default lab username: "
 	read seclab_username
 	get_proxmox_api_id() {
-		printf "[?] Enter the Proxmox API Token ID: "
+        printf "[?] Enter the Proxmox API Token ID: "
 		read proxmox_api_id
 	}
 	get_proxmox_api_token() {
