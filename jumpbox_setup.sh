@@ -72,11 +72,8 @@ initialize_vault() {
 	echo "[+] Starting Vault Systemd Service"
 	sudo systemctl start vault.service
 	echo "[+] Initializing Vault"
-	while [ $(systemctl status show -P vault.service) != "success" ]; do
-		echo "[+] Waiting for Vault service to be available..."
-		sleep 3
-	done
-
+	echo "[+] Waiting for Vault service to be available..."
+	sleep 10
 	echo "[+] This command will output data that you MUST store elsewhere!"
 	export VAULT_ADDR="http://127.0.0.1:8200"
 	vault operator init
