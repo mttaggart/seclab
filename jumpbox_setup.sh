@@ -3,6 +3,12 @@
 VSCODE_URL='https://az764295.vo.msecnd.net/stable/695af097c7bd098fbf017ce3ac85e09bbc5dda06/code_1.79.2-1686734195_amd64.deb'
 VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_6.1.3035.100-1_amd64.deb'
 
+install_tools() {
+	echo "[+] Installing baseline tools"
+	sudo apt update
+	sudo apt install -y tmux vim-gtk3 terminator krdc fish sshpass wireshark fonts-liberation
+}
+
 install_vscode() {
 	echo "[+] Installing Visual Studio Code"
 	wget -O code.deb $VSCODE_URL
@@ -34,11 +40,6 @@ install_ansible() {
 	pip3 install ansible
 	echo "[+] Installing Ansible Galaxy Plugins"
 	ansible-galaxy collection install community.docker community.hashi_vault community.windows community.general microsoft.ad
-}
-
-install_tools() {
-	echo "[+] Installing other tools"
-	sudo apt install -y tmux vim-gtk3 terminator krdc fish sshpass wireshark
 }
 
 install_fish() {
@@ -194,11 +195,11 @@ read confirm
 if [[ $confirm == "" ]] || [[ $confirm == "Y" ]]; then
 	echo "Doing it"
 	echo "[+] Beginning installation"
+	install_tools
 	install_vscode
 	install_vivaldi
 	install_hashicorp
 	install_ansible
-	install_tools
 	initialize_vault
 	create_creds
 	install_fish
