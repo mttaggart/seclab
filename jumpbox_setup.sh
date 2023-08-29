@@ -14,7 +14,7 @@ install_vivaldi() {
 	echo "[+] Installing Vivaldi"
 	wget -O vivaldi.deb $VIVALDI_URL
 	sudo dpkg -i vivaldi.deb
-	sudo apt --fix-broken install
+	sudo apt --fix-broken install -y
 	rm vivaldi.deb
 }
 
@@ -62,7 +62,7 @@ initialize_vault() {
 	echo "[+] Setting up Vault"
 	cd Vault
 	unset VAULT_TOKEN
-	export VAULT_ADDR=http://127.0.0.1:8200
+	VAULT_ADDR=http://127.0.0.1:8200
 	echo "[+] Creating Vault Systemd Service"
 	sudo cp /etc/vault.d/vault.hcl /etc/vault.d/vault.hcl.bak
 	sudo cp vault.hcl /etc/vault.d/vault.hcl
@@ -169,9 +169,11 @@ create_creds() {
 append_rcs() {
 	echo "export VAULT_TOKEN=$vault_token" >>~/.bashrc
 	echo "export VAULT_ADDR='http://127.0.0.1:8200'" >>~/.bashrc
-	if [[ $fish_confirm == "" ]] || [[ $fish_confirm == "Y" ]]; then
+	echo "export PATH=$PATH:~/.local/bin" >>~/.bashrc
+	if [[ $fish_confirm == "" ]] || [[ $fish_confirm == "Y" ]] || [[ $fish_confirm == "y" ]]; then
 		echo "set -x VAULT_TOKEN $vault_token" >>~/.config/fish/config.fish
 		echo "set -x VAULT_ADDR 'http://127.0.0.1:8200'" >>~/.config/fish/config.fish
+		echo "set -x PATH $PATH ~/.local/bin" >>~/.config/fish/config.fish
 	fi
 }
 
