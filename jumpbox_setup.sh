@@ -171,6 +171,7 @@ append_rcs() {
 	echo "export VAULT_ADDR='http://127.0.0.1:8200'" >>~/.bashrc
 	echo "export PATH=$PATH:~/.local/bin" >>~/.bashrc
 	if [[ $fish_confirm == "" ]] || [[ $fish_confirm == "Y" ]] || [[ $fish_confirm == "y" ]]; then
+		mkdir ~/.config/fish
 		echo "set -x VAULT_TOKEN $vault_token" >>~/.config/fish/config.fish
 		echo "set -x VAULT_ADDR 'http://127.0.0.1:8200'" >>~/.config/fish/config.fish
 		echo "set -x PATH $PATH ~/.local/bin" >>~/.config/fish/config.fish
