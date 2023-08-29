@@ -62,7 +62,7 @@ initialize_vault() {
 	echo "[+] Setting up Vault"
 	cd Vault
 	unset VAULT_TOKEN
-	export VAULT_ADDR='http://127.0.0.1:8200'
+	export VAULT_ADDR=http://127.0.0.1:8200
 	echo "[+] Creating Vault Systemd Service"
 	sudo cp /etc/vault.d/vault.hcl /etc/vault.d/vault.hcl.bak
 	sudo cp vault.hcl /etc/vault.d/vault.hcl
