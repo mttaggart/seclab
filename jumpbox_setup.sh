@@ -89,7 +89,7 @@ initialize_vault() {
 		vault operator unseal
 	done
 	echo "[+] Logging in to Vault"
-	printf "[?] Enter the Vault Root Token"
+	printf "[?] Enter the Vault Root Token (You'll be asked for it again): "
 	read vault_token
 	export VAULT_TOKEN=$vault_token
 	vault login
@@ -163,14 +163,7 @@ create_creds() {
 		create_creds
 	fi
 	echo "[+] Setting Vault data"
-	vault kv put -mount=seclab seclab \
-		proxmox_api_id=$proxmox_api_id
-	proxmox_api_token=$proxmox_api_token \
-		seclab_user=$seclab_user \
-		seclab_password=$seclab_password \
-		seclab_windows_password=$seclab_windows_password \
-		seclab_windows_domain_password=$seclab_windows_domain_password \
-		seclab_ssh_key="$(cat ~/.ssh/id_rsa.pub)"
+	vault kv put -mount=seclab seclab proxmox_api_id=$proxmox_api_id proxmox_api_token=$proxmox_api_token seclab_user=$seclab_user seclab_password=$seclab_password seclab_windows_password=$seclab_windows_password seclab_windows_domain_password=$seclab_windows_domain_password seclab_ssh_key="$(cat ~/.ssh/id_rsa.pub)"
 }
 
 append_rcs() {
