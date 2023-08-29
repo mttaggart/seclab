@@ -6,7 +6,7 @@
 
 - name: Download Sysmon Config
   ansible.windows.win_get_url:
-    url: https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/master/sysmonconfig-export.xml
+    url: https://raw.githubusercontent.com/olafhartong/sysmon-modular/master/sysmonconfig.xml
     dest: C:\Users\seclab\Downloads\sysmonconfig-export.xml
 
 - name: Install Sysmon as as Service

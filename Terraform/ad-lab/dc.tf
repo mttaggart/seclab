@@ -23,11 +23,6 @@ resource "proxmox_vm_qemu" "zd-dc" {
     model = "e1000"
   }
 
-  network {
-    bridge = "vmbr2"
-    model = "e1000"
-  }
-
   connection {
     type = "ssh"
     user = data.vault_kv_secret_v2.seclab.data.seclab_user
