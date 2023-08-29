@@ -158,7 +158,7 @@ create_creds() {
 	echo "[!] Seclab Windows Domain Admin password: $seclab_windows_domain_password"
 	printf "[?] Does this look correct? [Y/n]"
 	read create_creds_confirm
-	if [ $create_creds_confirm == "n" ]; then
+	if [[ $create_creds_confirm == "n" ]]; then
 		echo "[!] Restarting credential wizard..."
 		create_creds
 	fi
