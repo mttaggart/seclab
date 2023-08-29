@@ -63,7 +63,6 @@ initialize_vault() {
 	echo "[+] Setting up Vault"
 	cd Vault
 	unset VAULT_TOKEN
-	VAULT_ADDR=http://127.0.0.1:8200
 	echo "[+] Creating Vault Systemd Service"
 	sudo cp /etc/vault.d/vault.hcl /etc/vault.d/vault.hcl.bak
 	sudo cp vault.hcl /etc/vault.d/vault.hcl
@@ -74,7 +73,7 @@ initialize_vault() {
 	sudo systemctl start vault.service
 	echo "[+] Initializing Vault"
 	echo "[+] This command will output data that you MUST store elsewhere!"
-	vault operator init
+	VAULT_ADDR=http://127.0.0.1:8200 vault operator init
 	echo "[+] Unsealing Vault"
 	echo "[+] You will be prompted to enter 3 unseal keys in order."
 	printf "[!] Press any key when ready"
@@ -85,8 +84,7 @@ initialize_vault() {
 	echo "[+] Logging in to Vault"
 	printf "[?] Enter the Vault Root Token"
 	read vault_token
-	export VAULT_TOKEN=$vault_token
-	vault login
+	VAULT_TOKEN=$vault_token vault login
 	echo "[+] Initializing KV Secrets Engine"
 	vault secrets enable -version=2 -path=seclab kv
 	cd ..
@@ -176,6 +174,7 @@ append_rcs() {
 		echo "set -x VAULT_ADDR 'http://127.0.0.1:8200'" >>~/.config/fish/config.fish
 		echo "set -x PATH $PATH ~/.local/bin" >>~/.config/fish/config.fish
 	fi
+	source ~/.bashrc
 }
 
 echo "                                                                                          
