@@ -26,12 +26,12 @@ install_hashicorp() {
 }
 
 install_ansible() {
-    echo "[+] Installing Pip"
-    sudo apt install -y python3-pip
-    echo "[+] Installing Ansible"
-    pip3 install ansible
-    echo "[+] Installing Ansible Galaxy Plugins"
-    ansible-galaxy collection install community.docker community.hashi_vault community.windows community.general microsoft.ad
+	echo "[+] Installing Pip"
+	sudo apt install -y python3-pip
+	echo "[+] Installing Ansible"
+	pip3 install ansible
+	echo "[+] Installing Ansible Galaxy Plugins"
+	ansible-galaxy collection install community.docker community.hashi_vault community.windows community.general microsoft.ad
 }
 
 install_tools() {
@@ -98,7 +98,7 @@ create_creds() {
 	printf "[?] Enter the default lab username: "
 	read seclab_username
 	get_proxmox_api_id() {
-        printf "[?] Enter the Proxmox API Token ID: "
+		printf "[?] Enter the Proxmox API Token ID: "
 		read proxmox_api_id
 	}
 	get_proxmox_api_token() {
@@ -154,13 +154,13 @@ create_creds() {
 		create_creds
 	fi
 	echo "[+] Setting Vault data"
-	vault kv put -mount=seclab seclab \ 
-	proxmox_api_id=$proxmox_api_id
+	vault kv put -mount=seclab seclab \
+		proxmox_api_id=$proxmox_api_id
 	proxmox_api_token=$proxmox_api_token \
-		seclab_user=$seclab_user \ 
-	seclab_password=$seclab_password \ 
-	seclab_windows_password=$seclab_windows_password \ 
-	seclab_windows_domain_password=$seclab_windows_domain_password \
+		seclab_user=$seclab_user \
+		seclab_password=$seclab_password \
+		seclab_windows_password=$seclab_windows_password \
+		seclab_windows_domain_password=$seclab_windows_domain_password \
 		seclab_ssh_key="$(cat ~/.ssh/id_rsa.pub)"
 }
 
