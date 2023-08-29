@@ -17,11 +17,15 @@ install_vscode() {
 }
 
 install_vivaldi() {
-	echo "[+] Installing Vivaldi"
-	wget -O vivaldi.deb $VIVALDI_URL
-	sudo dpkg -i vivaldi.deb
-	sudo apt --fix-broken install -y
-	rm vivaldi.deb
+	echo "[?] Install Vivaldi Browser? [y/N]: "
+	read vivaldi_confirm
+	if [[ $vivaldi_confirm == "y" ]] || [[ $vivaldi_confirm == "Y" ]]; then
+		echo "[+] Installing Vivaldi"
+		wget -O vivaldi.deb $VIVALDI_URL
+		sudo dpkg -i vivaldi.deb
+		sudo apt --fix-broken install -y
+		rm vivaldi.deb
+	fi
 }
 
 install_hashicorp() {
