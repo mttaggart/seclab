@@ -14,6 +14,7 @@ install_vivaldi() {
 	echo "[+] Installing Vivaldi"
 	wget -O vivaldi.deb $VIVALDI_URL
 	sudo dpkg -i vivaldi.deb
+	sudo apt --fix-broken install
 	rm vivaldi.deb
 }
 
