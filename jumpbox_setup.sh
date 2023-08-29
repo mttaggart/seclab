@@ -73,7 +73,8 @@ initialize_vault() {
 	sudo systemctl start vault.service
 	echo "[+] Initializing Vault"
 	echo "[+] This command will output data that you MUST store elsewhere!"
-	VAULT_ADDR=http://127.0.0.1:8200 vault operator init
+	export VAULT_ADDR="http://127.0.0.1:8200"
+	vault operator init
 	echo "[+] Unsealing Vault"
 	echo "[+] You will be prompted to enter 3 unseal keys in order."
 	printf "[!] Press any key when ready"
@@ -84,7 +85,8 @@ initialize_vault() {
 	echo "[+] Logging in to Vault"
 	printf "[?] Enter the Vault Root Token"
 	read vault_token
-	VAULT_TOKEN=$vault_token vault login
+	export VAULT_TOKEN=$vault_token
+	vault login
 	echo "[+] Initializing KV Secrets Engine"
 	vault secrets enable -version=2 -path=seclab kv
 	cd ..
