@@ -47,11 +47,10 @@ install_ansible() {
 }
 
 install_fish() {
-	printf "[?] Do you want to configure fish as your default shell?"
+	printf "[?] Do you want to configure fish as your default shell? [Y/n] "
 	read fish_confirm
-	if [[ $fish_confirm == "" ]] || [[ $fish_confirm == "Y" ]]; then
+	if [[ $fish_confirm == "" ]] || [[ $fish_confirm == "Y" ]] || [[ $fish_confirm == "y" ]]; then
 		echo "[+] Installing Powerline fonts"
-		current_dir=$(pwd)
 		git clone https://github.com/powerline/fonts /tmp/fonts
 		chmod +x /tmp/fonts/install.sh
 		/tmp/fonts/install.sh
@@ -99,13 +98,14 @@ initialize_vault() {
 }
 
 create_creds() {
-	echo "[+] Creating Lab Credentials"
-	if [ ! -f ~/.ssh/id_rsa.pub ]; then
-		echo "[+] Generating SSH Key"
-		ssh-keygen -f ~/.ssh/id_rsa -b 4096 -P ''
-	fi
-	printf "[?] Enter the default lab username: "
-	read seclab_username
+
+	create_ssh_key() {
+		echo "[+] Creating Lab Credentials"
+		if [ ! -f ~/.ssh/id_rsa.pub ]; then
+			echo "[+] Generating SSH Key"
+			ssh-keygen -f ~/.ssh/id_rsa -b 4096 -P ''
+		fi
+	}
 	get_proxmox_api_id() {
 		printf "[?] Enter the Proxmox API Token ID: "
 		read proxmox_api_id
@@ -113,6 +113,10 @@ create_creds() {
 	get_proxmox_api_token() {
 		printf "[?] Enter the Proxmox API Token Secret: "
 		read proxmox_api_token
+	}
+	get_seclab_user() {
+		printf "[?] Enter the default lab username: "
+		read seclab_user
 	}
 	get_seclab_password() {
 		printf "[?] Enter the default lab password: "
@@ -145,14 +149,17 @@ create_creds() {
 		fi
 	}
 
+	create_ssh_key
+	get_seclab_user
 	get_proxmox_api_id
 	get_proxmox_api_token
+	get_seclab_user
 	get_seclab_password
 	get_seclab_windows_password
 	get_seclab_windows_domain_password
 
 	echo "[+] Setting the following:"
-	echo "[!] Seclab username: $seclab_username"
+	echo "[!] Seclab user: $seclab_user"
 	echo "[!] Seclab password: $seclab_password"
 	echo "[!] Seclab Windows password: $seclab_windows_password"
 	echo "[!] Seclab Windows Domain Admin password: $seclab_windows_domain_password"
