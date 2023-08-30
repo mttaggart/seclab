@@ -17,7 +17,7 @@ install_vscode() {
 }
 
 install_vivaldi() {
-	echo "[?] Install Vivaldi Browser? [y/N]: "
+	echo "[?] Install Vivaldi Browser [y/N]? "
 	read vivaldi_confirm
 	if [[ $vivaldi_confirm == "y" ]] || [[ $vivaldi_confirm == "Y" ]]; then
 		echo "[+] Installing Vivaldi"
@@ -47,9 +47,10 @@ install_ansible() {
 }
 
 install_fish() {
-	printf "[?] Do you want to configure fish as your default shell? [Y/n] "
+	printf "[?] Do you want to configure fish as your default shell [Y/n]? "
 	read fish_confirm
 	if [[ $fish_confirm == "" ]] || [[ $fish_confirm == "Y" ]] || [[ $fish_confirm == "y" ]]; then
+		chsh -s /usr/bin/fish
 		echo "[+] Installing Powerline fonts"
 		git clone https://github.com/powerline/fonts /tmp/fonts
 		chmod +x /tmp/fonts/install.sh
@@ -153,7 +154,6 @@ create_creds() {
 	get_seclab_user
 	get_proxmox_api_id
 	get_proxmox_api_token
-	get_seclab_user
 	get_seclab_password
 	get_seclab_windows_password
 	get_seclab_windows_domain_password
@@ -163,7 +163,7 @@ create_creds() {
 	echo "[!] Seclab password: $seclab_password"
 	echo "[!] Seclab Windows password: $seclab_windows_password"
 	echo "[!] Seclab Windows Domain Admin password: $seclab_windows_domain_password"
-	printf "[?] Does this look correct? [Y/n]"
+	printf "[?] Does this look correct [Y/n]? "
 	read create_creds_confirm
 	if [[ $create_creds_confirm == "n" ]]; then
 		echo "[!] Restarting credential wizard..."
@@ -197,7 +197,7 @@ echo "
                                                                                           "
 
 echo "This script will install dependencies for Seclab Jumpbox."
-printf "Continue? [Y/n] "
+printf "Continue [Y/n]? "
 read confirm
 
 if [[ $confirm == "" ]] || [[ $confirm == "Y" ]]; then
