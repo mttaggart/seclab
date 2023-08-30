@@ -50,7 +50,7 @@ install_fish() {
 	printf "[?] Do you want to configure fish as your default shell [Y/n]? "
 	read fish_confirm
 	if [[ $fish_confirm == "" ]] || [[ $fish_confirm == "Y" ]] || [[ $fish_confirm == "y" ]]; then
-		echo "[!] This is going to mess up this terminal session. Once it's finished, close it and open a new one."
+		echo "[!] This is going to kick you into a fish shell. Type 'exit' to close it and continue installation. The final step will mess up this terminal session. Once it's finished, close it and open a new one."
 		echo "[!] To enter Fish automatically, log out and back in."
 		chsh -s /usr/bin/fish
 		echo "[+] Installing Powerline fonts"
