@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VSCODE_URL='https://az764295.vo.msecnd.net/stable/695af097c7bd098fbf017ce3ac85e09bbc5dda06/code_1.79.2-1686734195_amd64.deb'
+VSCODE_URL='https://update.code.visualstudio.com/latest/linux-deb-x64/stable'
 VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_6.2.3105.43-1_amd64.deb'
 
 install_tools() {
