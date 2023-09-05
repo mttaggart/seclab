@@ -19,7 +19,7 @@ variable "proxmox_host" {
 
 variable "hostname" {
   type        = string
-  default     = "seclab-docker"
+  default     = "seclab-docker-swarm-swarm"
   description = "description"
 }
 
@@ -42,7 +42,7 @@ provider "proxmox" {
 }
 
 
-resource "proxmox_vm_qemu" "seclab-docker-main" {
+resource "proxmox_vm_qemu" "seclab-docker-swarm-main" {
   cores       = 2
   memory      = 4096
   name        = "Docker-Demo-Main"
@@ -66,9 +66,9 @@ resource "proxmox_vm_qemu" "seclab-docker-main" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo sed -i 's/seclab-ubuntu-server/seclab-docker-main/g' /etc/hosts",
-      "sudo sed -i 's/seclab-ubuntu-server/seclab-docker-main/g' /etc/hostname",
-      "sudo hostname seclab-docker-main",
+      "sudo sed -i 's/seclab-ubuntu-server/seclab-docker-swarm-main/g' /etc/hosts",
+      "sudo sed -i 's/seclab-ubuntu-server/seclab-docker-swarm-main/g' /etc/hostname",
+      "sudo hostname seclab-docker-swarm-main",
       "ip a s"
     ]
   }
@@ -76,7 +76,7 @@ resource "proxmox_vm_qemu" "seclab-docker-main" {
 
 }
 
-resource "proxmox_vm_qemu" "seclab-docker-node" {
+resource "proxmox_vm_qemu" "seclab-docker-swarm-node" {
   cores       = 2
   memory      = 4096
   name        = "Docker-Demo-Node"
@@ -106,9 +106,9 @@ resource "proxmox_vm_qemu" "seclab-docker-node" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo sed -i 's/seclab-ubuntu-server/seclab-docker-node/g' /etc/hosts",
-      "sudo sed -i 's/seclab-ubuntu-server/seclab-docker-node/g' /etc/hostname",
-      "sudo hostname seclab-docker-node",
+      "sudo sed -i 's/seclab-ubuntu-server/seclab-docker-swarm-node/g' /etc/hosts",
+      "sudo sed -i 's/seclab-ubuntu-server/seclab-docker-swarm-node/g' /etc/hostname",
+      "sudo hostname seclab-docker-swarm-node",
       "ip a s"
     ]
   }
@@ -117,13 +117,13 @@ resource "proxmox_vm_qemu" "seclab-docker-node" {
 }
 
 output "docker-main-ip" {
-  value       = proxmox_vm_qemu.seclab-docker-main.default_ipv4_address
+  value       = proxmox_vm_qemu.seclab-docker-swarm-main.default_ipv4_address
   sensitive   = false
   description = "Docker Main IP"
 }
 
 output "docker-node-ip" {
-  value       = proxmox_vm_qemu.seclab-docker-node.default_ipv4_address
+  value       = proxmox_vm_qemu.seclab-docker-swarm-node.default_ipv4_address
   sensitive   = false
   description = "Docker Node IP"
 }
