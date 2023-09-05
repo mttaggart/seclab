@@ -30,8 +30,8 @@ source "proxmox-iso" "seclab-ubuntu-server" {
   node                     = "${var.proxmox_node}"
   username                 = "${local.proxmox_api_id}"
   token                    = "${local.proxmox_api_token}"
-  iso_file                 = "local:iso/ubuntu-22.04-live-server-amd64.iso"
-  iso_checksum             = "sha256:10f19c5b2b8d6db711582e0e27f5116296c34fe4b313ba45f9b201a5007056cb"
+  iso_file                 = "local:iso/ubuntu-22.04.3-live-server-amd64.iso"
+  iso_checksum             = "sha256:a4acfda10b18da50e2ec50ccaf860d7f20b389df8765611142305c0e911d16fd"
   ssh_username             = "${local.username}"
   ssh_password             = "${local.password}"
   ssh_handshake_attempts   = 100
