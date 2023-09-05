@@ -6,7 +6,7 @@ VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_6.2.3105.43-1_a
 install_tools() {
 	echo "[+] Installing baseline tools"
 	sudo apt update
-	sudo apt install -y tmux vim-gtk3 terminator krdc fish openssh-server sshpass wireshark fonts-liberation xrdp
+	sudo apt install -y tmux vim-gtk3 terminator krdc fish openssh-server sshpass wireshark fonts-liberation xrdp genisoimage
 }
 
 install_vscode() {
