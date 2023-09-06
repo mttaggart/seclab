@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[[ -z $1 ]] && echo 'Error! Please provide a valid directory (e.g. scripts)' && exit 127
+[[ -z $1 ]] && echo '[!] No directory target provided! Please provide a valid directory (e.g. scripts)' && exit 127
 
 echo "[+] Extracting Vault Secrets"
 printf "[?] Login to Vault? [y/N]"
