@@ -21,7 +21,7 @@ variable "proxmox_node" {
 locals {
   username          = vault("/seclab/data/seclab/", "seclab_user")
   password          = vault("/seclab/data/seclab/", "seclab_windows_password")
-  proxmox_api_id      = vault("/seclab/data/seclab/", "proxmox_api_id")
+  proxmox_api_id    = vault("/seclab/data/seclab/", "proxmox_api_id")
   proxmox_api_token = vault("/seclab/data/seclab/", "proxmox_api_token")
 }
 
@@ -64,9 +64,9 @@ source "proxmox-iso" "seclab-win-server" {
   }
 
   disks {
-    type              = "virtio"
-    disk_size         = "50G"
-    storage_pool      = "local-lvm"
+    type         = "virtio"
+    disk_size    = "50G"
+    storage_pool = "local-lvm"
   }
   scsi_controller = "virtio-scsi-pci"
 }

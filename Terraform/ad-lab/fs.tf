@@ -7,8 +7,8 @@ variable "fs_hostname" {
 resource "proxmox_vm_qemu" "zd-fs" {
   cores       = 2
   memory      = 4096
-  name        = "${var.fs_hostname}"
-  target_node = "${var.proxmox_host}"
+  name        = var.fs_hostname
+  target_node = var.proxmox_host
   clone       = "seclab-win-server"
   full_clone  = false
   agent       = 1
@@ -18,14 +18,14 @@ resource "proxmox_vm_qemu" "zd-fs" {
 
   network {
     bridge = "vmbr2"
-    model = "e1000"
+    model  = "e1000"
   }
 
   connection {
-    type = "ssh"
-    user = data.vault_kv_secret_v2.seclab.data.seclab_user
-    password = data.vault_kv_secret_v2.seclab.data.seclab_windows_password
-    host = self.default_ipv4_address
+    type            = "ssh"
+    user            = data.vault_kv_secret_v2.seclab.data.seclab_user
+    password        = data.vault_kv_secret_v2.seclab.data.seclab_windows_password
+    host            = self.default_ipv4_address
     target_platform = "windows"
   }
 

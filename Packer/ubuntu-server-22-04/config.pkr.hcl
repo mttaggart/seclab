@@ -20,7 +20,7 @@ variable "proxmox_node" {
 locals {
   username          = vault("/seclab/data/seclab/", "seclab_user")
   password          = vault("/seclab/data/seclab/", "seclab_password")
-  proxmox_api_id      = vault("/seclab/data/seclab/", "proxmox_api_id")
+  proxmox_api_id    = vault("/seclab/data/seclab/", "proxmox_api_id")
   proxmox_api_token = vault("/seclab/data/seclab/", "proxmox_api_token")
 }
 
