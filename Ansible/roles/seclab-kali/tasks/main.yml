@@ -1,7 +1,7 @@
 ---
 - name: Create Scripts dir
   ansible.builtin.file:
-    path: /home/seclab/Scripts
+    path: /home/{{ ansible_user }}/Scripts
     state: directory
     owner: seclab
 
