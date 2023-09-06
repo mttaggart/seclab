@@ -22,5 +22,5 @@ echo "[+] Cleaning up"
 rm -rf $1
 mv $1.bak $1
 echo "[+] Obtaining SHA256 Hash of New ISO"
-md5sum ../$new_iso
+sha256sum ../$new_iso
 exit 0
