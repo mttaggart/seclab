@@ -2,12 +2,12 @@
 - name: Download UF MSI
   ansible.windows.win_get_url:
     url: "https://download.splunk.com/products/universalforwarder/releases/9.1.0.1/windows/splunkforwarder-9.1.0.1-77f73c9edb85-x64-release.msi"
-    dest: C:\Users\seclab\Downloads\splunk-uf.msi
+    dest: "C:\\Users\\{{ ansible_user }}\\Downloads\\splunk-uf.msi"
   when: ansible_facts["os_family"] == "Windows"
 
 - name: Install UF (Windows)
   ansible.windows.win_package:
-    path: C:\Users\seclab\Downloads\splunk-uf.msi
+    path: "C:\\Users\\{{ ansible_user }}\\Downloads\\splunk-uf.msi"
     arguments:
       - "AGREETOLICENSE=YES"
       - "RECEIVING_INDEXER={{ siem_ip }}:9997"
@@ -17,13 +17,13 @@
 - name: Install Inputs Config (Windows)
   ansible.builtin.template:
     src: inputs_win.conf.j2
-    dest: C:\Program Files\SplunkUniversalForwarder\etc\system\local\inputs.conf
+    dest: "C:\\Program Files\\SplunkUniversalForwarder\\etc\\system\\local\\inputs.conf"
   notify: Restart Windows Splunk UF Service
   when: ansible_facts["os_family"] == "Windows"
 
 - name: Remove Splunk Install Files
   ansible.windows.win_file:
-    path: C:\Users\seclab\\Downloads\splunk-uf.msi
+    path: "C:\\Users\\{{ ansible_user }}\\\\Downloads\\splunk-uf.msi"
     state: absent
   when: ansible_facts["os_family"] == "Windows"
 
