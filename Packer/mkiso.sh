@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[[ -z $1 ]] && echo 'Error! Please provide a valid directory (e.g. scripts)' && exit 127
+
 echo "[+] Extracting Vault Secrets"
 printf "[?] Login to Vault? [y/N]"
 read vault_login
@@ -14,7 +16,7 @@ echo "[+] Injecting password"
 sed -i "s/SECLAB_WINDOWS_PASSWORD/$windows_pw/g" $1/autounattend.xml
 sed -i "s/SECLAB_USER/$seclab_user/g" $1/autounattend.xml
 echo "[+] Making ISO"
-genisoimage -J -l -R -V "Autounattend" -iso-level 4 -o Autounattend.iso $1
+genisoimage -J -l -R -V "Autounattend" -iso-level 4 -o Autounattend-$(basename $PWD).iso $1
 echo "[+] Cleaning up"
 rm -rf $1
 mv $1.bak $1
