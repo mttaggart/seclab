@@ -1,8 +1,6 @@
 ---
 - name: Configure Attack Box
   hosts: seclab-kali
-  vars:
-    ansible_become_pass: "{{ ansible_password }}"
   roles:
     - rdp
     - attack-box
