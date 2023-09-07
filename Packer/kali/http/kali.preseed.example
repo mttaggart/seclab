@@ -115,7 +115,7 @@ d-i partman-basicfilesystems/no_swap boolean false
 # Packages
 tasksel tasksel/first multiselect standard
 d-i pkgsel/include string \
-    curl git kali-linux-default kali-desktop-xfce openssh-server qemu-guest-agent
+    curl git kali-linux-default kali-desktop-xfce openssh-server qemu-guest-agent xrdp
 
 # User Stuff
 # Skip creation of a root account (normal user account will be able to
@@ -142,3 +142,10 @@ d-i cdrom-detect/eject boolean true
 d-i preseed/late_command string \
     in-target systemctl enable ssh;
     in-target systemctl enable xrdp;
+    in-target mkdir -pm 700 /home/SECLAB_USER/.ssh;
+    in-target echo 'SECLAB_SSH_KEY' > /home/SECLAB_USER/.ssh/authorized_keys;
+    in-target chmod 0600 /home/SECLAB_USER/.ssh/authorized_keys;
+    in-target chown -R SECLAB_USER:SECLAB_USER /home/SECLAB_USER/.ssh;
+    in-target echo 'Defaults:SECLAB_USER !requiretty' > /etc/sudoers.d/SECLAB_USER;
+    in-target echo 'SECLAB_USER ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers.d/SECLAB_USER;
+    in-target chmod 440 /target/etc/sudoers.d/SECLAB_USER;
