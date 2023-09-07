@@ -147,4 +147,4 @@ d-i preseed/late_command string \
     chown --recursive SECLAB_USER: /home/SECLAB_USER/.ssh; \
     chmod 0644 /home/SECLAB_USER/.ssh/authorized_keys; \
     echo "SECLAB_USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/SECLAB_USER; \
-    echo "Defaults:SECLAB_USER !requiretty" > /etc/sudoers.d/SECLAB_USER;'
+    echo "Defaults:SECLAB_USER !requiretty" >> /etc/sudoers.d/SECLAB_USER;'
