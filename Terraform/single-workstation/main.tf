@@ -71,7 +71,7 @@ resource "proxmox_vm_qemu" "demo-ws" {
   provisioner "remote-exec" {
     inline = [
       "powershell.exe -c Rename-Computer '${var.hostname}'",
-      "powershell.exe -c Start-Services W32Time",
+      "powershell.exe -c Start-Service W32Time",
       "W32tm /resync /force",
       "ipconfig"
     ]

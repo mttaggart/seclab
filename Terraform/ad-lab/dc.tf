@@ -36,7 +36,7 @@ resource "proxmox_vm_qemu" "zd-dc" {
       "powershell.exe -c Rename-Computer ${var.dc_hostname}",
       "powershell.exe -c Get-NetIpAddress",
       "powershell.exe -c New-NetIpAddress -InterfaceAlias 'Ethernet 2' -IpAddress 10.1.99.3 -PrefixLength 24",
-      "powershell.exe -c Start-Services W32Time",
+      "powershell.exe -c Start-Service W32Time",
       "W32tm /resync /force"
     ]
   }
