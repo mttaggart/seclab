@@ -31,7 +31,7 @@ resource "proxmox_vm_qemu" "zd-fs" {
 
   provisioner "remote-exec" {
     inline = [
-      "powershell.exe -c Rename-Computer ${var.fs_hostname}"
+      "powershell.exe -c Rename-Computer ${var.fs_hostname}",
       "powershell.exe -c Start-Service W32Time",
       "W32tm /resync /force"
     ]
