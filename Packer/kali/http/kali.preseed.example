@@ -115,7 +115,7 @@ d-i partman-basicfilesystems/no_swap boolean false
 # Packages
 tasksel tasksel/first multiselect standard
 d-i pkgsel/include string \
-    curl git kali-linux-default kali-desktop-xfce openssh-server qemu-guest-agent xrdp
+    curl git kali-linux-default kali-desktop-xfce openssh-server qemu-guest-agent xrdp auditd
 
 # User Stuff
 # Skip creation of a root account (normal user account will be able to

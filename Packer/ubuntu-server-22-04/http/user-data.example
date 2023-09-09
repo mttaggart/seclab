@@ -39,6 +39,7 @@ autoinstall:
         size: -1
   packages:
     - qemu-guest-agent
+    - auditd
   late-commands:
     - "echo 'Defaults:SECLAB_USER !requiretty' > /target/etc/sudoers.d/SECLAB_USER"
     - "echo 'SECLAB_USER ALL=(ALL) NOPASSWD: ALL' >> /target/etc/sudoers.d/SECLAB_USER"
