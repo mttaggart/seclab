@@ -4,7 +4,7 @@
     - name: siem_ip
       prompt: SIEM IP
       private: false
-    - name: enrollment_token
+    - name: fleet_server_token
       prompt: Fleet Enrollment Token
       private: false
   roles:
