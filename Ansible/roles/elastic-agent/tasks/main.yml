@@ -40,3 +40,4 @@
 - name: Remove Linux install files
   ansible.builtin.file:
     path: /tmp/elastic-agent-{{ agent_version }}-linux-x86_64
+  when: ansible_facts["os_family"] == "Ubuntu" or ansible_facts["os_family"] == "Debian"
