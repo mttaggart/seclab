@@ -47,7 +47,7 @@ resource "proxmox_vm_qemu" "seclab-docker-swarm-main" {
   memory      = 4096
   name        = "Docker-Demo-Main"
   target_node = var.proxmox_host
-  clone       = "seclab-ubuntu22-22-04"
+  clone       = "seclab-ubuntu22"
   full_clone  = false
   onboot      = true
   agent       = 1
@@ -81,7 +81,7 @@ resource "proxmox_vm_qemu" "seclab-docker-swarm-node" {
   memory      = 4096
   name        = "Docker-Demo-Node"
   target_node = var.proxmox_host
-  clone       = "seclab-ubuntu22-22-04"
+  clone       = "seclab-ubuntu22"
   full_clone  = false
   onboot      = true
   agent       = 1

@@ -47,7 +47,7 @@ resource "proxmox_vm_qemu" "seclab-siem" {
   memory      = 8192
   name        = "Seclab-SIEM"
   target_node = var.proxmox_host
-  clone       = "seclab-ubuntu22-22-04"
+  clone       = "seclab-ubuntu22"
   full_clone  = false
   onboot      = true
   agent       = 1
