@@ -39,7 +39,7 @@ source "proxmox-iso" "seclab-ubuntu-server" {
   http_directory           = "http"
   cores                    = 2
   memory                   = 2048
-  vm_name                  = "seclab-ubuntu-server-22-04"
+  vm_name                  = "seclab-ubuntu-22-04"
   qemu_agent               = true
   template_description     = "Ubuntu 22.04 Server"
   insecure_skip_tls_verify = true
