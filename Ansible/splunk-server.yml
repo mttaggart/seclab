@@ -4,7 +4,7 @@
   vars_prompt:
     - name: siem_password
       prompt: "Enter Splunk Admin Password"
-      private: true
+      private: false
   become: true
   become_user: root
   roles:
