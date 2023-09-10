@@ -47,7 +47,7 @@ resource "proxmox_vm_qemu" "seclab-docker-swarm-main" {
   memory      = 4096
   name        = "Docker-Demo-Main"
   target_node = var.proxmox_host
-  clone       = "seclab-ubuntu22"
+  clone       = "seclab-ubuntu-22-04"
   full_clone  = false
   onboot      = true
   agent       = 1
@@ -66,8 +66,8 @@ resource "proxmox_vm_qemu" "seclab-docker-swarm-main" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo sed -i 's/seclab-ubuntu22/seclab-docker-swarm-main/g' /etc/hosts",
-      "sudo sed -i 's/seclab-ubuntu22/seclab-docker-swarm-main/g' /etc/hostname",
+      "sudo sed -i 's/seclab-ubuntu-22-04/seclab-docker-swarm-main/g' /etc/hosts",
+      "sudo sed -i 's/seclab-ubuntu-22-04/seclab-docker-swarm-main/g' /etc/hostname",
       "sudo hostname seclab-docker-swarm-main",
       "ip a s"
     ]
@@ -81,7 +81,7 @@ resource "proxmox_vm_qemu" "seclab-docker-swarm-node" {
   memory      = 4096
   name        = "Docker-Demo-Node"
   target_node = var.proxmox_host
-  clone       = "seclab-ubuntu22"
+  clone       = "seclab-ubuntu-22-04"
   full_clone  = false
   onboot      = true
   agent       = 1
@@ -106,8 +106,8 @@ resource "proxmox_vm_qemu" "seclab-docker-swarm-node" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo sed -i 's/seclab-ubuntu22/seclab-docker-swarm-node/g' /etc/hosts",
-      "sudo sed -i 's/seclab-ubuntu22/seclab-docker-swarm-node/g' /etc/hostname",
+      "sudo sed -i 's/seclab-ubuntu-22-04/seclab-docker-swarm-node/g' /etc/hosts",
+      "sudo sed -i 's/seclab-ubuntu-22-04/seclab-docker-swarm-node/g' /etc/hostname",
       "sudo hostname seclab-docker-swarm-node",
       "ip a s"
     ]

@@ -47,7 +47,7 @@ resource "proxmox_vm_qemu" "seclab-zeek" {
   memory      = 7192
   name        = "Seclab-Zeek"
   target_node = var.proxmox_host
-  clone       = "seclab-ubuntu22"
+  clone       = "seclab-ubuntu-22-04"
   full_clone  = false
   onboot      = true
   agent       = 1
@@ -75,8 +75,8 @@ resource "proxmox_vm_qemu" "seclab-zeek" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo sed -i 's/seclab-ubuntu22/${var.hostname}/g' /etc/hosts",
-      "sudo sed -i 's/seclab-ubuntu22/${var.hostname}/g' /etc/hostname",
+      "sudo sed -i 's/seclab-ubuntu-22-04/${var.hostname}/g' /etc/hosts",
+      "sudo sed -i 's/seclab-ubuntu-22-04/${var.hostname}/g' /etc/hostname",
       "sudo mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak",
       "sudo mv /tmp/00-netplan.yaml /etc/netplan/00-netplan.yaml",
       "sudo hostname ${var.hostname}",
