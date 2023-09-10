@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: /home/{{ ansible_user }}/Scripts
     state: directory
-    owner: seclab
+    owner: {{ ansible_user }}
 
 - name: Install prereqs
   ansible.builtin.apt:
