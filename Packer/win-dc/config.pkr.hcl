@@ -20,14 +20,14 @@ variable "hostname" {
   default = "seclab-win-dc"
 }
 
-variable "proxmox_hostname" {
+variable "proxmox_node" {
   type    = string
   default = "proxmox"
 }
 
 source "proxmox-iso" "seclab-win-dc" {
-  proxmox_url  = "https://${var.proxmox_hostname}:8006/api2/json"
-  node         = "${var.proxmox_hostname}"
+  proxmox_url  = "https://${var.proxmox_node}:8006/api2/json"
+  node         = "${var.proxmox_node}"
   username     = "${local.proxmox_api_id}"
   token        = "${local.proxmox_api_token}"
   iso_file     = "local:iso/Win-Server-2019.iso"
