@@ -1,4 +1,4 @@
-ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+ansible_ssh_common_args: '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 ansible_user: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=seclab/data/seclab url=http://127.0.0.1:8200')['seclab_user'] }}"
 ansible_password: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=seclab/data/seclab url=http://127.0.0.1:8200')['seclab_windows_password'] }}"
 ansible_connection: ssh
