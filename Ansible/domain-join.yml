@@ -2,6 +2,10 @@
   hosts: windows-hosts
   gather_facts: true
   tasks:
+  - name: Pause Windows updates
+    ansible.windows.win_updates:
+      reject_list:
+        - ".*"
   - name: Reboot Machine for Rename
     ansible.windows.win_reboot:
       msg: "Rebooting for Provisioning Name Change"
@@ -19,5 +23,10 @@
       msg: "Domain joined. Rebooting"
       pre_reboot_delay: 15
     when: domain_state.changed
+  - name: Reenable Windows updates
+    ansible.windows.win_updates:
+      accept_list:
+        - ".*"
+      reject_list:
   roles:
     - rdp
