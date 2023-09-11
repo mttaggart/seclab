@@ -11,6 +11,6 @@
         name: juice-shop
         image: bkimminich/juice-shop
         state: started
-        restart-policy: unless-stopped
+        restart_policy: unless-stopped
         ports:
           - 8000:3000
