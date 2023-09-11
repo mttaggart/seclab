@@ -2,8 +2,10 @@
 disabled = 0
 index = syslog
 sourcetype = syslog
+source = syslog
 
 [monitor:///var/log/audit/*]
 disabled = 0
 index = syslog
 sourcetype = auditd
+source = auditd
