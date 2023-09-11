@@ -7,7 +7,7 @@
       private: false
     - name: siem_password
       prompt: "Enter Splunk Password"
-      private: password
+      private: false
   roles:
     # - sysmon
     - splunk-uf
