@@ -3,27 +3,31 @@
   ansible.windows.win_service_info:
     name: Sysmon64
   register: sysmon_info
+  when: ansible_facts["os_family"] == "Windows"
 
 - name: Download Sysmon
   ansible.windows.win_get_url:
     url: https://live.sysinternals.com/Sysmon64.exe
     dest: "C:\\Users\\{{ ansible_user }}\\Downloads\\Sysmon64.exe"
+  when: ansible_facts["os_family"] == "Windows"
 
 - name: Uninstall Sysmon
   ansible.windows.win_shell: .\Sysmon64.exe -accepteula -u
   args:
     chdir: C:\Users\{{ ansible_user }}\Downloads
-  when: sysmon_info["exists"]
+  when: ansible_facts["os_family"] == "Windows" and sysmon_info["exists"] 
 
 - name: Download Sysmon Config
   ansible.windows.win_get_url:
     url: https://raw.githubusercontent.com/olafhartong/sysmon-modular/master/sysmonconfig.xml
     dest: "C:\\Users\\{{ ansible_user }}\\Downloads\\sysmonconfig-export.xml"
+  when: ansible_facts["os_family"] == "Windows"
 
-- name: Install Sysmon as as Service
+- name: Install Sysmon as a Service
   ansible.windows.win_shell: .\Sysmon64.exe -accepteula -i .\sysmonconfig-export.xml
   args:
     chdir: C:\Users\{{ ansible_user }}\Downloads
+  when: ansible_facts["os_family"] == "Windows"
 
 - name: Remove Sysmon Install Files
   ansible.windows.win_file:
@@ -32,3 +36,45 @@
   loop: "{{ sysmon_files }}"
   vars:
     sysmon_files: ["Sysmon64.exe", "sysmonconfig-export.xml"]
+  when: ansible_facts["os_family"] == "Windows"
+
+- name: Download and Install Microsoft Sources
+  become: true
+  ansible.builtin.apt:
+    deb: "https://packages.microsoft.com/config/ubuntu/{{ ansible_facts['distribution_version'] }}/packages-microsoft-prod.deb"
+  when: ansible_facts["os_family"] == "Debian"
+
+- name: Install S4L and Dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - libbpfcc
+      - libbpfcc-dev
+      - sysmonforlinux
+    update_cache: true
+  when: ansible_facts["os_family"] == "Debian"
+
+- name: Download Sysmon Config (Linux)
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/microsoft/MSTIC-Sysmon/main/linux/configs/collect-all.xml
+    dest: /tmp/sysmonconfig.xml
+  when: ansible_facts["os_family"] == "Debian"
+
+- name: Remove Existing Sysmon Systemd Service
+  become: true
+  ansible.builtin.systemd:
+    name: sysmon 
+    state: stopped
+    enabled: false
+  when: ansible_facts["os_family"] == "Debian"
+
+- name: Install Sysmon as a Service
+  become: true
+  ansible.builtin.shell: sysmon -accepteula -i /tmp/sysmonconfig.xml
+  when: ansible_facts["os_family"] == "Debian"
+
+- name: Remove Sysmon Config (Linux)
+  ansible.builtin.file:
+    path: /tmp/sysmonconfig-export.xml
+    state: absent
+  when: ansible_facts["os_family"] == "Debian"
