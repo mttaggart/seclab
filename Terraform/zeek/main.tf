@@ -44,7 +44,7 @@ provider "proxmox" {
 
 resource "proxmox_vm_qemu" "seclab-zeek" {
   cores       = 4
-  memory      = 7192
+  memory      = 8192
   name        = "Seclab-Zeek"
   target_node = var.proxmox_host
   clone       = "seclab-ubuntu-22-04"
