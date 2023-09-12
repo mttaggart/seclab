@@ -1,5 +1,7 @@
 # Seclab
 
+The code accompaniment to the book [_The Homelab Almanac_](https://taggartinstitute.org/p/the-homelab-almanac), by Michael Taggart.
+
 This repo aims to provide a lightly-automated starting point for creating virtual labs for security research. To accomplish this, we rely on 4 technologies:
 
 * **Proxmox**: Hypervisor/VM Host
@@ -10,7 +12,7 @@ This repo aims to provide a lightly-automated starting point for creating virtua
 
 ## Intended Usage
 
-While this repo can be used independently, it is designed to be used in conjunction with _The Homelab Almanac_.
+While this repo can be used independently, it is designed to be used in conjunction with _The Homelab Almanac_. If you find this repo useful, consider purchasing the book. If you already have, thank you so much!
 
 ## Getting Started
 
