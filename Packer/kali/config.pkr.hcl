@@ -31,7 +31,7 @@ source "proxmox-iso" "seclab-kali" {
   username                 = "${local.proxmox_api_id}"
   token                    = "${local.proxmox_api_token}"
   iso_file                 = "local:iso/kali.iso"
-  iso_checksum             = "sha256:4aeaac60c69fb7137beaaef1fa48c194431274bcb8abf2d9f01c1087c8263b6a"
+  iso_checksum             = "sha256:0b0f5560c21bcc1ee2b1fef2d8e21dca99cc6efa938a47108bbba63bec499779"
   ssh_username             = "${local.username}"
   ssh_password             = "${local.password}"
   ssh_handshake_attempts   = 100
