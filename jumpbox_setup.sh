@@ -41,7 +41,7 @@ install_ansible() {
 	echo "[+] Installing Pip"
 	sudo apt install -y python3-pip
 	echo "[+] Installing Ansible"
-	pip3 install ansible
+	pip3 install ansible hvac
 	echo "[+] Installing Ansible Galaxy Plugins"
 	ansible-galaxy collection install community.docker community.hashi_vault community.windows community.general microsoft.ad
 }
