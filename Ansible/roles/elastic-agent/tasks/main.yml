@@ -32,10 +32,11 @@
   when: ansible_facts["os_family"] == "Ubuntu" or ansible_facts["os_family"] == "Debian"
 
 - name: Install Linux Agent
+  vars:
+    ansible_become_pass: "{{ ansible_password }}"
   ansible.builtin.shell: 
     cmd: /tmp/elastic-agent-{{ agent_version }}-linux-x86_64/elastic-agent install -i -n -f --url=https://{{ siem_ip }}:8220 --enrollment-token={{ enrollment_token }}
   become: true
-  ansible_become_pass: "{{ ansible_password }}"
   when: ansible_facts["os_family"] == "Ubuntu" or ansible_facts["os_family"] == "Debian"
 
 - name: Remove Linux install files
