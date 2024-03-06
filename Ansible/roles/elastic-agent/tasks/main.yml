@@ -13,7 +13,7 @@
       Invoke-WebRequest -Uri https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-{{ agent_version }}-windows-x86_64.zip -OutFile elastic-agent-{{ agent_version }}-windows-x86_64.zip
       Expand-Archive .\elastic-agent-{{ agent_version }}-windows-x86_64.zip -DestinationPath .
       cd elastic-agent-8.4.1-windows-x86_64
-      .\elastic-agent.exe install --url=https://{{ seclab_siem_ip }}:8220 -i -n -f --enrollment-token={{ enrollment_token }}
+      .\elastic-agent.exe install --url=https://{{ siem_ip }}:8220 -i -n -f --enrollment-token={{ enrollment_token }}
       cd ..
       Remove-Item -Path .\elastic-agent-{{ agent_version }}-windows-x86_64 -Recurse -Force
   when: ansible_facts["os_family"] == "Windows"
