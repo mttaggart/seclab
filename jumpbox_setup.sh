@@ -1,7 +1,7 @@
 #!/bin/bash
 
 VSCODE_URL='https://update.code.visualstudio.com/latest/linux-deb-x64/stable'
-VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_6.2.3105.43-1_amd64.deb'
+VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_6.6.3271.48-1_amd64.deb'
 
 install_tools() {
 	echo "[+] Installing baseline tools"
@@ -72,7 +72,7 @@ initialize_vault() {
 	echo "[+] Creating Vault Systemd Service"
 	sudo cp /etc/vault.d/vault.hcl /etc/vault.d/vault.hcl.bak
 	sudo cp vault.hcl /etc/vault.d/vault.hcl
-	sudo cp vault.service /etc/systemd/system/vault.service
+	# sudo cp vault.service /etc/systemd/system/vault.service
 	echo "[+] Enabling Vault Systemd Service"
 	sudo systemctl enable vault.service
 	echo "[+] Starting Vault Systemd Service"
