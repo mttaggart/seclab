@@ -1,8 +1,8 @@
 terraform {
   required_providers {
     proxmox = {
-      source  = "Telmate/proxmox"
-      version = "2.9.13"
+      source  = "bpg/proxmox"
+      version = "0.48.1"
     }
     vault = {
       source  = "hashicorp/vault"
@@ -14,13 +14,18 @@ terraform {
 variable "proxmox_host" {
   type        = string
   default     = "proxmox"
-  description = "description"
+  description = "Proxmox node name"
 }
 
 variable "hostname" {
   type        = string
   default     = "seclab-docker"
-  description = "description"
+  description = "hostname"
+}
+
+variable "template_id" {
+  type        = string
+  description = "Template ID for clone"
 }
 
 provider "vault" {
@@ -34,39 +39,50 @@ data "vault_kv_secret_v2" "seclab" {
 
 provider "proxmox" {
   # Configuration options
-  pm_api_url          = "https://${var.proxmox_host}:8006/api2/json"
-  pm_tls_insecure     = true
-  pm_log_enable       = true
-  pm_api_token_id     = data.vault_kv_secret_v2.seclab.data.proxmox_api_id
-  pm_api_token_secret = data.vault_kv_secret_v2.seclab.data.proxmox_api_token
+  endpoint  = "https://${var.proxmox_host}:8006/api2/json"
+  insecure  = true
+  api_token = "${data.vault_kv_secret_v2.seclab.data.proxmox_api_id}=${data.vault_kv_secret_v2.seclab.data.proxmox_api_token}"
 }
 
 
-resource "proxmox_vm_qemu" "seclab-docker" {
-  cores       = 2
-  memory      = 4096
-  name        = "Seclab-Docker"
-  target_node = var.proxmox_host
-  clone       = "seclab-ubuntu-22-04"
-  full_clone  = false
-  onboot      = true
-  agent       = 1
+resource "proxmox_virtual_environment_vm" "seclab-docker" {
+  name      = "Seclab-Docker"
+  node_name = var.proxmox_host
+  on_boot   = true
+
+  clone {
+    vm_id = var.template_id
+    full  = false
+  }
+
+  agent {
+    enabled = true
+  }
+
+  cpu {
+    cores = 2
+  }
+
+  memory {
+    dedicated = 4096
+  }
+
+  network_device {
+    bridge = "vmbr1"
+    model  = "e1000"
+  }
+  network_device {
+    bridge = "vmbr2"
+    model  = "e1000"
+  }
 
   connection {
     type     = "ssh"
     user     = data.vault_kv_secret_v2.seclab.data.seclab_user
     password = data.vault_kv_secret_v2.seclab.data.seclab_password
-    host     = self.default_ipv4_address
+    host     = self.ipv4_addresses[1][0]
   }
 
-  network {
-    bridge = "vmbr1"
-    model  = "e1000"
-  }
-  network {
-    bridge = "vmbr2"
-    model  = "e1000"
-  }
 
   provisioner "file" {
     source      = "./00-netplan.yaml"
@@ -75,12 +91,10 @@ resource "proxmox_vm_qemu" "seclab-docker" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo sed -i 's/seclab-ubuntu-22-04/${var.hostname}/g' /etc/hosts",
-      "sudo sed -i 's/seclab-ubuntu-22-04/${var.hostname}/g' /etc/hostname",
       "sudo mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak",
       "sudo mv /tmp/00-netplan.yaml /etc/netplan/00-netplan.yaml",
-      "sudo hostname ${var.hostname}",
-      "sudo netplan apply && sudo ip addr add dev ens18 ${self.default_ipv4_address}",
+      "sudo hostnamectl hostname ${var.hostname}",
+      "sudo netplan apply && sudo ip addr add dev ens18 ${self.ipv4_addresses[1][0]}",
       "ip a s"
     ]
   }
@@ -89,7 +103,7 @@ resource "proxmox_vm_qemu" "seclab-docker" {
 }
 
 output "vm_ip" {
-  value       = proxmox_vm_qemu.seclab-docker.default_ipv4_address
+  value       = proxmox_virtual_environment_vm.seclab-docker.ipv4_addresses
   sensitive   = false
   description = "VM IP"
 }
