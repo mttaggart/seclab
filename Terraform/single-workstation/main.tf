@@ -1,8 +1,8 @@
 terraform {
   required_providers {
     proxmox = {
-      source  = "Telmate/proxmox"
-      version = "2.9.13"
+      source  = "bpg/proxmox"
+      version = "0.48.1"
     }
     vault = {
       source  = "hashicorp/vault"
@@ -14,13 +14,18 @@ terraform {
 variable "proxmox_host" {
   type        = string
   default     = "proxmox"
-  description = "description"
+  description = "Proxmox node name"
 }
 
 variable "hostname" {
   type        = string
-  default     = "seclab-ws"
-  description = "description"
+  default     = "seclab-docker"
+  description = "hostname"
+}
+
+variable "template_id" {
+  type        = string
+  description = "Template ID for clone"
 }
 
 provider "vault" {
@@ -34,28 +39,39 @@ data "vault_kv_secret_v2" "seclab" {
 
 provider "proxmox" {
   # Configuration options
-  pm_api_url          = "https://${var.proxmox_host}:8006/api2/json"
-  pm_tls_insecure     = true
-  pm_log_enable       = true
-  pm_api_token_id     = data.vault_kv_secret_v2.seclab.data.proxmox_api_id
-  pm_api_token_secret = data.vault_kv_secret_v2.seclab.data.proxmox_api_token
+  endpoint  = "https://${var.proxmox_host}:8006/api2/json"
+  insecure  = true
+  api_token = "${data.vault_kv_secret_v2.seclab.data.proxmox_api_id}=${data.vault_kv_secret_v2.seclab.data.proxmox_api_token}"
 }
 
 
-resource "proxmox_vm_qemu" "demo-ws" {
-  cores       = 2
-  memory      = 4096
-  name        = "WS-TF-Demo"
-  target_node = var.proxmox_host
-  clone       = "seclab-win-ws"
-  full_clone  = false
-  agent       = 1
+resource "proxmox_virtual_environment_vm" "seclab-ws" {
+  name      = "Seclab-Workstation"
+  node_name = var.proxmox_host
+  on_boot   = true
 
-  network {
+  clone {
+    vm_id = var.template_id
+    full  = false
+  }
+
+  agent {
+    enabled = true
+  }
+
+  cpu {
+    cores = 2
+  }
+
+  memory {
+    dedicated = 4096
+  }
+
+  network_device {
     bridge = "vmbr1"
     model  = "e1000"
   }
-  network {
+  network_device {
     bridge = "vmbr2"
     model  = "e1000"
   }
@@ -64,9 +80,10 @@ resource "proxmox_vm_qemu" "demo-ws" {
     type            = "ssh"
     user            = data.vault_kv_secret_v2.seclab.data.seclab_user
     password        = data.vault_kv_secret_v2.seclab.data.seclab_windows_password
-    host            = self.default_ipv4_address
+    host            = self.ipv4_addresses[0][0]
     target_platform = "windows"
   }
+
 
   provisioner "remote-exec" {
     inline = [
@@ -77,17 +94,10 @@ resource "proxmox_vm_qemu" "demo-ws" {
     ]
   }
 
-
 }
 
-output "demo-id" {
-  value       = proxmox_vm_qemu.demo-ws.id
-  sensitive   = false
-  description = "VM ID"
-}
-
-output "demo-ip" {
-  value       = proxmox_vm_qemu.demo-ws.default_ipv4_address
+output "vm_ip" {
+  value       = proxmox_virtual_environment_vm.seclab-ws.ipv4_addresses
   sensitive   = false
   description = "VM IP"
 }
