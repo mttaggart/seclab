@@ -4,21 +4,29 @@ variable "dc_hostname" {
   description = "description"
 }
 
-resource "proxmox_vm_qemu" "zd-dc" {
-  cores       = 2
-  memory      = 4096
-  name        = var.dc_hostname
-  target_node = var.proxmox_host
-  clone       = "seclab-win-dc"
-  full_clone  = false
-  agent       = 1
+resource "proxmox_virtual_environment_vm" "zd-dc" {
+  name      = "ZD-DC-01"
+  node_name = var.proxmox_host
+  on_boot   = true
 
-  network {
-    bridge = "vmbr2"
-    model  = "e1000"
+  clone {
+    vm_id = var.dc_template_id
+    full  = false
   }
 
-  network {
+  agent {
+    enabled = true
+  }
+
+  cpu {
+    cores = 2
+  }
+
+  memory {
+    dedicated = 4096
+  }
+
+  network_device {
     bridge = "vmbr2"
     model  = "e1000"
   }
@@ -27,24 +35,25 @@ resource "proxmox_vm_qemu" "zd-dc" {
     type            = "ssh"
     user            = data.vault_kv_secret_v2.seclab.data.seclab_user
     password        = data.vault_kv_secret_v2.seclab.data.seclab_windows_password
-    host            = self.default_ipv4_address
+    host            = self.ipv4_addresses[0][0]
     target_platform = "windows"
   }
 
+
   provisioner "remote-exec" {
     inline = [
-      "powershell.exe -c Rename-Computer ${var.dc_hostname}",
-      "powershell.exe -c Get-NetIpAddress",
-      "powershell.exe -c New-NetIpAddress -InterfaceAlias 'Ethernet 2' -IpAddress 10.1.99.3 -PrefixLength 24",
+      "powershell.exe -c Rename-Computer '${var.dc_hostname}'",
       "powershell.exe -c Start-Service W32Time",
-      "W32tm /resync /force"
+      "W32tm /resync /force",
+      "ipconfig"
     ]
   }
 
 }
 
-output "zd-dc-ip" {
-  value       = proxmox_vm_qemu.zd-dc.default_ipv4_address
+output "zd_dc_ip" {
+  value       = proxmox_virtual_environment_vm.zd-dc.ipv4_addresses
   sensitive   = false
-  description = "Domain Controller IP (Change me!)"
+  description = "AD Lab DC IP"
 }
+

@@ -4,20 +4,29 @@ variable "ws_hostname" {
   description = "username"
 }
 
-resource "proxmox_vm_qemu" "zd-ws" {
-  cores       = 2
-  memory      = 4096
-  name        = var.ws_hostname
-  target_node = var.proxmox_host
-  clone       = "seclab-win-ws"
-  full_clone  = false
-  agent       = 1
-  depends_on = [
-    proxmox_vm_qemu.zd-dc,
-    proxmox_vm_qemu.zd-fs
-  ]
+resource "proxmox_virtual_environment_vm" "zd-ws" {
+  name      = "ZD-WS-01"
+  node_name = var.proxmox_host
+  on_boot   = true
 
-  network {
+  clone {
+    vm_id = var.ws_template_id
+    full  = false
+  }
+
+  agent {
+    enabled = true
+  }
+
+  cpu {
+    cores = 2
+  }
+
+  memory {
+    dedicated = 4096
+  }
+
+  network_device {
     bridge = "vmbr2"
     model  = "e1000"
   }
@@ -26,23 +35,24 @@ resource "proxmox_vm_qemu" "zd-ws" {
     type            = "ssh"
     user            = data.vault_kv_secret_v2.seclab.data.seclab_user
     password        = data.vault_kv_secret_v2.seclab.data.seclab_windows_password
-    host            = self.default_ipv4_address
+    host            = self.ipv4_addresses[0][0]
     target_platform = "windows"
   }
 
+
   provisioner "remote-exec" {
     inline = [
-      "powershell.exe -c Rename-Computer ${var.ws_hostname}",
+      "powershell.exe -c Rename-Computer '${var.ws_hostname}'",
       "powershell.exe -c Start-Service W32Time",
-      "W32tm /resync /force"
+      "W32tm /resync /force",
+      "ipconfig"
     ]
   }
 
-
 }
 
-output "zd-ws-ip" {
-  value       = proxmox_vm_qemu.zd-ws.default_ipv4_address
+output "zd_ws_ip" {
+  value       = proxmox_virtual_environment_vm.zd-ws.ipv4_addresses
   sensitive   = false
-  description = "Workstation IP (Change me!)"
+  description = "AD Lab Workstation IP"
 }
