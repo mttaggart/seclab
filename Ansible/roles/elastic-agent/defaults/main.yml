@@ -1,2 +1,2 @@
 agent_version: 8.4.1
-seclab_siem_ip: 192.168.99.2
+siem_ip: 192.168.99.2
