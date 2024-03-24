@@ -1,8 +1,8 @@
 terraform {
   required_providers {
     proxmox = {
-      source  = "Telmate/proxmox"
-      version = "2.9.13"
+      source  = "bpg/proxmox"
+      version = "0.48.1"
     }
     vault = {
       source  = "hashicorp/vault"
@@ -14,13 +14,24 @@ terraform {
 variable "proxmox_host" {
   type        = string
   default     = "proxmox"
-  description = "description"
+  description = "Proxmox node name"
 }
 
-variable "hostname" {
+variable "manager_hostname" {
   type        = string
-  default     = "seclab-docker-swarm-swarm"
-  description = "description"
+  default     = "swarm-manager"
+  description = "hostname"
+}
+
+variable "worker_hostname" {
+  type        = string
+  default     = "swarm-worker"
+  description = "hostname"
+}
+
+variable "template_id" {
+  type        = string
+  description = "Template ID for clone"
 }
 
 provider "vault" {
@@ -34,96 +45,106 @@ data "vault_kv_secret_v2" "seclab" {
 
 provider "proxmox" {
   # Configuration options
-  pm_api_url          = "https://${var.proxmox_host}:8006/api2/json"
-  pm_tls_insecure     = true
-  pm_log_enable       = true
-  pm_api_token_id     = data.vault_kv_secret_v2.seclab.data.proxmox_api_id
-  pm_api_token_secret = data.vault_kv_secret_v2.seclab.data.proxmox_api_token
+  endpoint  = "https://${var.proxmox_host}:8006/api2/json"
+  insecure  = true
+  api_token = "${data.vault_kv_secret_v2.seclab.data.proxmox_api_id}=${data.vault_kv_secret_v2.seclab.data.proxmox_api_token}"
 }
 
+resource "proxmox_virtual_environment_vm" "swarm-manager" {
+  name      = "Swarm-Manager"
+  node_name = var.proxmox_host
+  on_boot   = true
 
-resource "proxmox_vm_qemu" "seclab-docker-swarm-main" {
-  cores       = 2
-  memory      = 4096
-  name        = "Docker-Demo-Main"
-  target_node = var.proxmox_host
-  clone       = "seclab-ubuntu-22-04"
-  full_clone  = false
-  onboot      = true
-  agent       = 1
+  clone {
+    vm_id = var.template_id
+    full  = false
+  }
+
+  agent {
+    enabled = true
+  }
+
+  cpu {
+    cores = 2
+  }
+
+  memory {
+    dedicated = 4096
+  }
+
+  network_device {
+    bridge = "vmbr1"
+    model  = "e1000"
+  }
 
   connection {
     type     = "ssh"
     user     = data.vault_kv_secret_v2.seclab.data.seclab_user
     password = data.vault_kv_secret_v2.seclab.data.seclab_password
-    host     = self.default_ipv4_address
+    host     = self.ipv4_addresses[1][0]
   }
 
-  network {
-    bridge = "vmbr1"
-    model  = "e1000"
-  }
 
   provisioner "remote-exec" {
     inline = [
-      "sudo sed -i 's/seclab-ubuntu-22-04/seclab-docker-swarm-main/g' /etc/hosts",
-      "sudo sed -i 's/seclab-ubuntu-22-04/seclab-docker-swarm-main/g' /etc/hostname",
-      "sudo hostname seclab-docker-swarm-main",
+      "sudo hostnamectl hostname ${var.manager_hostname}",
+      "sudo netplan apply && sudo ip addr add dev ens18 ${self.ipv4_addresses[1][0]}",
       "ip a s"
     ]
   }
-
-
 }
 
-resource "proxmox_vm_qemu" "seclab-docker-swarm-node" {
-  cores       = 2
-  memory      = 4096
-  name        = "Docker-Demo-Node"
-  target_node = var.proxmox_host
-  clone       = "seclab-ubuntu-22-04"
-  full_clone  = false
-  onboot      = true
-  agent       = 1
+resource "proxmox_virtual_environment_vm" "swarm-worker" {
+  name      = "Swarm-Worker"
+  node_name = var.proxmox_host
+  on_boot   = true
+
+  clone {
+    vm_id = var.template_id
+    full  = false
+  }
+
+  agent {
+    enabled = true
+  }
+
+  cpu {
+    cores = 2
+  }
+
+  memory {
+    dedicated = 4096
+  }
+
+  network_device {
+    bridge = "vmbr1"
+    model  = "e1000"
+  }
 
   connection {
     type     = "ssh"
     user     = data.vault_kv_secret_v2.seclab.data.seclab_user
     password = data.vault_kv_secret_v2.seclab.data.seclab_password
-    host     = self.default_ipv4_address
-  }
-
-  disk {
-    type    = "virtio"
-    size    = "50G"
-    storage = "local-lvm"
-  }
-
-  network {
-    bridge = "vmbr1"
-    model  = "e1000"
+    host     = self.ipv4_addresses[1][0]
   }
 
   provisioner "remote-exec" {
     inline = [
-      "sudo sed -i 's/seclab-ubuntu-22-04/seclab-docker-swarm-node/g' /etc/hosts",
-      "sudo sed -i 's/seclab-ubuntu-22-04/seclab-docker-swarm-node/g' /etc/hostname",
-      "sudo hostname seclab-docker-swarm-node",
+      "sudo hostnamectl hostname ${var.worker_hostname}",
+      "sudo netplan apply && sudo ip addr add dev ens18 ${self.ipv4_addresses[1][0]}",
       "ip a s"
     ]
   }
-
-
 }
 
-output "docker-main-ip" {
-  value       = proxmox_vm_qemu.seclab-docker-swarm-main.default_ipv4_address
+output "swarm_manager_ip" {
+  value       = proxmox_virtual_environment_vm.swarm-manager.ipv4_addresses
   sensitive   = false
-  description = "Docker Main IP"
+  description = "Swarm Manager IP"
 }
 
-output "docker-node-ip" {
-  value       = proxmox_vm_qemu.seclab-docker-swarm-node.default_ipv4_address
+output "swarm_worker_ip" {
+  value       = proxmox_virtual_environment_vm.swarm-worker.ipv4_addresses
   sensitive   = false
-  description = "Docker Node IP"
+  description = "Swarm Worker IP"
 }
