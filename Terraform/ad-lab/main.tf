@@ -22,7 +22,7 @@ variable "dc_template_id" {
   description = "Template ID for DC clone"
 }
 
-variable "server_template_id" {
+variable "fs_template_id" {
   type        = string
   description = "Template ID for Server clone"
 }
