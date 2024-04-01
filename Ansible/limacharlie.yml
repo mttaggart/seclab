@@ -1,0 +1,53 @@
+---
+- name: Install LimaCharlie Agent
+  hosts: all
+  vars_prompt:
+    - name: lc_key
+      prompt: LimaCharlie Deployment Key 
+      private: false
+  tasks:
+    - name: Download LC Sensor
+      ansible.windows.win_get_url:
+        url: "https://downloads.limacharlie.io/sensor/windows/msi64"
+        dest: "C:\\Users\\{{ ansible_user }}\\Downloads\\lc_sensor.msi"
+      when: ansible_facts["os_family"] == "Windows"
+
+    - name: Install LC Sensor (Windows)
+      ansible.windows.win_package:
+        path: "C:\\Users\\{{ ansible_user }}\\Downloads\\lc_sensor.msi"
+        arguments:
+          - "InstallationKey={{lc_key}}"
+      when: ansible_facts["os_family"] == "Windows"
+
+    - name: Remove LimaCharlie Install Files
+      ansible.windows.win_file:
+        path: "C:\\Users\\{{ ansible_user }}\\\\Downloads\\lc_sensor.msi"
+        state: absent
+      when: ansible_facts["os_family"] == "Windows"
+      
+    - name: Download LC Sensor DEB
+      ansible.builtin.get_url:
+        url: "https://downloads.limacharlie.io/sensor/linux/deb64"
+        dest: /tmp/lc_sensor.deb
+        mode: 0755
+      when: ansible_facts["os_family"] == "Debian" or ansible_facts["os_family"] == "Kali"
+
+    - name: Configure LC Sensor Deb Options
+      become: true
+      ansible.builtin.debconf:
+        name: limacharlie
+        question: limacharlie/installation_key
+        vtype: string
+        value: "{{ lc_key }}"
+
+    - name: Install UF DEB
+      become: true
+      ansible.builtin.apt:
+        deb: /tmp/lc_sensor.deb
+      when: ansible_facts["os_family"] == "Debian" or ansible_facts["os_family"] == "Kali"
+
+    - name: Remove UF Deb
+      ansible.builtin.file:
+        path: /tmp/lc_sensor.deb
+        state: absent
+      when: ansible_facts["os_family"] == "Debian" or ansible_facts["os_family"] == "Kali"
