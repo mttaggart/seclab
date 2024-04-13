@@ -46,6 +46,16 @@ install_ansible() {
 	ansible-galaxy collection install community.docker community.hashi_vault community.windows community.general microsoft.ad
 }
 
+install_nerdfont() {
+	echo "[+] Installing NerdFont"
+	wget -O /tmp/scp.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/SourceCodePro.zip
+	unzip /tmp/scp.zip -d /tmp/scp '*.ttf'
+	sudo mkdir /usr/share/fonts/saucecode-pro
+	sudo mv /tmp/scp/*.ttf /usr/share/fonts/saucecode-pro
+	rm -rf /tmp/scp
+	sudo fc-cache -s -f
+}
+
 install_fish() {
 	printf "[?] Do you want to configure fish as your default shell [Y/n]? "
 	read fish_confirm
@@ -53,15 +63,20 @@ install_fish() {
 		echo "[!] This is going to kick you into a fish shell. Type 'exit' to close it and continue installation. The final step will mess up this terminal session. Once it's finished, close it and open a new one."
 		echo "[!] To enter Fish automatically, log out and back in."
 		chsh -s /usr/bin/fish
-		echo "[+] Installing Powerline fonts"
-		git clone https://github.com/powerline/fonts /tmp/fonts
-		chmod +x /tmp/fonts/install.sh
-		/tmp/fonts/install.sh
+		insall_nerdfont
 		echo "[+] Configuring Terminator"
 		cp ./terminatorconfig ~/.config/terminator/config
 		echo "[+] Configuring Fish"
-		curl -kL https://get.oh-my.fish | fish
-		fish -c "omf install bobthefish && exit"
+		# Starship
+		curl -sS https://starship.rs/install.sh | sh
+		mkdir ~/.config/fish
+		echo "starship init fish | source" >~/.config/fish/config.fish
+		cp ./fish_variables/.config/fish
+		echo "[+] Configuring Starship"
+		cp ./starship.toml ~/.config/starship.toml
+		# OMF
+		# curl -kL https://get.oh-my.fish | fish
+		# fish -c "omf install bobthefish && exit"
 	fi
 }
 
