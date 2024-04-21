@@ -137,7 +137,7 @@
         <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
             <UserAccounts>
                 <AdministratorPassword>
-                    <Value>SECLAB_WINDOWS_PASSWORD</Value>
+                    <Value>SECLAB_WINDOWS_ADMIN_PASSWORD</Value>
                     <PlainText>false</PlainText>
                 </AdministratorPassword>
                 <LocalAccounts>
@@ -177,11 +177,6 @@
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <Order>2</Order>
-                    <!-- Enable SSH service -->
-                    <CommandLine>powershell.exe -c Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0</CommandLine>
-                    <RequiresUserInput>false</RequiresUserInput>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
                     <Order>3</Order>
                     <!-- Enable SSH service -->
                     <CommandLine>powershell.exe -c Start-Service sshd</CommandLine>
@@ -199,9 +194,6 @@
                     <Description>Disable password expiration for seclab user</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <!-- Install QEMU Agent -->
-                    <CommandLine>msiexec /q /i F:\guest-agent\qemu-ga-x86_64.msi</CommandLine>
-                    <Order>6</Order>
                     <Description>Install QEMU Agent</Description>
                 </SynchronousCommand>
                 <!-- END WITHOUT WINDOWS UPDATES -->

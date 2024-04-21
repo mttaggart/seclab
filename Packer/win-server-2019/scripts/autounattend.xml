@@ -195,7 +195,7 @@
             </OOBE>
             <UserAccounts>
                 <AdministratorPassword>
-                    <Value>SECLAB_WINDOWS_PASSWORD</Value>
+                    <Value>SECLAB_WINDOWS_ADMIN_PASSWORD</Value>
                     <PlainText>false</PlainText>
                 </AdministratorPassword>
                 <LocalAccounts>
