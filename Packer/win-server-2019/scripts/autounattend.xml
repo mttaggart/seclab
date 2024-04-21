@@ -140,7 +140,7 @@
             <AutoLogon>
                 <Password>
                     <Value>SECLAB_WINDOWS_PASSWORD</Value>
-                    <PlainText>true</PlainText>
+                    <PlainText>false</PlainText>
                 </Password>
                 <LogonCount>2</LogonCount>
                 <Username>SECLAB_USER</Username>
@@ -196,13 +196,13 @@
             <UserAccounts>
                 <AdministratorPassword>
                     <Value>SECLAB_WINDOWS_PASSWORD</Value>
-                    <PlainText>true</PlainText>
+                    <PlainText>false</PlainText>
                 </AdministratorPassword>
                 <LocalAccounts>
                     <LocalAccount wcm:action="add">
                         <Password>
                             <Value>SECLAB_WINDOWS_PASSWORD</Value>
-                            <PlainText>true</PlainText>
+                            <PlainText>false</PlainText>
                         </Password>
                         <Group>administrators</Group>
                         <DisplayName>Seclab</DisplayName>
