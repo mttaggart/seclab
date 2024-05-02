@@ -1,0 +1,68 @@
+---
+- name: Install Velociraptor Client
+  hosts: all
+  vars:
+    velociraptor_version: "0.72"
+    velociraptor_version_long: "0.72.0"
+    temp_dir: /tmp/Velociraptor
+    windows_temp_dir: C:\Windows\Temp\Velociraptor
+  vars_prompt:
+    - name: velociraptor_server
+      prompt: Velociraptor Server IP
+      private: false
+  tasks: 
+    - name: Create Temp Directory (Linux)
+      ansible.builtin.file:
+        path: "{{ temp_dir }}"
+        state: directory
+      when: ansible_facts["os_family"] == "Ubuntu"
+    - name: Download Velociraptor (Linux)
+      ansible.builtin.get_url:
+        url: "https://github.com/Velocidex/velociraptor/releases/download/v{{velociraptor_version}}/velociraptor-v{{velociraptor_version_long}}-linux-amd64"
+        dest: "{{ temp_dir}}/velociraptor"
+        mode: "0755"
+      when: ansible_facts["os_family"] == "Ubuntu"
+    - name: Download Client Config (Linux)
+      ansible.builtin.get_url:
+        url: "http://{{ velociraptor_server }}/client.config.yaml"
+        dest: "{{ temp_dir }}/client.config.yaml"
+        mode: "0755"
+      when: ansible_facts["os_family"] == "Ubuntu"
+    - name: Start Velociraptor (Linux)
+      become: true
+      ansible.builtin.shell:
+        cmd: "./velociraptor -c client.config.yaml client --quiet &"
+        chdir: "{{ temp_dir}} "
+      when: ansible_facts["os_family"] == "Ubuntu"
+    - name: Create Temp Directory (Windows)
+      ansible.windows.win_file:
+        path: "{{ windows_temp_dir }}"
+        state: directory
+      when: ansible_facts["os_family"] == "Windows"
+    - name: Download Velociraptor (Windows)
+      ansible.windows.win_get_url:
+        url: "https://github.com/Velocidex/velociraptor/releases/download/v{{velociraptor_version}}/velociraptor-v{{velociraptor_version_long}}-windows-amd64.exe"
+        dest: "{{windows_temp_dir}}\\velociraptor.exe"
+      when: ansible_facts["os_family"] == "Windows"
+    - name: Download Client Config (Windows)
+      ansible.windows.win_get_url:
+        url: "http://{{ velociraptor_server }}/client.config.yaml"
+        dest: "{{windows_temp_dir}}\\client.config.yaml"
+      when: ansible_facts["os_family"] == "Windows"
+    - name: Start Velociraptor (Windows)
+      community.windows.win_scheduled_task:
+        name: Velociraptor
+        run_level: highest
+        user_id: NT AUTHORITY\SYSTEM
+        actions:
+          - working_directory: "{{ windows_temp_dir }}"
+            path: "velociraptor.exe"
+            arguments: "-c client.config.yaml client --quiet"
+        triggers:
+          - type: registration
+            delay: PT5S
+        allow_demand_start: true
+      when: ansible_facts["os_family"] == "Windows"
+
+
+
