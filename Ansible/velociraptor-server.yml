@@ -2,6 +2,7 @@
 - name: Deploy Velociraptor Server
   hosts: all
   vars:
+    velociraptor_port: 8001
     velociraptor_version: "0.72"
     velociraptor_version_long: "0.72.0"
     linux_tempdir: /tmp/Velociraptor
@@ -26,7 +27,7 @@
           '{
             \"Client\": {
               \"server_urls\": [
-                \"https://{{ ansible_facts['default_ipv4']['address'] }}:8000/\"
+                \"https://{{ ansible_facts['default_ipv4']['address'] }}:{{ velociraptor_port }}/\"
               ],
               \"writeback_windows\": \"{{ windows_tempdir }}\\\\velociraptor.writeback.yaml\",
               \"writeback_linux\": \"{{ linux_tempdir }}/velociraptor.writeback.yaml\",
@@ -42,7 +43,8 @@
             },
             \"Frontend\": {
               \"hostname\": 
-                \"{{ ansible_facts['default_ipv4']['address'] }}\"
+                \"{{ ansible_facts['default_ipv4']['address'] }}\",
+              \"bind_port\": {{ velociraptor_port }}
             }
           }' | tee velo_conf.yml"
         chdir: "/home/{{ ansible_user }}"
