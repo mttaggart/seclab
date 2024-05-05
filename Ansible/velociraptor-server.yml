@@ -25,6 +25,9 @@
       ansible.builtin.shell:
         cmd: "./velociraptor config generate --merge \
           '{
+            \"GUI\": {
+              \"bind_address\": \"0.0.0.0\"
+            },
             \"Client\": {
               \"server_urls\": [
                 \"https://{{ ansible_facts['default_ipv4']['address'] }}:{{ velociraptor_port }}/\"
