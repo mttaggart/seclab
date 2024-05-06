@@ -8,6 +8,7 @@ resource "proxmox_virtual_environment_vm" "zd-dc" {
   name      = "ZD-DC-01"
   node_name = var.proxmox_host
   on_boot   = true
+  pool_id   = proxmox_virtual_environment_pool.zeroday_pool.pool_id
 
   clone {
     vm_id = var.dc_template_id
