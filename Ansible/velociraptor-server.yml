@@ -2,7 +2,7 @@
 - name: Deploy Velociraptor Server
   hosts: all
   vars:
-    velociraptor_port: 8001
+    velociraptor_port: 8002
     velociraptor_version: "0.72"
     velociraptor_version_long: "0.72.0"
     linux_tempdir: /tmp/Velociraptor
