@@ -32,6 +32,11 @@ resource "proxmox_virtual_environment_vm" "zd-dc" {
     model  = "e1000"
   }
 
+  network_device {
+    bridge = "vmbr2"
+    model  = "e1000"
+  }
+
   connection {
     type            = "ssh"
     user            = data.vault_kv_secret_v2.seclab.data.seclab_user
@@ -45,6 +50,7 @@ resource "proxmox_virtual_environment_vm" "zd-dc" {
     inline = [
       "powershell.exe -c Rename-Computer '${var.dc_hostname}'",
       "powershell.exe -c Start-Service W32Time",
+      "powershell.exe -c New-NetIpAddress -InterfaceAlias 'Ethernet 2' -IpAddress 10.1.99.3 -PrefixLength 24"
       "W32tm /resync /force",
       "ipconfig"
     ]
