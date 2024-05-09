@@ -1,0 +1,88 @@
+---
+- name: Deploy Velociraptor Server
+  hosts: all
+  vars:
+    velociraptor_port: 8002
+    velociraptor_version: "0.72"
+    velociraptor_version_long: "0.72.0"
+    linux_tempdir: /tmp/Velociraptor
+    darwin_tempdir: /tmp/Velociraptor
+    windows_tempdir: C:\\Windows\\Temp\\Velociraptor
+  tasks:
+    - name: Install nginx
+      become: true
+      ansible.builtin.apt:
+        update_cache: true
+        name:
+          - nginx
+          - unzip
+    - name: Download Velociraptor Binary
+      ansible.builtin.get_url:
+        url: "https://github.com/Velocidex/velociraptor/releases/download/v{{velociraptor_version}}/velociraptor-v{{velociraptor_version_long}}-linux-amd64"
+        dest: "/home/{{ansible_user}}/velociraptor"
+        mode: "0755"
+    - name: Generate Velociraptor Config
+      ansible.builtin.shell:
+        cmd: "./velociraptor config generate --merge \
+          '{
+            \"GUI\": {
+              \"bind_address\": \"0.0.0.0\"
+            },
+            \"Client\": {
+              \"server_urls\": [
+                \"https://{{ ansible_facts['default_ipv4']['address'] }}:{{ velociraptor_port }}/\"
+              ],
+              \"writeback_windows\": \"{{ windows_tempdir }}\\\\velociraptor.writeback.yaml\",
+              \"writeback_linux\": \"{{ linux_tempdir }}/velociraptor.writeback.yaml\",
+              \"writeback_darwin\": \"{{ darwin_tempdir }}/velociraptor.writeback.yaml\",
+              \"tempdir_windows\": \"{{ windows_tempdir }}\",
+              \"tempdir_linux\": \"{{ linux_tempdir }}/\",
+              \"tempdir_darwin\": \"{{ darwin_tempdir }}/\",
+              \"local_buffer\": {
+                \"filename_linux\": \"{{ linux_tempdir }}/Velociraptor_Buffer.bin\",
+                \"filename_darwin\": \"{{ darwin_tempdir }}/Velociraptor_Buffer.bin\",
+                \"filename_windows\": \"{{ windows_tempdir }}\\\\Velociraptor_Buffer.bin\"
+              }
+            },
+            \"Frontend\": {
+              \"hostname\": 
+                \"{{ ansible_facts['default_ipv4']['address'] }}\",
+              \"bind_port\": {{ velociraptor_port }}
+            }
+          }' | tee velo_conf.yml"
+        chdir: "/home/{{ ansible_user }}"
+      register: config_out
+    - name: Show conf output
+      ansible.builtin.debug:
+        var: config_out
+    - name: Generate Velociraptor .deb
+      ansible.builtin.shell:
+        cmd: ./velociraptor --config velo_conf.yml debian server --binary ./velociraptor 
+        chdir: "/home/{{ ansible_user }}"
+      register: deb_created
+    - name: Install Velociraptor
+      become: true
+      ansible.builtin.apt:
+        deb: "/home/{{ ansible_user }}/{{ deb_created['stdout'].split(' ')[5] }}"
+    - name: Add Seclab User
+      ansible.builtin.shell: 
+        cmd: "sudo -u velociraptor /usr/local/bin/velociraptor user add --role=administrator {{ ansible_user }} {{ ansible_password }}"
+    - name: Restart Velociraptor
+      become: true
+      ansible.builtin.systemd_service:
+        daemon-reload: true
+        name: velociraptor_server
+        state: restarted
+    - name: Generate Client Config
+      ansible.builtin.shell:
+        cmd: "sudo -u velociraptor velociraptor \
+              -c /etc/velociraptor/server.config.yaml config client"
+      register: client_config
+    - name: Place Config in Webroot
+      become: true
+      ansible.builtin.copy:
+        content: "{{ client_config['stdout'] }}"
+        dest: /var/www/html/client.config.yaml
+        owner: www-data
+        group: www-data
+      

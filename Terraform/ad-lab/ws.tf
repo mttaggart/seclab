@@ -8,7 +8,8 @@ resource "proxmox_virtual_environment_vm" "zd-ws" {
   name      = "ZD-WS-01"
   node_name = var.proxmox_host
   on_boot   = true
-
+  pool_id   = proxmox_virtual_environment_pool.zeroday_pool.pool_id
+  
   clone {
     vm_id = var.ws_template_id
     full  = false

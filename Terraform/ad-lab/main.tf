@@ -32,11 +32,6 @@ variable "ws_template_id" {
   description = "Template ID for Workstation clones"
 }
 
-variable "adlab_pool_id" {
-  type        = string
-  description = "Pool ID for AD Lab"
-}
-
 provider "vault" {
 
 }
@@ -51,4 +46,9 @@ provider "proxmox" {
   endpoint  = "https://${var.proxmox_host}:8006/api2/json"
   insecure  = true
   api_token = "${data.vault_kv_secret_v2.seclab.data.proxmox_api_id}=${data.vault_kv_secret_v2.seclab.data.proxmox_api_token}"
+}
+
+resource "proxmox_virtual_environment_pool" "zeroday_pool" {
+  comment = "ZeroDay Pool"
+  pool_id = "ZeroDay"
 }
