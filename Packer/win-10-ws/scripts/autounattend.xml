@@ -190,12 +190,15 @@
                 <SynchronousCommand wcm:action="add">
                     <Order>4</Order>
                     <CommandLine>cmd.exe /c wmic useraccount where "name='SECLAB_USER'" set PasswordExpires=FALSE</CommandLine>
+                    <RequiresUserInput>false</RequiresUserInput>
                     <Order>5</Order>
                     <Description>Disable password expiration for seclab user</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <Order>6</Order>
                     <Description>Install QEMU Agent</Description>
+                    <CommandLine>msiexec /q /i F:\guest-agent\qemu-ga-x86_64.msi</CommandLine>
+                    <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
                 <!-- END WITHOUT WINDOWS UPDATES -->
                 <!-- WITH WINDOWS UPDATES -->
