@@ -56,7 +56,7 @@
         user_id: NT AUTHORITY\SYSTEM
         actions:
           - working_directory: "{{ windows_temp_dir }}"
-            path: "velociraptor.exe"
+            path: "{{ windows_temp_dir }}\\velociraptor.exe"
             arguments: "-c client.config.yaml client --quiet"
         triggers:
           - type: registration
