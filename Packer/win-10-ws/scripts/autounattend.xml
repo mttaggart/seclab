@@ -184,25 +184,25 @@
                 <SynchronousCommand wcm:action="add">
                     <Order>3</Order>
                     <!-- Enable SSH service -->
-                    <CommandLine>powershell.exe -c Start-Service sshd</CommandLine>
-                    <RequiresUserInput>false</RequiresUserInput>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <Order>4</Order>
-                    <!-- Enable SSH service -->
                     <CommandLine>powershell.exe -c Set-Service -Name sshd -StartupType 'Automatic'</CommandLine>
                     <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <Order>5</Order>
+                    <Order>4</Order>
                     <CommandLine>cmd.exe /c wmic useraccount where "name='SECLAB_USER'" set PasswordExpires=FALSE</CommandLine>
                     <RequiresUserInput>false</RequiresUserInput>
                     <Description>Disable password expiration for seclab user</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <Order>6</Order>
+                    <Order>5</Order>
                     <Description>Install QEMU Agent</Description>
                     <CommandLine>msiexec /q /i F:\guest-agent\qemu-ga-x86_64.msi</CommandLine>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Order>6</Order>
+                    <!-- Enable SSH service -->
+                    <CommandLine>powershell.exe -c Start-Service sshd</CommandLine>
                     <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
                 <!-- END WITHOUT WINDOWS UPDATES -->
