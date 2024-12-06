@@ -27,7 +27,7 @@ d-i apt-setup/enable-source-repositories boolean false
 #d-i debian-installer/allow_unauthenticated boolean true
 
 # Add proper source repositories
-d-i apt-setup/local0/repository string http://http.kali.org/kali kali-rolling main contrib non-free
+d-i apt-setup/local0/repository string http://http.kali.org/kali kali-rolling main contrib non-free non-free-firmware
 
 d-i apt-setup/local0/comment string Main repo
 d-i apt-setup/local0/source boolean false

@@ -187,7 +187,8 @@ create_creds() {
 		create_creds
 	fi
 	echo "[+] Setting Vault data"
-	vault kv put -mount=seclab seclab proxmox_api_id=$proxmox_api_id proxmox_api_token=$proxmox_api_token seclab_user=$seclab_user seclab_password=$seclab_password seclab_windows_password=$seclab_windows_password seclab_windows_domain_password=$seclab_windows_domain_password seclab_ssh_key=@/home/$USER/.ssh/id_rsa.pub)
+ 	USER_HOME_DIR=$(getent passwd "$USER" | cut -d: -f6)
+	vault kv put -mount=seclab seclab proxmox_api_id=$proxmox_api_id proxmox_api_token=$proxmox_api_token seclab_user=$seclab_user seclab_password=$seclab_password seclab_windows_password=$seclab_windows_password seclab_windows_domain_password=$seclab_windows_domain_password seclab_ssh_key=@$USER_HOME_DIR/.ssh/id_rsa.pub
 }
 
 append_rcs() {
