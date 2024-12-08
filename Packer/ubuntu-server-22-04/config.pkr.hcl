@@ -1,7 +1,7 @@
 packer {
   required_plugins {
     proxmox = {
-      version = ">= 1.1.3"
+      version = ">= 1.2.1"
       source  = "github.com/hashicorp/proxmox"
     }
   }
@@ -26,12 +26,16 @@ locals {
 
 
 source "proxmox-iso" "seclab-ubuntu-server" {
-  proxmox_url              = "https://${var.proxmox_node}:8006/api2/json"
-  node                     = "${var.proxmox_node}"
-  username                 = "${local.proxmox_api_id}"
-  token                    = "${local.proxmox_api_token}"
-  iso_file                 = "local:iso/ubuntu-22.04.3-live-server-amd64.iso"
-  iso_checksum             = "sha256:a4acfda10b18da50e2ec50ccaf860d7f20b389df8765611142305c0e911d16fd"
+  proxmox_url = "https://${var.proxmox_node}:8006/api2/json"
+  node        = "${var.proxmox_node}"
+  username    = "${local.proxmox_api_id}"
+  token       = "${local.proxmox_api_token}"
+  boot_iso {
+    type         = "scsi"
+    iso_file     = "local:iso/ubuntu-22.04.3-live-server-amd64.iso"
+    iso_checksum = "sha256:a4acfda10b18da50e2ec50ccaf860d7f20b389df8765611142305c0e911d16fd"
+    unmount      = true
+  }
   ssh_username             = "${local.username}"
   ssh_password             = "${local.password}"
   ssh_handshake_attempts   = 100
