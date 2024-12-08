@@ -1,0 +1,46 @@
+#cloud-config
+autoinstall:
+  version: 1
+  apt:
+    geoip: true
+    preserve_sources_list: false
+    primary:
+    - arches: [amd64, i386]
+      uri: http://us.archive.ubuntu.com/ubuntu
+    - arches: [default]
+      uri: http://ports.ubuntu.com/ubuntu-ports
+  identity:
+    hostname: seclab-ubuntu-22-04
+    username: SECLAB_USER
+    password: SECLAB_PASSWORD
+  ssh:
+    allow-pw: true
+    install-server: true
+    authorized-keys: 
+      - SECLAB_SSH_KEY
+  locale: en_US
+  keyboard: 
+    layout: us
+  storage:
+    layout:
+      name: direct
+    config:
+      - type: disk
+        id: disk0
+        match:
+          size: largest
+      - type: partition
+        id: boot-partition
+        device: disk0
+        size: 500M
+      - type: partition
+        id: root-partition
+        device: disk0
+        size: -1
+  packages:
+    - qemu-guest-agent
+    - auditd
+  late-commands:
+    - "echo 'Defaults:SECLAB_USER !requiretty' > /target/etc/sudoers.d/SECLAB_USER"
+    - "echo 'SECLAB_USER ALL=(ALL) NOPASSWD: ALL' >> /target/etc/sudoers.d/SECLAB_USER"
+    - "chmod 440 /target/etc/sudoers.d/SECLAB_USER"
