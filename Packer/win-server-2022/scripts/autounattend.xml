@@ -4,43 +4,43 @@
         <component name="Microsoft-Windows-PnpCustomizationsWinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <DriverPaths>
                    <PathAndCredentials wcm:action="add" wcm:keyValue="2">
-                       <Path>D:\viostor\2k22\amd64</Path>
+                       <Path>E:\viostor\2k22\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="3">
-                       <Path>D:\NetKVM\2k22\amd64</Path>
+                       <Path>E:\NetKVM\2k22\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="4">
-                       <Path>D:\Balloon\2k22\amd64</Path>
+                       <Path>E:\Balloon\2k22\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="5">
-                       <Path>D:\pvpanic\2k22\amd64</Path>
+                       <Path>E:\pvpanic\2k22\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="6">
-                       <Path>D:\qemupciserial\2k22\amd64</Path>
+                       <Path>E:\qemupciserial\2k22\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="7">
-                       <Path>D:\qxldod\2k22\amd64</Path>
+                       <Path>E:\qxldod\2k22\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="8">
-                       <Path>D:\vioinput\2k22\amd64</Path>
+                       <Path>E:\vioinput\2k22\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="9">
-                       <Path>D:\viorng\2k22\amd64</Path>
+                       <Path>E:\viorng\2k22\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="10">
-                       <Path>D:\vioscsi\2k22\amd64</Path>
+                       <Path>E:\vioscsi\2k22\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="11">
-                       <Path>D:\vioserial\2k22\amd64</Path>
+                       <Path>E:\vioserial\2k22\amd64</Path>
                </PathAndCredentials>
             </DriverPaths>
          </component>
@@ -55,46 +55,37 @@
         </component>
         <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <DiskConfiguration>
-              <Disk wcm:action="add">
-                <CreatePartitions>
-                    <CreatePartition wcm:action="add">
-                        <Type>EFI</Type>
-                        <Size>512</Size>
-                        <Order>1</Order>
-                    </CreatePartition>
-                    <CreatePartition wcm:action="add">
-                        <Extend>false</Extend>
-                        <Type>MSR</Type>
-                        <Order>2</Order>
-                        <Size>128</Size>
-                    </CreatePartition>
-                    <CreatePartition wcm:action="add">
-                        <Order>3</Order>
-                        <Type>Primary</Type>
-                        <Extend>true</Extend>
-                    </CreatePartition>
-                </CreatePartitions>
-                <ModifyPartitions>
-                    <ModifyPartition wcm:action="add">
-                        <Format>FAT32</Format>
-                        <Order>1</Order>
-                        <PartitionID>1</PartitionID>
-                    </ModifyPartition>
-                    <ModifyPartition wcm:action="add">
-                        <Order>2</Order>
-                        <PartitionID>2</PartitionID>
-                    </ModifyPartition>
-                    <ModifyPartition wcm:action="add">
-                        <Format>NTFS</Format>
-                        <Label>Windows</Label>
-                        <Order>3</Order>
-                        <PartitionID>3</PartitionID>
-                    </ModifyPartition>
-                </ModifyPartitions>
-                <DiskID>0</DiskID>
-                <WillWipeDisk>true</WillWipeDisk>
-              </Disk>
-              <WillShowUI>OnError</WillShowUI>
+                <Disk wcm:action="add">
+                    <CreatePartitions>
+                        <CreatePartition wcm:action="add">
+                            <Order>1</Order>
+                            <Size>250</Size>
+                            <Type>Primary</Type>
+                        </CreatePartition>
+                        <CreatePartition wcm:action="add">
+                            <Order>2</Order>
+                            <Extend>true</Extend>
+                            <Type>Primary</Type>
+                        </CreatePartition>
+                    </CreatePartitions>
+                    <ModifyPartitions>
+                        <ModifyPartition wcm:action="add">
+                            <Order>1</Order>
+                            <PartitionID>1</PartitionID>
+                            <Format>NTFS</Format>
+                            <Label>Boot</Label>
+                            <Active>true</Active>
+                        </ModifyPartition>
+                        <ModifyPartition wcm:action="add">
+                            <Order>2</Order>
+                            <PartitionID>2</PartitionID>
+                            <Format>NTFS</Format>
+                            <Label>System</Label>
+                        </ModifyPartition>
+                    </ModifyPartitions>
+                    <DiskID>0</DiskID>
+                    <WillWipeDisk>true</WillWipeDisk>
+                </Disk>
             </DiskConfiguration>
             <ImageInstall>
                 <OSImage>
@@ -106,7 +97,7 @@
                     </InstallFrom>
                     <InstallTo>
                         <DiskID>0</DiskID>
-                        <PartitionID>3</PartitionID>
+                        <PartitionID>2</PartitionID>
                     </InstallTo>
                     <WillShowUI>OnError</WillShowUI>
                     <InstallToAvailablePartition>false</InstallToAvailablePartition>
@@ -188,7 +179,7 @@
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <!-- Install QEMU Agent -->
-                    <CommandLine>msiexec /q /i D:\guest-agent\qemu-ga-x86_64.msi</CommandLine>
+                    <CommandLine>msiexec /q /i E:\guest-agent\qemu-ga-x86_64.msi</CommandLine>
                     <Order>6</Order>
                     <Description>Install QEMU Agent</Description>
                 </SynchronousCommand>

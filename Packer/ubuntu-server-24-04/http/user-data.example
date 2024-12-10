@@ -10,7 +10,7 @@ autoinstall:
     - arches: [default]
       uri: http://ports.ubuntu.com/ubuntu-ports
   identity:
-    hostname: seclab-ubuntu-22-04
+    hostname: seclab-ubuntu-24-04
     username: SECLAB_USER
     password: SECLAB_PASSWORD
   ssh:

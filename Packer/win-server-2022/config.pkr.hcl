@@ -9,7 +9,7 @@ packer {
 
 variable "hostname" {
   type    = string
-  default = "seclab-win-server"
+  default = "seclab-win-22-server"
 }
 
 variable "proxmox_node" {
@@ -32,9 +32,9 @@ source "proxmox-iso" "seclab-win-server" {
   username                 = "${local.proxmox_api_id}"
   token                    = "${local.proxmox_api_token}"
   boot_iso {
-    type         = "scsi"
-    iso_file                 = "local:iso/Win-Server-2019.iso"
-    iso_checksum             = "sha256:549bca46c055157291be6c22a3aaaed8330e78ef4382c99ee82c896426a1cee1"
+    type         = "ide"
+    iso_file                 = "local:iso/Win-Server-2022.iso"
+    iso_checksum             = "sha256:3e4fa6d8507b554856fc9ca6079cc402df11a8b79344871669f0251535255325"
     unmount      = true
   }
   insecure_skip_tls_verify = true
@@ -43,24 +43,37 @@ source "proxmox-iso" "seclab-win-server" {
   ssh_password             = "${local.password}"
   ssh_timeout              = "30m"
   qemu_agent               = true
-  cores                    = 2
-  memory                   = 4096
-  vm_name                  = "seclab-win-server"
-  template_description     = "Base Seclab Windows Server"
-
-  additional_iso_files {
-    device       = "ide3"
-    iso_file     = "local:iso/Autounattend-win-server-2019.iso"
-    iso_checksum = "sha256:bf44c536d84e62ae5b1d83eca44b4725644578ddeb11d55f78fe0f4e5849f196"
-    unmount      = true
+  cores                    = 4
+  memory                   = 8192
+  vm_name                  = "seclab-win-22-server"
+  template_description     = "Base Seclab Windows Server 2022"
+  boot                     = "order=ide0;ide1"
+    efi_config {
+    efi_storage_pool  = "local-lvm"
+    efi_type          = "4m"
+    pre_enrolled_keys = true
+  }
+  tpm_config {
+    tpm_storage_pool = "local-lvm"
+    tpm_version      = "v2.0"
   }
 
   additional_iso_files {
-    device       = "sata0"
+    index        = 0
+    type         = "sata"
     iso_file     = "local:iso/virtio.iso"
     iso_checksum = "sha256:8a066741ef79d3fb66e536fb6f010ad91269364bd9b8c1ad7f2f5655caf8acd8"
     unmount      = true
   }
+
+  additional_iso_files {
+    index        = 1
+    type         = "sata"
+    iso_file     = "local:iso/Autounattend-win-server-2022.iso"
+    iso_checksum = "sha256:c2c6bb24e262673fa903d8b1c277a5e6d6344779a324e65aae7206be4ab40297"
+    unmount      = true
+  }
+
 
 
   network_adapters {
@@ -68,12 +81,12 @@ source "proxmox-iso" "seclab-win-server" {
   }
 
   disks {
-    type         = "virtio"
-    disk_size    = "50G"
+    type         = "ide"
+    disk_size    = "60G"
     storage_pool = "local-lvm"
     format       = "raw"
   }
-  scsi_controller = "virtio-scsi-pci"
+  scsi_controller = "virtio-scsi-single"
 }
 
 
