@@ -18,6 +18,11 @@ variable "proxmox_node" {
 }
 
 
+variable "storage_pool" {
+  type    = string
+  default = "local-lvm"
+}
+
 locals {
   username          = vault("/seclab/data/seclab/", "seclab_user")
   password          = vault("/seclab/data/seclab/", "seclab_windows_password")
@@ -49,12 +54,12 @@ source "proxmox-iso" "seclab-win-server" {
   template_description     = "Base Seclab Windows Server 2022"
   boot                     = "order=ide0;ide1"
     efi_config {
-    efi_storage_pool  = "local-lvm"
+    efi_storage_pool  = "${var.storage_pool}"
     efi_type          = "4m"
     pre_enrolled_keys = true
   }
   tpm_config {
-    tpm_storage_pool = "local-lvm"
+    tpm_storage_pool = "${var.storage_pool}"
     tpm_version      = "v2.0"
   }
 
@@ -83,7 +88,7 @@ source "proxmox-iso" "seclab-win-server" {
   disks {
     type         = "ide"
     disk_size    = "60G"
-    storage_pool = "local-lvm"
+    storage_pool = "${var.storage_pool}"
     format       = "raw"
   }
   scsi_controller = "virtio-scsi-single"

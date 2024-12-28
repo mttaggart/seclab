@@ -25,6 +25,11 @@ variable "proxmox_node" {
   default = "proxmox"
 }
 
+variable "storage_pool" {
+  type    = string
+  default = "local-lvm"
+}
+
 source "proxmox-iso" "seclab-win-dc" {
   proxmox_url  = "https://${var.proxmox_node}:8006/api2/json"
   node         = "${var.proxmox_node}"
@@ -68,7 +73,7 @@ source "proxmox-iso" "seclab-win-dc" {
   disks {
     type         = "virtio"
     disk_size    = "50G"
-    storage_pool = "local-lvm"
+    storage_pool = "${var.storage_pool}"
   }
   scsi_controller = "virtio-scsi-pci"
 }

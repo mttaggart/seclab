@@ -17,6 +17,11 @@ variable "proxmox_node" {
   default = "proxmox"
 }
 
+variable "storage_pool" {
+  type    = string
+  default = "local-lvm"
+}
+
 locals {
   username          = vault("/seclab/data/seclab/", "seclab_user")
   password          = vault("/seclab/data/seclab/", "seclab_password")
@@ -53,7 +58,7 @@ source "proxmox-iso" "seclab-ubuntu-server" {
   }
   disks {
     disk_size    = "30G"
-    storage_pool = "local-lvm"
+    storage_pool = "${var.storage_pool}"
     format       = "raw"
   }
   boot_wait = "10s"

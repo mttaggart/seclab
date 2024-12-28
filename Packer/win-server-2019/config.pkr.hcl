@@ -17,6 +17,11 @@ variable "proxmox_node" {
   default = "proxmox"
 }
 
+variable "storage_pool" {
+  type    = string
+  default = "local-lvm"
+}
+
 
 locals {
   username          = vault("/seclab/data/seclab/", "seclab_user")
@@ -70,7 +75,7 @@ source "proxmox-iso" "seclab-win-server" {
   disks {
     type         = "virtio"
     disk_size    = "50G"
-    storage_pool = "local-lvm"
+    storage_pool = "${var.storage_pool}"
     format       = "raw"
   }
   scsi_controller = "virtio-scsi-pci"

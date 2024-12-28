@@ -24,6 +24,11 @@ variable "proxmox_node" {
   default = "proxmox"
 }
 
+variable "storage_pool" {
+  type    = string
+  default = "local-lvm"
+}
+
 source "proxmox-iso" "seclab-win-ws" {
   proxmox_url  = "https://${var.proxmox_node}:8006/api2/json"
   node         = "${var.proxmox_node}"
@@ -49,12 +54,12 @@ source "proxmox-iso" "seclab-win-ws" {
   insecure_skip_tls_verify = true
   boot                     = "order=ide0;ide1"
   efi_config {
-    efi_storage_pool  = "local-lvm"
+    efi_storage_pool  = "${var.storage_pool}"
     efi_type          = "4m"
     pre_enrolled_keys = true
   }
   tpm_config {
-    tpm_storage_pool = "local-lvm"
+    tpm_storage_pool = "${var.storage_pool}"
     tpm_version      = "v2.0"
   }
   additional_iso_files {
@@ -80,7 +85,7 @@ source "proxmox-iso" "seclab-win-ws" {
   disks {
     type         = "ide"
     disk_size    = "60G"
-    storage_pool = "local-lvm"
+    storage_pool = "${var.storage_pool}"
     format       = "raw"
   }
   scsi_controller = "virtio-scsi-single"
