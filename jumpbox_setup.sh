@@ -38,12 +38,10 @@ install_hashicorp() {
 }
 
 install_ansible() {
-	echo "[+] Installing Pip"
-	sudo apt install -y python3-pip
+	echo "[+] Installing Pipx"
+	sudo apt install -y python3-pip pipx
 	echo "[+] Installing Ansible"
-	pip3 install ansible hvac
-	echo "[+] Installing Ansible Galaxy Plugins"
-	ansible-galaxy collection install community.docker community.hashi_vault community.windows community.general microsoft.ad
+	pipx install --include-deps ansible
 }
 
 install_nerdfont() {
