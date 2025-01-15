@@ -67,7 +67,7 @@ source "proxmox-iso" "seclab-win-server" {
     index        = 0
     type         = "sata"
     iso_file     = "local:iso/virtio.iso"
-    iso_checksum = "sha256:8a066741ef79d3fb66e536fb6f010ad91269364bd9b8c1ad7f2f5655caf8acd8"
+    iso_checksum = "sha256:57b0f6dc8dc92dc2ae8621f8b1bfbd8a873de9bedc788c4c4b305ea28acc77cd"
     unmount      = true
   }
 
