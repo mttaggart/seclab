@@ -42,6 +42,8 @@ install_ansible() {
 	sudo apt install -y python3-pip pipx
 	echo "[+] Installing Ansible"
 	pipx install --include-deps ansible
+	echo "[+] Installing Ansible Galaxy Plugins"
+  ansible-galaxy collection install community.docker community.hashi_vault community.windows community.general microsoft.ad
 }
 
 install_nerdfont() {
