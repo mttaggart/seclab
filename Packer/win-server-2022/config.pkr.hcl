@@ -37,7 +37,7 @@ source "proxmox-iso" "seclab-win-server" {
   username                 = "${local.proxmox_api_id}"
   token                    = "${local.proxmox_api_token}"
   boot_iso {
-    type         = "ide"
+    type         = "sata"
     iso_file                 = "local:iso/Win-Server-2022.iso"
     iso_checksum             = "sha256:3e4fa6d8507b554856fc9ca6079cc402df11a8b79344871669f0251535255325"
     unmount      = true
@@ -52,7 +52,16 @@ source "proxmox-iso" "seclab-win-server" {
   memory                   = 8192
   vm_name                  = "seclab-win-server-22"
   template_description     = "Base Seclab Windows Server 2022"
-  boot                     = "order=ide0;ide1"
+  bios                     = "ovmf"
+  boot                     = "order=sata1;sata0"
+  boot_wait                = "5s"
+  boot_command             = [
+    "<space><space><space><space><space><space>",
+    "<space><space><space><space><space><space>",
+    "<space><space><space><space><space><space>",
+    "<space><space><space><space><space><space>",
+    "<space><space><space><space><space><space><enter><wait>"
+  ]
     efi_config {
     efi_storage_pool  = "${var.storage_pool}"
     efi_type          = "4m"
@@ -64,7 +73,7 @@ source "proxmox-iso" "seclab-win-server" {
   }
 
   additional_iso_files {
-    index        = 0
+    index        = 2
     type         = "sata"
     iso_file     = "local:iso/virtio.iso"
     iso_checksum = "sha256:57b0f6dc8dc92dc2ae8621f8b1bfbd8a873de9bedc788c4c4b305ea28acc77cd"
@@ -72,7 +81,7 @@ source "proxmox-iso" "seclab-win-server" {
   }
 
   additional_iso_files {
-    index        = 1
+    index        = 3
     type         = "sata"
     iso_file     = "local:iso/Autounattend-win-server-2022.iso"
     iso_checksum = "sha256:c2c6bb24e262673fa903d8b1c277a5e6d6344779a324e65aae7206be4ab40297"
@@ -86,7 +95,7 @@ source "proxmox-iso" "seclab-win-server" {
   }
 
   disks {
-    type         = "ide"
+    type         = "sata"
     disk_size    = "60G"
     storage_pool = "${var.storage_pool}"
     format       = "raw"
