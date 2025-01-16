@@ -9,7 +9,7 @@ packer {
 
 variable "hostname" {
   type    = string
-  default = "seclab-win-ws"
+  default = "seclab-win11-ws"
 }
 
 locals {
@@ -36,7 +36,7 @@ source "proxmox-iso" "seclab-win-ws" {
   token        = "${local.proxmox_api_token}"
   bios         = "ovmf"
   boot_iso {
-    type         = "ide"
+    type         = "sata"
     iso_file     = "local:iso/Win-11-Enterprise.iso"
     iso_checksum = "sha256:ebbc79106715f44f5020f77bd90721b17c5a877cbc15a3535b99155493a1bb3f"
     unmount      = true
@@ -52,7 +52,16 @@ source "proxmox-iso" "seclab-win-ws" {
   vm_name                  = "seclab-win11-ws"
   template_description     = "Base Seclab Windows 11 Workstation"
   insecure_skip_tls_verify = true
-  boot                     = "order=ide0;ide1"
+  boot                     = "order=sata1;sata0"
+  boot_wait                = "5s"
+  boot_command             = [
+    "<space><space><space><space><space><space>",
+    "<space><space><space><space><space><space>",
+    "<space><space><space><space><space><space>",
+    "<space><space><space><space><space><space>",
+    "<space><space><space><space><space><space>",
+    "<wait30s><enter>"
+  ]
   efi_config {
     efi_storage_pool  = "${var.storage_pool}"
     efi_type          = "4m"
@@ -63,7 +72,7 @@ source "proxmox-iso" "seclab-win-ws" {
     tpm_version      = "v2.0"
   }
   additional_iso_files {
-    index        = 0
+    index        = 2
     type         = "sata"
     iso_file     = "local:iso/virtio.iso"
     iso_checksum = "sha256:57b0f6dc8dc92dc2ae8621f8b1bfbd8a873de9bedc788c4c4b305ea28acc77cd"
@@ -71,8 +80,8 @@ source "proxmox-iso" "seclab-win-ws" {
   }
 
   additional_iso_files {
+    index        = 3
     type         = "sata"
-    index        = 1
     iso_file     = "local:iso/Autounattend-Win-11.iso"
     iso_checksum = "sha256:2893ca8f6d1f420436b6c213fa618710e7689a67d4bf924263361f07cced3b34"
   }
@@ -83,7 +92,7 @@ source "proxmox-iso" "seclab-win-ws" {
   }
 
   disks {
-    type         = "ide"
+    type         = "sata"
     disk_size    = "60G"
     storage_pool = "${var.storage_pool}"
     format       = "raw"

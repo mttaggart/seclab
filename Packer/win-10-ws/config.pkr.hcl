@@ -9,7 +9,7 @@ packer {
 
 variable "hostname" {
   type    = string
-  default = "seclab-win-ws"
+  default = "seclab-win10-ws"
 }
 
 variable "storage_pool" {
@@ -48,7 +48,7 @@ source "proxmox-iso" "seclab-win-ws" {
   qemu_agent               = true
   cores                    = 2
   memory                   = 4096
-  vm_name                  = "seclab-win-ws"
+  vm_name                  = "seclab-win10-ws"
   template_description     = "Base Seclab Windows Workstation"
   insecure_skip_tls_verify = true
 

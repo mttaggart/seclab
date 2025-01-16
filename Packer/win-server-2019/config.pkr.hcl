@@ -9,7 +9,7 @@ packer {
 
 variable "hostname" {
   type    = string
-  default = "seclab-win-server"
+  default = "seclab-win-server-19"
 }
 
 variable "proxmox_node" {
@@ -50,7 +50,7 @@ source "proxmox-iso" "seclab-win-server" {
   qemu_agent               = true
   cores                    = 2
   memory                   = 4096
-  vm_name                  = "seclab-win-server"
+  vm_name                  = "seclab-win-server-19"
   template_description     = "Base Seclab Windows Server"
 
   additional_iso_files {
