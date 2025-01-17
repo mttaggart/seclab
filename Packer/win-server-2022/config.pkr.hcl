@@ -52,6 +52,7 @@ source "proxmox-iso" "seclab-win-server" {
   memory                   = 8192
   vm_name                  = "seclab-win-server-22"
   template_description     = "Base Seclab Windows Server 2022"
+  os                       = "win11"
   bios                     = "ovmf"
   boot                     = "order=sata1;sata0"
   boot_wait                = "5s"

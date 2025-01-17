@@ -51,6 +51,7 @@ source "proxmox-iso" "seclab-win-ws" {
   memory                   = 8192
   vm_name                  = "seclab-win11-ws"
   template_description     = "Base Seclab Windows 11 Workstation"
+  os                       = "win11"
   insecure_skip_tls_verify = true
   boot                     = "order=sata1;sata0"
   boot_wait                = "5s"
