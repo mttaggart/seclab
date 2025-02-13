@@ -52,6 +52,8 @@ source "proxmox-iso" "seclab-win-ws" {
   template_description     = "Base Seclab Windows Workstation"
   os                       = "win10"
   insecure_skip_tls_verify = true
+  machine                  = "pc-q35-9.0"
+  cpu_type                 = "x86-64-v2-AES"
 
   additional_iso_files {
     device       = "ide3"

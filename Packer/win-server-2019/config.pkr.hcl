@@ -53,6 +53,8 @@ source "proxmox-iso" "seclab-win-server" {
   vm_name                  = "seclab-win-server-19"
   template_description     = "Base Seclab Windows Server"
   os                       = "win10"
+  machine                  = "pc-q35-9.0"
+  cpu_type                 = "x86-64-v2-AES"
 
   additional_iso_files {
     device       = "ide3"

@@ -43,6 +43,8 @@ source "proxmox-iso" "seclab-win-server" {
     unmount      = true
   }
   insecure_skip_tls_verify = true
+  machine                  = "pc-q35-9.0"
+  cpu_type                 = "x86-64-v2-AES"
   communicator             = "ssh"
   ssh_username             = "${local.username}"
   ssh_password             = "${local.password}"
