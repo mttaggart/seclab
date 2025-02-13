@@ -87,4 +87,14 @@ source "proxmox-iso" "seclab-ubuntu-server" {
 
 build {
   sources = ["sources.proxmox-iso.seclab-ubuntu-server"]
+  provisioner "file" {
+    source = "./00-netplan.yaml"
+    destination = "/tmp/00-netplan.yaml"
+  }
+  provisioner "shell" {
+    inline = [
+      "sudo cp /tmp/00-netplan.yaml /etc/netplan/",
+      "rm /tmp/00-netplan.yaml"
+    ]
+  }
 }

@@ -1,0 +1,6 @@
+network:
+  ethernets:
+    ens18:
+      dhcp4: true
+      dhcp-identifier: mac
+  version: 2
