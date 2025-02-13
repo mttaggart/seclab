@@ -10,6 +10,6 @@
     owner: seclab
     mode: 0644 
 - name: Launch Iris
-  community.docker.docker_compose:
-    build: true
+  community.docker.docker_compose_v2:
+    build: always
     project_src: "{{ repo_path }}"
