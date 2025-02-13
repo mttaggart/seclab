@@ -3,8 +3,8 @@
   hosts: all
   vars:
     velociraptor_port: 8002
-    velociraptor_version: "0.72"
-    velociraptor_version_long: "0.72.0"
+    velociraptor_version: "0.73"
+    velociraptor_version_long: "0.73.0"
     linux_tempdir: /tmp/Velociraptor
     darwin_tempdir: /tmp/Velociraptor
     windows_tempdir: C:\\Windows\\Temp\\Velociraptor
