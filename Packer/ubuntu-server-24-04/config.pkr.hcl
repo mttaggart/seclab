@@ -52,6 +52,8 @@ source "proxmox-iso" "seclab-ubuntu-server" {
   qemu_agent               = true
   template_description     = "Ubuntu 24.04 Server"
   insecure_skip_tls_verify = true
+  machine                  = "pc-q35-9.0"
+  cpu_type                 = "x86-64-v2-AES"
 
   network_adapters {
     bridge = "vmbr1"
