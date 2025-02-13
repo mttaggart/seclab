@@ -2,11 +2,11 @@ terraform {
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.68.0"
+      version = "0.71.0"
     }
     vault = {
       source  = "hashicorp/vault"
-      version = "4.5.0"
+      version = "4.6.0"
     }
   }
 }
