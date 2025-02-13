@@ -12,6 +12,6 @@
     mode: 0644
     owner: "{{ ansible_user }}"
 - name: Run Compose
-  community.docker.docker_compose:
-    build: true
+  community.docker.docker_compose_v2:
+    build: always
     project_src: "/home/{{ ansible_user }}/wordpress"
