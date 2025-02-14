@@ -4,7 +4,26 @@ packer {
       version = ">= 1.2.1"
       source  = "github.com/hashicorp/proxmox"
     }
+    keepass = {
+      version = ">= 0.3.0"
+      source  = "github.com/chunqi/keepass"
+    }
   }
+}
+
+variable "keepass_database" {
+  type = string
+  default = "../../seclab.kdbx"
+}
+
+variable "keepass_password" {
+  type = string
+  sensitive = true
+}
+
+data "keepass-credentials" "kpxc" {
+  keepass_file = "${var.keepass_database}"
+  keepass_password = "${var.keepass_password}"
 }
 
 variable "hostname" {
