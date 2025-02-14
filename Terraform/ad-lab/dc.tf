@@ -4,6 +4,12 @@ variable "dc_hostname" {
   description = "description"
 }
 
+variable "dc_ip" {
+  type       = string
+  default = "10.1.99.3"
+  description = "DC IP Address"
+}
+
 resource "proxmox_virtual_environment_vm" "zd-dc" {
   name      = "ZD-DC-01"
   node_name = var.proxmox_host
@@ -39,8 +45,8 @@ resource "proxmox_virtual_environment_vm" "zd-dc" {
 
   connection {
     type            = "ssh"
-    user            = data.vault_kv_secret_v2.seclab.data.seclab_user
-    password        = data.vault_kv_secret_v2.seclab.data.seclab_windows_password
+    user            = data.keepass_entry.seclab_windows.username
+    password        = data.keepass_entry.seclab_windows.password
     host            = self.ipv4_addresses[0][0]
     target_platform = "windows"
   }
@@ -49,9 +55,7 @@ resource "proxmox_virtual_environment_vm" "zd-dc" {
   provisioner "remote-exec" {
     inline = [
       "powershell.exe -c Rename-Computer '${var.dc_hostname}'",
-      "powershell.exe -c Start-Service W32Time",
-      "powershell.exe -c New-NetIpAddress -InterfaceAlias 'Ethernet 2' -IpAddress 10.1.99.3 -PrefixLength 24",
-      "W32tm /resync /force",
+      "powershell.exe -c New-NetIpAddress -InterfaceAlias 'Ethernet 2' -IpAddress ${var.dc_ip} -PrefixLength 24",
       "ipconfig"
     ]
   }

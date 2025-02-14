@@ -4,11 +4,16 @@ terraform {
       source  = "bpg/proxmox"
       version = "0.71.0"
     }
-    vault = {
-      source  = "hashicorp/vault"
-      version = "4.6.0"
+    keepass = {
+      source = "iSchluff/keepass"
+      version = "1.0.1"
     }
   }
+}
+
+variable "keepass_password" {
+  type       = string
+  sensitive  = true
 }
 
 variable "proxmox_host" {
@@ -32,21 +37,33 @@ variable "ws_template_id" {
   description = "Template ID for Workstation clones"
 }
 
-provider "vault" {
-
+provider "keepass" {
+  password = "${var.keepass_password}"
 }
 
-data "vault_kv_secret_v2" "seclab" {
-  mount = "seclab"
-  name  = "seclab"
+data "keepass_entry" "proxmox_api" {
+  path = "Passwords/Seclab/proxmox_api"
+}
+
+data "keepass_entry" "seclab_user" {
+  path = "Passwords/Seclab/seclab_user"
+}
+
+data "keepass_entry" "seclab_windows" {
+  path = "Passwords/Seclab/seclab_windows"
+}
+
+data "keepass_entry" "seclab_windows_da" {
+  path = "Passwords/Seclab/seclab_windows_da"
 }
 
 provider "proxmox" {
   # Configuration options
   endpoint  = "https://${var.proxmox_host}:8006/api2/json"
   insecure  = true
-  api_token = "${data.vault_kv_secret_v2.seclab.data.proxmox_api_id}=${data.vault_kv_secret_v2.seclab.data.proxmox_api_token}"
+  api_token = "${data.keepass_entry.proxmox_api.username}=${data.keepass_entry.proxmox_api.password}"
 }
+
 
 resource "proxmox_virtual_environment_pool" "zeroday_pool" {
   comment = "ZeroDay Pool"

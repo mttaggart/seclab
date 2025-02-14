@@ -34,8 +34,8 @@ resource "proxmox_virtual_environment_vm" "zd-ws" {
 
   connection {
     type            = "ssh"
-    user            = data.vault_kv_secret_v2.seclab.data.seclab_user
-    password        = data.vault_kv_secret_v2.seclab.data.seclab_windows_password
+    user            = data.keepass_entry.seclab_windows.username
+    password        = data.keepass_entry.seclab_windows.password
     host            = self.ipv4_addresses[0][0]
     target_platform = "windows"
   }
@@ -44,8 +44,6 @@ resource "proxmox_virtual_environment_vm" "zd-ws" {
   provisioner "remote-exec" {
     inline = [
       "powershell.exe -c Rename-Computer '${var.ws_hostname}'",
-      "powershell.exe -c Start-Service W32Time",
-      "W32tm /resync /force",
       "ipconfig"
     ]
   }
