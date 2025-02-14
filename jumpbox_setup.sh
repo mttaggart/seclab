@@ -1,12 +1,24 @@
 #!/bin/bash
 
 VSCODE_URL='https://update.code.visualstudio.com/latest/linux-deb-x64/stable'
-VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_6.6.3271.48-1_amd64.deb'
+VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_7.1.3570.50-1_amd64.deb'
 
 install_tools() {
 	echo "[+] Installing baseline tools"
 	sudo apt update
-	sudo apt install -y tmux vim-gtk3 terminator krdc fish openssh-server sshpass wireshark fonts-liberation xrdp genisoimage
+	sudo apt install -y \
+		tmux \
+		vim-gtk3 \
+		terminator \
+		krdc \
+		fish \
+		openssh-server \
+		sshpass \
+		wireshark \
+		fonts-liberation \
+		xrdp \
+		genisoimage \
+		keepassxc
 }
 
 install_vscode() {
