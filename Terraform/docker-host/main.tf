@@ -11,6 +11,11 @@ terraform {
   }
 }
 
+variable "keepass_password" {
+  type       = string
+  sensitive  = true
+}
+
 variable "proxmox_host" {
   type        = string
   default     = "proxmox"
@@ -23,11 +28,6 @@ variable "hostname" {
   description = "hostname"
 }
 
-variable "keepass_password" {
-  type       = string
-  sensitive  = true
-}
-
 variable "template_id" {
   type        = string
   description = "Template ID for clone"
@@ -36,7 +36,6 @@ variable "template_id" {
 provider "keepass" {
   password = "${var.keepass_password}"
 }
-
 
 data "keepass_entry" "proxmox_api" {
   path = "Passwords/Seclab/proxmox_api"
