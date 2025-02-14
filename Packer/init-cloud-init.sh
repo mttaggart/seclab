@@ -4,8 +4,8 @@ SSH_KEY_PATH=~/.ssh/id_rsa.pub
 
 echo "[+] Extracting KPXC Secrets"
 echo "[+] You'll be asked for your KeePassXC database password twice."
-seclab_user=$(keepassxc-cli show -s $KPXC_DB_PATH $1 | grep UserName | cut -d " " -f 2)
-seclab_pw=$(keepassxc-cli show -s $KPXC_DB_PATH $1 | grep Password | cut -d " " -f 2)
+seclab_user=$(keepassxc-cli show -s $KPXC_DB_PATH Seclab/seclab_user | grep UserName | cut -d " " -f 2)
+seclab_pw=$(keepassxc-cli show -s $KPXC_DB_PATH Seclab/seclab_user | grep Password | cut -d " " -f 2)
 seclab_ssh_key=$(cat $SSH_KEY_PATH)
 encrypted_pw=$(openssl passwd -6 $seclab_pw)
 echo "[+] Moving example files to active files"
