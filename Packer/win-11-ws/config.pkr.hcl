@@ -28,7 +28,7 @@ data "keepass-credentials" "kpxc" {
 
 variable "hostname" {
   type    = string
-  default = "seclab-win11-ws"
+  default = "win11-ws"
 }
 
 locals {
