@@ -16,3 +16,4 @@ user-data
 user-data.bak
 *.preseed
 *.preseed.bak
+*.kdbx
