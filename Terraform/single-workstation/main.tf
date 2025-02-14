@@ -4,11 +4,16 @@ terraform {
       source  = "bpg/proxmox"
       version = "0.71.0"
     }
-    vault = {
-      source  = "hashicorp/vault"
-      version = "4.6.0"
+    keepass = {
+      source = "iSchluff/keepass"
+      version = "1.0.1"
     }
   }
+}
+
+variable "keepass_password" {
+  type       = string
+  sensitive  = true
 }
 
 variable "proxmox_host" {
@@ -28,22 +33,24 @@ variable "template_id" {
   description = "Template ID for clone"
 }
 
-provider "vault" {
-
+provider "keepass" {
+  password = "${var.keepass_password}"
 }
 
-data "vault_kv_secret_v2" "seclab" {
-  mount = "seclab"
-  name  = "seclab"
+data "keepass_entry" "proxmox_api" {
+  path = "Passwords/Seclab/proxmox_api"
+}
+
+data "keepass_entry" "seclab_user" {
+  path = "Passwords/Seclab/seclab_windows"
 }
 
 provider "proxmox" {
   # Configuration options
   endpoint  = "https://${var.proxmox_host}:8006/api2/json"
   insecure  = true
-  api_token = "${data.vault_kv_secret_v2.seclab.data.proxmox_api_id}=${data.vault_kv_secret_v2.seclab.data.proxmox_api_token}"
+  api_token = "${data.keepass_entry.proxmox_api.username}=${data.keepass_entry.proxmox_api.password}"
 }
-
 
 resource "proxmox_virtual_environment_vm" "seclab-ws" {
   name      = "Seclab-Workstation"
@@ -77,10 +84,10 @@ resource "proxmox_virtual_environment_vm" "seclab-ws" {
   }
 
   connection {
-    type            = "ssh"
-    user            = data.vault_kv_secret_v2.seclab.data.seclab_user
-    password        = data.vault_kv_secret_v2.seclab.data.seclab_windows_password
-    host            = self.ipv4_addresses[0][0]
+    type     = "ssh"
+    user     = data.keepass_entry.seclab_user.username
+    password = data.keepass_entry.seclab_user.password
+    host     = self.ipv4_addresses[0][0]
     target_platform = "windows"
   }
 
@@ -88,8 +95,6 @@ resource "proxmox_virtual_environment_vm" "seclab-ws" {
   provisioner "remote-exec" {
     inline = [
       "powershell.exe -c Rename-Computer '${var.hostname}'",
-      "powershell.exe -c Start-Service W32Time",
-      "W32tm /resync /force",
       "ipconfig"
     ]
   }
