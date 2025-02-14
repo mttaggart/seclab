@@ -18,7 +18,9 @@ install_tools() {
 		fonts-liberation \
 		xrdp \
 		genisoimage \
-		keepassxc
+		keepassxc \
+		python3-pip \
+		pipx
 }
 
 install_vscode() {
@@ -50,8 +52,6 @@ install_hashicorp() {
 }
 
 install_ansible() {
-	echo "[+] Installing Pipx"
-	sudo apt install -y python3-pip pipx
 	echo "[+] Installing Ansible"
 	pipx install --include-deps ansible
 	echo "[+] Installing Ansible Galaxy Plugins"
