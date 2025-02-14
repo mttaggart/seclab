@@ -1,14 +1,12 @@
 #! /bin/bash
+KPXC_DB_PATH=~/seclab/seclab.kdbx
+SSH_KEY_PATH=~/.ssh/id_rsa.pub
 
-echo "[+] Extracting Vault Secrets"
-printf "[?] Login to Vault? [y/N]"
-read vault_login
-if [[ $vault_login == "y" ]]; then
-	vault login
-fi
-seclab_user=$(vault kv get -field=seclab_user seclab/seclab)
-seclab_pw=$(vault kv get -field=seclab_password seclab/seclab)
-seclab_ssh_key=$(vault kv get -field=seclab_ssh_key seclab/seclab)
+echo "[+] Extracting KPXC Secrets"
+echo "[+] You'll be asked for your KeePassXC database password twice."
+seclab_user=$(keepassxc-cli show -s $KPXC_DB_PATH $1 | grep UserName | cut -d " " -f 2)
+seclab_pw=$(keepassxc-cli show -s $KPXC_DB_PATH $1 | grep Password | cut -d " " -f 2)
+seclab_ssh_key=$(cat $SSH_KEY_PATH)
 encrypted_pw=$(openssl passwd -6 $seclab_pw)
 echo "[+] Moving example files to active files"
 for f in $(find ./ -name "user-data.example" -or -name "*.preseed.example"); do
