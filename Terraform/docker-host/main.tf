@@ -4,9 +4,9 @@ terraform {
       source  = "bpg/proxmox"
       version = "0.71.0"
     }
-    vault = {
-      source  = "hashicorp/vault"
-      version = "4.6.0"
+    keepass = {
+      source = "iSchluff/keepass"
+      version = "1.0.1"
     }
   }
 }
@@ -23,25 +23,34 @@ variable "hostname" {
   description = "hostname"
 }
 
+variable "keepass_password" {
+  type       = string
+  sensitive  = true
+}
+
 variable "template_id" {
   type        = string
   description = "Template ID for clone"
 }
 
-provider "vault" {
-
+provider "keepass" {
+  password = "${var.keepass_password}"
 }
 
-data "vault_kv_secret_v2" "seclab" {
-  mount = "seclab"
-  name  = "seclab"
+
+data "keepass_entry" "proxmox_api" {
+  path = "Passwords/Seclab/proxmox_api"
+}
+
+data "keepass_entry" "seclab_user" {
+  path = "Passwords/Seclab/seclab_user"
 }
 
 provider "proxmox" {
   # Configuration options
   endpoint  = "https://${var.proxmox_host}:8006/api2/json"
   insecure  = true
-  api_token = "${data.vault_kv_secret_v2.seclab.data.proxmox_api_id}=${data.vault_kv_secret_v2.seclab.data.proxmox_api_token}"
+  api_token = "${data.keepass_entry.proxmox_api.username}=${data.keepass_entry.proxmox_api.password}"
 }
 
 
@@ -78,8 +87,8 @@ resource "proxmox_virtual_environment_vm" "seclab-docker" {
 
   connection {
     type     = "ssh"
-    user     = data.vault_kv_secret_v2.seclab.data.seclab_user
-    password = data.vault_kv_secret_v2.seclab.data.seclab_password
+    user     = data.keepass_entry.seclab_user.username
+    password = data.keepass_entry.seclab_user.password
     host     = self.ipv4_addresses[1][0]
   }
 
