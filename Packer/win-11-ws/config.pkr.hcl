@@ -4,7 +4,26 @@ packer {
       version = ">= 1.2.1"
       source  = "github.com/hashicorp/proxmox"
     }
+    keepass = {
+      version = ">= 0.3.0"
+      source  = "github.com/chunqi/keepass"
+    }
   }
+}
+
+variable "keepass_database" {
+  type = string
+  default = "../../seclab.kdbx"
+}
+
+variable "keepass_password" {
+  type = string
+  sensitive = true
+}
+
+data "keepass-credentials" "kpxc" {
+  keepass_file = "${var.keepass_database}"
+  keepass_password = "${var.keepass_password}"
 }
 
 variable "hostname" {
@@ -13,10 +32,10 @@ variable "hostname" {
 }
 
 locals {
-  username          = vault("/seclab/data/seclab/", "seclab_user")
-  password          = vault("/seclab/data/seclab/", "seclab_windows_password")
-  proxmox_api_id    = vault("/seclab/data/seclab/", "proxmox_api_id")
-  proxmox_api_token = vault("/seclab/data/seclab/", "proxmox_api_token")
+  username          = data.keepass-credentials.kpxc.map["/Passwords/Seclab/seclab_windows-UserName"]
+  password          = data.keepass-credentials.kpxc.map["/Passwords/Seclab/seclab_windows-Password"]
+  proxmox_api_id    = data.keepass-credentials.kpxc.map["/Passwords/Seclab/proxmox_api-UserName"]
+  proxmox_api_token = data.keepass-credentials.kpxc.map["/Passwords/Seclab/proxmox_api-Password"]
 }
 
 variable "proxmox_node" {
@@ -107,6 +126,9 @@ source "proxmox-iso" "seclab-win-ws" {
 build {
   sources = ["sources.proxmox-iso.seclab-win-ws"]
   provisioner "windows-shell" {
-    inline = ["ipconfig"]
+    inline = [
+      "powershell.exe -c Rename-Computer ${var.hostname}"
+      "ipconfig"
+    ]
   }
 }
