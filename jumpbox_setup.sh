@@ -139,6 +139,8 @@ create_creds() {
 		if [ ! -f ~/.ssh/id_rsa.pub ]; then
 			echo "[+] Generating SSH Key"
 			ssh-keygen -f ~/.ssh/id_rsa -b 4096 -P ''
+		else
+			echo "[!] SSH Key exists!"
 		fi
 	}
 	get_proxmox_api_id() {
