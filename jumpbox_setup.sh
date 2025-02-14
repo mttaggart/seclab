@@ -2,6 +2,8 @@
 
 VSCODE_URL='https://update.code.visualstudio.com/latest/linux-deb-x64/stable'
 VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_7.1.3570.50-1_amd64.deb'
+KPXC_DB_PATH="~/seclab/seclab.kdbx"
+PW_LENGTH=32
 
 install_tools() {
 	echo "[+] Installing baseline tools"
@@ -48,7 +50,7 @@ install_hashicorp() {
 	echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 	sudo apt update
 	echo "[+] Installing Hashicorp Tools"
-	sudo apt install -y packer terraform vault
+	sudo apt install -y packer terraform
 }
 
 install_ansible() {
@@ -97,39 +99,14 @@ install_fish() {
 	fi
 }
 
-initialize_vault() {
-	echo "[+] Setting up Vault"
-	cd Vault
-	unset VAULT_TOKEN
-	echo "[+] Creating Vault Systemd Service"
-	sudo cp /etc/vault.d/vault.hcl /etc/vault.d/vault.hcl.bak
-	sudo cp vault.hcl /etc/vault.d/vault.hcl
-	# sudo cp vault.service /etc/systemd/system/vault.service
-	echo "[+] Enabling Vault Systemd Service"
-	sudo systemctl enable vault.service
-	echo "[+] Starting Vault Systemd Service"
-	sudo systemctl start vault.service
-	echo "[+] Initializing Vault"
-	echo "[+] Waiting for Vault service to be available..."
-	sleep 10
-	echo "[+] This command will output data that you MUST store elsewhere!"
-	export VAULT_ADDR="http://127.0.0.1:8200"
-	vault operator init
-	echo "[+] Unsealing Vault"
-	echo "[+] You will be prompted to enter 3 unseal keys in order."
-	printf "[!] Press any key when ready"
-	read vault_confirm
-	for i in $(seq 3); do
-		vault operator unseal
-	done
-	echo "[+] Logging in to Vault"
-	printf "[?] Enter the Vault Root Token (You'll be asked for it again): "
-	read vault_token
-	export VAULT_TOKEN=$vault_token
-	vault login
-	echo "[+] Initializing KV Secrets Engine"
-	vault secrets enable -version=2 -path=seclab kv
-	cd ..
+initialize_keepassxc() {
+	echo "[+] Setting Up KeePassXC Database"
+	echo "[+] You will be asked to set your database password."
+	echo "[!] DO NOT LOSE THIS; it will not be stored for you."
+	echo "[+] Database will be stored at $KPXC_DB_PATH"
+	keepassxc-cli db-create $KPXC_DB_PATH -p
+	echo "[+] Creating Seclab group to Database; password required"
+	keepassxc-cli mkdir $KPXC_DB_PATH Seclab
 }
 
 create_creds() {
@@ -138,7 +115,7 @@ create_creds() {
 		echo "[+] Creating Lab Credentials"
 		if [ ! -f ~/.ssh/id_rsa.pub ]; then
 			echo "[+] Generating SSH Key"
-			ssh-keygen -f ~/.ssh/id_rsa -b 4096 -P ''
+			ssh-keygen -f ~/.ssh/id_rsa -b 4096
 		else
 			echo "[!] SSH Key exists!"
 		fi
@@ -147,84 +124,36 @@ create_creds() {
 		printf "[?] Enter the Proxmox API Token ID: "
 		read proxmox_api_id
 	}
-	get_proxmox_api_token() {
-		printf "[?] Enter the Proxmox API Token Secret: "
-		read proxmox_api_token
-	}
 	get_seclab_user() {
 		printf "[?] Enter the default lab username: "
 		read seclab_user
 	}
-	get_seclab_password() {
-		printf "[?] Enter the default lab password: "
-		read seclab_password
-		printf "[?] Confirm the default lab password: "
-		read seclab_password_confirm
-		if [ $seclab_password != $seclab_password_confirm ]; then
-			echo "[!] Passwords don't match!"
-			get_seclab_password
-		fi
-	}
-	get_seclab_windows_password() {
-		printf "[?] Enter the default lab Windows password: "
-		read seclab_windows_password
-		printf "[?] Confirm the default lab Windows password: "
-		read seclab_windows_password_confirm
-		if [ $seclab_windows_password != $seclab_windows_password_confirm ]; then
-			echo "[!] Passwords don't match!"
-			get_seclab_windows_password
-		fi
-	}
-	get_seclab_windows_domain_password() {
-		printf "[?] Enter the lab Windows domain admin password: "
-		read seclab_windows_domain_password
-		printf "[?] Confirm the default lab Windows domain admin password: "
-		read seclab_windows_domain_password_confirm
-		if [ $seclab_windows_domain_password != $seclab_windows_domain_password_confirm ]; then
-			echo "[!] Passwords don't match!"
-			get_seclab_windows_domain_password
-		fi
-	}
 
 	create_ssh_key
 	get_seclab_user
-	get_proxmox_api_id
-	get_proxmox_api_token
-	get_seclab_password
-	get_seclab_windows_password
-	get_seclab_windows_domain_password
 
-	echo "[+] Setting the following:"
-	echo "[!] Seclab user: $seclab_user"
-	echo "[!] Seclab password: $seclab_password"
-	echo "[!] Seclab Windows password: $seclab_windows_password"
-	echo "[!] Seclab Windows Domain Admin password: $seclab_windows_domain_password"
-	printf "[?] Does this look correct [Y/n]? "
-	read create_creds_confirm
-	if [[ $create_creds_confirm == "n" ]]; then
-		echo "[!] Restarting credential wizard..."
-		create_creds
-	fi
-	echo "[+] Setting Vault data"
+	echo "[+] Setting secrets in KPXC database"
+	echo "[!] You will be asked for your database password several times"
  	USER_HOME_DIR=$(getent passwd "$USER" | cut -d: -f6)
-	vault kv put -mount=seclab seclab \
-		proxmox_api_id=$proxmox_api_id \
-		proxmox_api_token=$proxmox_api_token \
-		seclab_user=$seclab_user \
-		seclab_password=$seclab_password \
-		seclab_windows_password=$seclab_windows_password \
-		seclab_windows_domain_password=$seclab_windows_domain_password \
-		seclab_ssh_key=@$USER_HOME_DIR/.ssh/id_rsa.pub
+ 	echo "[+] Setting Proxmox API Credentials"
+	get_proxmox_api_id
+	echo "[+] When asked for the new entry password, enter your Proxmox API Token Secret"
+ 	keepassxc-cli add -p -u $proxmox_api_id $KPXC_DB_PATH Seclab/proxmox_api_id
+ 	echo "[+] Setting Seclab user"
+ 	keepassxc-cli add -g -L $PW_LENGTH -lUns -u $seclab_user $KPXC_DB_PATH Seclab/seclab_user
+ 	echo "[+] Setting Seclab Windows user"
+ 	keepassxc-cli add -g -L $PW_LENGTH -lUns -u $seclab_user $KPXC_DB_PATH Seclab/seclab_windows
+ 	echo "[+] Setting Seclab Windows domain admin"
+ 	keepassxc-cli add -g -L $PW_LENGTH -lUns -u $seclab_user $KPXC_DB_PATH Seclab/seclab_windows_da
+ 	echo "[+] Secrets generated. You can change them using KeePassXC and your database password."
+ 	echo "[!] Make sure you change secrets BEFORE running init-cloud-init.sh!"
+
 }
 
 append_rcs() {
-	echo "export VAULT_TOKEN=$vault_token" >>~/.bashrc
-	echo "export VAULT_ADDR='http://127.0.0.1:8200'" >>~/.bashrc
 	echo "export PATH=$PATH:~/.local/bin" >>~/.bashrc
 	if [[ $fish_confirm == "" ]] || [[ $fish_confirm == "Y" ]] || [[ $fish_confirm == "y" ]]; then
 		mkdir ~/.config/fish
-		echo "set -x VAULT_TOKEN $vault_token" >>~/.config/fish/config.fish
-		echo "set -x VAULT_ADDR 'http://127.0.0.1:8200'" >>~/.config/fish/config.fish
 		echo "set -x PATH $PATH ~/.local/bin" >>~/.config/fish/config.fish
 	fi
 	source ~/.bashrc
@@ -252,7 +181,7 @@ if [[ $confirm == "" ]] || [[ $confirm == "Y" ]]; then
 	install_vivaldi
 	install_hashicorp
 	install_ansible
-	initialize_vault
+	initialize_keepassxc
 	create_creds
 	install_fish
 	append_rcs
