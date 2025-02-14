@@ -1,16 +1,14 @@
 #!/bin/bash
 
+KPXC_DB_PATH=~/seclab/seclab.kdbx
+
 [[ -z $1 ]] && echo '[!] No directory target provided! Please provide a valid directory (e.g. scripts)' && exit 127
 
-echo "[+] Extracting Vault Secrets"
-printf "[?] Login to Vault? [y/N]"
-read vault_login
-if [[ $vault_login == "y" ]]; then
-	vault login
-fi
-seclab_user=$(vault kv get -field=seclab_user seclab/seclab)
-windows_pw=$(vault kv get -field=seclab_windows_password seclab/seclab)
-windows_domain_pw=$(vault kv get -field=seclab_windows_domain_password seclab/seclab)
+echo "[+] Extracting KPXC Secrets"
+echo "[+] You'll be asked for your KeePassXC database password four times."
+seclab_user=$(keepassxc-cli show -s $KPXC_DB_PATH Seclab/seclab_windows | grep UserName | cut -d " " -f 2)
+windows_pw=$(keepassxc-cli show -s $KPXC_DB_PATH Seclab/seclab_windows | grep Password | cut -d " " -f 2)
+windows_domain_pw=$(keepassxc-cli show -s $KPXC_DB_PATH Seclab/seclab_windows_da | grep Password | cut -d " " -f 2)
 
 # Necessary appends for b64-encded passwords because...reasons?
 windows_userpw=$windows_pw"Password"
