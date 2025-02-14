@@ -138,7 +138,7 @@ create_creds() {
  	echo "[+] Setting Proxmox API Credentials"
 	get_proxmox_api_id
 	echo "[+] When asked for the new entry password, enter your Proxmox API Token Secret"
- 	keepassxc-cli add -p -u $proxmox_api_id $KPXC_DB_PATH Seclab/proxmox_api_id
+ 	keepassxc-cli add -p -u $proxmox_api_id $KPXC_DB_PATH Seclab/proxmox_api
  	echo "[+] Setting Seclab user"
  	keepassxc-cli add -g -L $PW_LENGTH -lUns -u $seclab_user $KPXC_DB_PATH Seclab/seclab_user
  	echo "[+] Setting Seclab Windows user"
