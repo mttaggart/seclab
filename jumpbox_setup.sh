@@ -22,6 +22,7 @@ install_tools() {
 		genisoimage \
 		keepassxc \
 		python3-pip \
+		python3-pykeepass \
 		pipx
 }
 
@@ -59,7 +60,7 @@ install_ansible() {
 	echo "[+] Installing Ansible Galaxy Plugins"
   ansible-galaxy collection install \
   	community.docker \
-  	community.hashi_vault \
+  	viczem.keepass \
   	community.windows \
   	community.general \
   	microsoft.ad
