@@ -1,4 +1,5 @@
+  keepass_dbx: "~/seclab/seclab.kdbx"
   ansible_ssh_common_args: '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-  ansible_user: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=seclab/data/seclab url=http://127.0.0.1:8200')['seclab_user'] }}"
-  ansible_password: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=seclab/data/seclab url=http://127.0.0.1:8200')['seclab_password'] }}"
+  ansible_user: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_user', 'username') }}"
+  ansible_password: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_user', 'password') }}"
   ansible_connection: ssh
