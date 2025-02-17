@@ -7,7 +7,7 @@ This repo aims to provide a lightly-automated starting point for creating virtua
 * **Proxmox**: Hypervisor/VM Host
 * **Packer**: Base VM template creation
 * **Terraform**: VM/VM set creation/destruction
-* **Vault**: Secrets management
+* **KeePassXC**: Secrets management
 * **Ansible**: VM post-provisioning
 
 ## Intended Usage
@@ -31,8 +31,10 @@ Some assembly required. These steps meant are meant to be executed on a Debian/U
 2. Save the username and API Token for use in the next step.
 3. Run `jumpbox_setup.sh` to set up the requisite tools. This installs Packer, Terraform, Vault, and Ansible, and sets up your Vault server.
 4. Use [Packer](Packer/README.md) to create VM templates for your lab. The `mkiso.sh` and `init-cloud-init.sh` scripts ensure your static files never contain unencrypted secrets. You'll need OS install disks and the VirtIO disk (instructions provided).
+  - The `packer_run.sh` command allows secure usage of the KeePassXC database for secret access.
 5. Use [Terraform](Terraform/README.md) to provision VMs. The provided plans are good starting points.
-4. Use [Ansible](Ansible/README.md) to create an inventory and provision your VMs with the provided playbooks—or your own!
+6. Use [Ansible](Ansible/README.md) to create an inventory and provision your VMs with the provided playbooks—or your own!
+  - The `ansible_run.sh` command allows secure usage of the KeePassXC database for secret access.
 
 ## Contributing
 
