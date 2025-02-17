@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# This script wraps Ansible-Playbook runs to keep KeePass secrets secret.
+
+KPXC_DB_PATH=~/seclab/seclab.kdbx
+
+echo "[+] Enter KeePass database password: "
+read -s keepass_password
+echo "[+] Running packer $@ ."
+ANSIBLE_KEEPASS_PSW=$keepass_password ansible-playbook $@
