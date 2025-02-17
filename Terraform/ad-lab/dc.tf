@@ -47,7 +47,7 @@ resource "proxmox_virtual_environment_vm" "zd-dc" {
     type            = "ssh"
     user            = data.keepass_entry.seclab_windows.username
     password        = data.keepass_entry.seclab_windows.password
-    host            = self.ipv4_addresses[0][0]
+    host            = self.ipv4_addresses[1][0]
     target_platform = "windows"
   }
 
