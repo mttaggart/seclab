@@ -153,9 +153,11 @@ create_creds() {
 
 append_rcs() {
 	echo "export PATH=$PATH:~/.local/bin" >>~/.bashrc
+	echo "export KEEPASS_DATABASE=$KPXC_DB_PATH" >>~/.bashrc
 	if [[ $fish_confirm == "" ]] || [[ $fish_confirm == "Y" ]] || [[ $fish_confirm == "y" ]]; then
 		mkdir ~/.config/fish
-		echo "set -x PATH $PATH ~/.local/bin" >>~/.config/fish/config.fish
+		echo "set -x PATH $PATH ~/.local/bin" >> ~/.config/fish/config.fish
+		echo "set -x KEEPASS_DATABASE $KPXC_DB_PATH" >> ~/.config/fish/config.fish
 	fi
 	source ~/.bashrc
 }
