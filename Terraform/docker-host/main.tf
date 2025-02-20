@@ -5,15 +5,20 @@ terraform {
       version = "0.71.0"
     }
     keepass = {
-      source = "iSchluff/keepass"
+      source  = "iSchluff/keepass"
       version = "1.0.1"
     }
   }
 }
 
 variable "keepass_password" {
-  type       = string
-  sensitive  = true
+  type      = string
+  sensitive = true
+}
+
+variable "keepass_database" {
+  type     = string
+  default = "../../seclab.kdbx"
 }
 
 variable "proxmox_host" {
@@ -34,7 +39,8 @@ variable "template_id" {
 }
 
 provider "keepass" {
-  password = "${var.keepass_password}"
+  password = var.keepass_password
+  database = var.keepass_database
 }
 
 data "keepass_entry" "proxmox_api" {

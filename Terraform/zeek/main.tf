@@ -16,6 +16,11 @@ variable "keepass_password" {
   sensitive  = true
 }
 
+variable "keepass_database" {
+  type     = string
+  default = "../../seclab.kdbx"
+}
+
 variable "proxmox_host" {
   type        = string
   default     = "proxmox"
@@ -34,7 +39,8 @@ variable "template_id" {
 }
 
 provider "keepass" {
-  password = "${var.keepass_password}"
+  password = var.keepass_password
+  database = var.keepass_database
 }
 
 data "keepass_entry" "proxmox_api" {

@@ -5,15 +5,20 @@ terraform {
       version = "0.71.0"
     }
     keepass = {
-      source = "iSchluff/keepass"
+      source  = "iSchluff/keepass"
       version = "1.0.1"
     }
   }
 }
 
 variable "keepass_password" {
-  type       = string
-  sensitive  = true
+  type      = string
+  sensitive = true
+}
+
+variable "keepass_database" {
+  type     = string
+  default = "../../seclab.kdbx"
 }
 
 variable "proxmox_host" {
@@ -34,7 +39,8 @@ variable "template_id" {
 }
 
 provider "keepass" {
-  password = "${var.keepass_password}"
+  database = var.keepass_database
+  password = var.keepass_password
 }
 
 data "keepass_entry" "proxmox_api" {
@@ -84,10 +90,10 @@ resource "proxmox_virtual_environment_vm" "seclab-ws" {
   }
 
   connection {
-    type     = "ssh"
-    user     = data.keepass_entry.seclab_user.username
-    password = data.keepass_entry.seclab_user.password
-    host     = self.ipv4_addresses[1][0]
+    type            = "ssh"
+    user            = data.keepass_entry.seclab_user.username
+    password        = data.keepass_entry.seclab_user.password
+    host            = self.ipv4_addresses[1][0]
     target_platform = "windows"
   }
 
