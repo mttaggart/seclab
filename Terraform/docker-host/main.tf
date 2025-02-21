@@ -29,7 +29,7 @@ variable "proxmox_host" {
 
 variable "hostname" {
   type        = string
-  default     = "seclab-docker"
+  default     = "docker"
   description = "hostname"
 }
 
