@@ -23,7 +23,8 @@ install_tools() {
 		keepassxc \
 		python3-pip \
 		python3-pykeepass \
-		pipx
+		pipx \
+		easyrsa
 }
 
 install_vscode() {
@@ -151,6 +152,18 @@ create_creds() {
 
 }
 
+initialize_pki() {
+	echo "[+] Linking easyrsa"
+	sudo ln -s /usr/share/easy-rsa/easyrsa /usr/local/bin/easyrsa
+	echo "[+] Setting up PKI"
+	easyrsa init-pki
+	cat <<EOF > pki/vars
+set_var EASYRSA_DN "cn_only"
+set_var EASYRSA_NO_PASS 1
+EOF
+	easyrsa build-ca
+}
+
 append_rcs() {
 	echo "export PATH=$PATH:~/.local/bin" >>~/.bashrc
 	echo "export KEEPASS_DATABASE=$KPXC_DB_PATH" >>~/.bashrc
@@ -187,6 +200,7 @@ if [[ $confirm == "" ]] || [[ $confirm == "Y" ]]; then
 	initialize_keepassxc
 	create_creds
 	install_fish
+	initialize_pki
 	append_rcs
 	echo "[+] Setup finished! Time to configure Proxmox credentials!"
 else
