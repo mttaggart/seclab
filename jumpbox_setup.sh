@@ -3,6 +3,8 @@
 VSCODE_URL='https://update.code.visualstudio.com/latest/linux-deb-x64/stable'
 VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_7.1.3570.50-1_amd64.deb'
 KPXC_DB_PATH="~/seclab/seclab.kdbx"
+PKI_PATH="~/seclab/pki"
+PKI_DOMAIN="sec.lab"
 PW_LENGTH=32
 
 install_tools() {
@@ -24,7 +26,8 @@ install_tools() {
 		python3-pip \
 		python3-pykeepass \
 		pipx \
-		easyrsa
+		easy-rsa \
+		caddy
 }
 
 install_vscode() {
@@ -165,6 +168,39 @@ EOF
 	easyrsa build-ca
 }
 
+initialize_caddy() {
+	echo "[+] Initializing PKI Server"
+	sudo mkdir -p /var/www/html/ca
+	cat <<EOF | sudo tee /etc/caddy/Caddyfile 1>/dev/null
+https://ca.sec.lab {
+	root * /var/www/html/ca
+    file_server {
+	    browse
+    }
+
+  tls /etc/caddy/ca.$PKI_DOMAIN /etc/caddy/ca.$PKI_DOMAIN.key
+
+  log {
+	  output file /var/log/caddy/caddy.json
+    format json
+  }
+}
+EOF
+  echo "[+] Generating cert for ca.$PKI_DOMAIN"
+	easyrsa --batch --req-cn=ca.$PKI_DOMAIN --dn-mode=cn_only gen-req ca.$PKI_DOMAIN
+	easyrsa --batch sign-req ca.$PKI_DOMAIN
+  echo "[+] Installing certificates"
+  sudo cp $PKI_PATH/ca.crt /var/www/html/ca/
+  sudo chown -R caddy: /var/www/html/ca
+  sudo cp $PKI_PATH/issued/ca.$PKI_DOMAIN.crt /etc/caddy/
+  sudo cp $PKI_PATH/private/ca.$PKI_DOMAIN.key /etc/caddy/
+  sudo chown caddy: /etc/caddy/ca.*
+  echo "[+] Enabling/Starting Caddy Server"
+  sudo systemctl enable caddy.service
+  sudo systemctl restart caddy.service
+		
+}
+
 append_rcs() {
 	echo "export PATH=$PATH:~/.local/bin" >>~/.bashrc
 	echo "export KEEPASS_DATABASE=$KPXC_DB_PATH" >>~/.bashrc
@@ -202,6 +238,7 @@ if [[ $confirm == "" ]] || [[ $confirm == "Y" ]]; then
 	create_creds
 	install_fish
 	initialize_pki
+	intialize_caddy
 	append_rcs
 	echo "[+] Setup finished! Time to configure Proxmox credentials!"
 else
