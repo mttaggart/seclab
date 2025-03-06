@@ -101,4 +101,9 @@ source "proxmox-iso" "seclab-kali" {
 
 build {
   sources = ["sources.proxmox-iso.seclab-kali"]
+  provisioner "shell" {
+    inline = [
+      "sudo update-ca-certificates"
+    ]
+  }
 }

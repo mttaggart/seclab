@@ -115,7 +115,8 @@ build {
   provisioner "shell" {
     inline = [
       "sudo cp /tmp/00-netplan.yaml /etc/netplan/",
-      "rm /tmp/00-netplan.yaml"
+      "rm /tmp/00-netplan.yaml",
+      "sudo update-ca-certificates"
     ]
   }
 }
