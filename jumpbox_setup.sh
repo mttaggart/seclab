@@ -153,6 +153,7 @@ create_creds() {
 }
 
 initialize_pki() {
+	echo "[+] Initializing PKI"
 	echo "[+] Linking easyrsa"
 	sudo ln -s /usr/share/easy-rsa/easyrsa /usr/local/bin/easyrsa
 	echo "[+] Setting up PKI"
