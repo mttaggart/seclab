@@ -16,6 +16,11 @@ variable "keepass_database" {
   default = "../../seclab.kdbx"
 }
 
+variable "ca_cert_path" {
+  type = string
+  default = "../../pki/ca.crt"
+}
+
 variable "keepass_password" {
   type = string
   sensitive = true
@@ -54,7 +59,7 @@ source "proxmox-iso" "seclab-win-ws" {
   username     = "${local.proxmox_api_id}"
   token        = "${local.proxmox_api_token}"
   boot_iso {
-    type         = "scsi"
+    type         = "sata"
     iso_file     = "local:iso/Win-10-Enterprise.iso"
     iso_checksum = "sha256:ef7312733a9f5d7d51cfa04ac497671995674ca5e1058d5164d6028f0938d668"
     unmount      = true
@@ -73,17 +78,38 @@ source "proxmox-iso" "seclab-win-ws" {
   insecure_skip_tls_verify = true
   machine                  = "pc-q35-9.0"
   cpu_type                 = "x86-64-v2-AES"
+  boot                     = "order=sata1;sata0"
+  boot_wait                = "5s"
+  boot_command             = [
+    "<space><space><space><space><space><space>",
+    "<space><space><space><space><space><space>",
+    "<space><space><space><space><space><space>",
+    "<space><space><space><space><space><space>",
+    "<space><space><space><space><space><space>",
+    "<wait30s><enter>"
+  ]
+
+  efi_config {
+    efi_storage_pool  = "${var.storage_pool}"
+    efi_type          = "4m"
+    pre_enrolled_keys = true
+  }
+  tpm_config {
+    tpm_storage_pool = "${var.storage_pool}"
+    tpm_version      = "v2.0"
+  }
 
   additional_iso_files {
-    device       = "ide3"
+    index        = 2
+    type         = "sata"
     iso_file     = "local:iso/Autounattend-win-10-ws.iso"
     iso_checksum = "sha256:2893ca8f6d1f420436b6c213fa618710e7689a67d4bf924263361f07cced3b34"
   }
   additional_iso_files {
-    device       = "sata0"
+    index        = 3
+    type         = "sata"
     iso_file     = "local:iso/virtio.iso"
     iso_checksum = "sha256:57b0f6dc8dc92dc2ae8621f8b1bfbd8a873de9bedc788c4c4b305ea28acc77cd"
-    unmount      = true
   }
 
   network_adapters {
@@ -91,7 +117,7 @@ source "proxmox-iso" "seclab-win-ws" {
   }
 
   disks {
-    type         = "virtio"
+    type         = "sata"
     disk_size    = "50G"
     storage_pool = "${var.storage_pool}"
     format       = "raw"
@@ -102,8 +128,13 @@ source "proxmox-iso" "seclab-win-ws" {
 
 build {
   sources = ["sources.proxmox-iso.seclab-win-ws"]
+  provisioner "file" {
+    source = "${var.ca_cert_path}"
+    destination = "C:/Windows/Temp/ca.crt"
+  }
   provisioner "windows-shell" {
     inline = [
+      "powershell.exe -c Import-Certificate -FilePath C:\\Windows\\Temp\\ca.crt -CertStore Cert:\\LocalMachine\\Root",
       "powershell.exe -c Rename-Computer ${var.hostname}",
       "ipconfig"
     ]

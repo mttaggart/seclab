@@ -201,6 +201,24 @@
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <Order>6</Order>
+                    <Description>Enable RDP</Description>
+                    <CommandLine>powershell.exe -c Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0</CommandLine>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Order>7</Order>
+                    <Description>Enable RDP Firewall Rules</Description>
+                    <CommandLine>powershell.exe -c Enable-NetFirewallRule -DisplayGroup "Remote Desktop"</CommandLine>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Order>8</Order>
+                    <Description>Disable Edge First-Run Crap</Description>
+                    <CommandLine>powershell.exe -c Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Edge' -name "HideFirstRunExperience" -value 0</CommandLine>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Order>9</Order>
                     <!-- Enable SSH service -->
                     <CommandLine>powershell.exe -c Start-Service sshd</CommandLine>
                     <RequiresUserInput>false</RequiresUserInput>
