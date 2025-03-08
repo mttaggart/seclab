@@ -16,6 +16,11 @@ variable "keepass_database" {
   default = "../../seclab.kdbx"
 }
 
+variable "ca_cert_path" {
+  type = string
+  default = "../../pki/ca.crt"
+}
+
 variable "keepass_password" {
   type = string
   sensitive = true
@@ -112,10 +117,15 @@ build {
     source = "./00-netplan.yaml"
     destination = "/tmp/00-netplan.yaml"
   }
+  provisioner "file" {
+    source = "${var.ca_cert_path}"
+    destination = "/tmp/ca.crt"
+  }
   provisioner "shell" {
     inline = [
       "sudo cp /tmp/00-netplan.yaml /etc/netplan/",
       "rm /tmp/00-netplan.yaml",
+      "sudo cp /tmp/ca.crt /usr/local/share/ca-certificates",
       "sudo update-ca-certificates"
     ]
   }

@@ -44,4 +44,3 @@ autoinstall:
     - "echo 'Defaults:SECLAB_USER !requiretty' > /target/etc/sudoers.d/SECLAB_USER"
     - "echo 'SECLAB_USER ALL=(ALL) NOPASSWD: ALL' >> /target/etc/sudoers.d/SECLAB_USER"
     - "chmod 440 /target/etc/sudoers.d/SECLAB_USER"
-    - "curl -k https://ca.sec.lab/ca.crt > /target/usr/local/share/ca-certificates/ca.crt"
