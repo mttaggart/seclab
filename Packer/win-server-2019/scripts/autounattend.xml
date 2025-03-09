@@ -4,43 +4,43 @@
         <component name="Microsoft-Windows-PnpCustomizationsWinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <DriverPaths>
                    <PathAndCredentials wcm:action="add" wcm:keyValue="2">
-                       <Path>F:\viostor\2k16\amd64</Path>
+                       <Path>F:\viostor\2k19\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="3">
-                       <Path>F:\NetKVM\2k16\amd64</Path>
+                       <Path>F:\NetKVM\2k19\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="4">
-                       <Path>F:\Balloon\2k16\amd64</Path>
+                       <Path>F:\Balloon\2k19\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="5">
-                       <Path>F:\pvpanic\2k16\amd64</Path>
+                       <Path>F:\pvpanic\2k19\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="6">
-                       <Path>F:\qemupciserial\2k16\amd64</Path>
+                       <Path>F:\qemupciserial\2k19\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="7">
-                       <Path>F:\qxldod\2k16\amd64</Path>
+                       <Path>F:\qxldod\2k19\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="8">
-                       <Path>F:\vioinput\2k16\amd64</Path>
+                       <Path>F:\vioinput\2k19\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="9">
-                       <Path>F:\viorng\2k16\amd64</Path>
+                       <Path>F:\viorng\2k19\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="10">
-                       <Path>F:\vioscsi\2k16\amd64</Path>
+                       <Path>F:\vioscsi\2k19\amd64</Path>
                    </PathAndCredentials>
    
                    <PathAndCredentials wcm:action="add" wcm:keyValue="11">
-                       <Path>F:\vioserial\2k16\amd64</Path>
+                       <Path>F:\vioserial\2k19\amd64</Path>
                </PathAndCredentials>
             </DriverPaths>
          </component>
@@ -59,33 +59,24 @@
                     <CreatePartitions>
                         <CreatePartition wcm:action="add">
                             <Order>1</Order>
-                            <Size>250</Size>
                             <Type>Primary</Type>
-                        </CreatePartition>
-                        <CreatePartition wcm:action="add">
-                            <Order>2</Order>
                             <Extend>true</Extend>
-                            <Type>Primary</Type>
                         </CreatePartition>
                     </CreatePartitions>
                     <ModifyPartitions>
                         <ModifyPartition wcm:action="add">
+                            <Extend>false</Extend>
+                            <Format>NTFS</Format>
+                            <Letter>C</Letter>
                             <Order>1</Order>
                             <PartitionID>1</PartitionID>
-                            <Format>NTFS</Format>
-                            <Label>Boot</Label>
-                            <Active>true</Active>
-                        </ModifyPartition>
-                        <ModifyPartition wcm:action="add">
-                            <Order>2</Order>
-                            <PartitionID>2</PartitionID>
-                            <Format>NTFS</Format>
-                            <Label>System</Label>
+                            <Label>Windows 10</Label>
                         </ModifyPartition>
                     </ModifyPartitions>
                     <DiskID>0</DiskID>
                     <WillWipeDisk>true</WillWipeDisk>
                 </Disk>
+                <WillShowUI>OnError</WillShowUI>
             </DiskConfiguration>
             <ImageInstall>
                 <OSImage>
@@ -97,7 +88,7 @@
                     </InstallFrom>
                     <InstallTo>
                         <DiskID>0</DiskID>
-                        <PartitionID>2</PartitionID>
+                        <PartitionID>1</PartitionID>
                     </InstallTo>
                     <WillShowUI>OnError</WillShowUI>
                     <InstallToAvailablePartition>false</InstallToAvailablePartition>
@@ -105,9 +96,10 @@
             </ImageInstall>
             <UserData>
                 <AcceptEula>true</AcceptEula>
-				<ProductKey>
+        				<ProductKey>
                   <!-- <Key>11111-22222-33333-44444-55555</Key> -->
-                  <WillShowUI>OnError</WillShowUI>
+                  <!-- <Key>N2KJX-J94YW-TQVFB-DG9YT-724CC</Key> -->
+                  <WillShowUI>Always</WillShowUI>
                </ProductKey>
             </UserData>
         </component>
@@ -179,10 +171,35 @@
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <Order>6</Order>
+                    <Description>Enable RDP</Description>
+                    <CommandLine>powershell.exe -c Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0</CommandLine>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Order>7</Order>
+                    <Description>Enable RDP Firewall Rules</Description>
+                    <CommandLine>powershell.exe -c Enable-NetFirewallRule -DisplayGroup "Remote Desktop"</CommandLine>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Order>8</Order>
+                    <Description>Disable Edge First-Run Crap</Description>
+                    <CommandLine>powershell.exe -c Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Edge' -name "HideFirstRunExperience" -value 0</CommandLine>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Order>9</Order>
                     <!-- Enable SSH service -->
                     <CommandLine>powershell.exe -c Start-Service sshd</CommandLine>
                     <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Order>10</Order>
+                    <!-- Enable SSH service -->
+                    <CommandLine>powershell.exe -c New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22</CommandLine>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+ ommands>
             </FirstLogonCommands>
             <OOBE>
                 <HideEULAPage>true</HideEULAPage>
