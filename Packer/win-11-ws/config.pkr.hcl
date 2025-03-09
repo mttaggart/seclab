@@ -79,7 +79,7 @@ source "proxmox-iso" "seclab-win-ws" {
   insecure_skip_tls_verify = true
   machine                  = "pc-q35-9.0"
   cpu_type                 = "x86-64-v2-AES"
-  boot                     = "order=sata1;sata0"
+  boot                     = "order=sata0;virtio0"
   boot_wait                = "5s"
   boot_command             = [
     "<space><space><space><space><space><space>",
@@ -100,14 +100,14 @@ source "proxmox-iso" "seclab-win-ws" {
   }
 
   additional_iso_files {
-    index        = 2
+    index        = 1
     type         = "sata"
     iso_file     = "local:iso/Autounattend-win-11-ws.iso"
     iso_checksum = "sha256:2893ca8f6d1f420436b6c213fa618710e7689a67d4bf924263361f07cced3b34"
   }
   
   additional_iso_files {
-    index        = 3
+    index        = 2
     type         = "sata"
     iso_file     = "local:iso/virtio.iso"
     iso_checksum = "sha256:57b0f6dc8dc92dc2ae8621f8b1bfbd8a873de9bedc788c4c4b305ea28acc77cd"
@@ -118,7 +118,7 @@ source "proxmox-iso" "seclab-win-ws" {
   }
 
   disks {
-    type         = "sata"
+    type         = "virtio"
     disk_size    = "60G"
     storage_pool = "${var.storage_pool}"
     format       = "raw"
