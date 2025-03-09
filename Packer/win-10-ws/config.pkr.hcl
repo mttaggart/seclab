@@ -33,7 +33,7 @@ data "keepass-credentials" "kpxc" {
 
 variable "hostname" {
   type    = string
-  default = "seclab-win10-ws"
+  default = "win10-ws"
 }
 
 variable "storage_pool" {
@@ -68,7 +68,7 @@ source "proxmox-iso" "seclab-win-ws" {
   communicator             = "ssh"
   ssh_username             = "${local.username}"
   ssh_password             = "${local.password}"
-  ssh_timeout              = "30m"
+  ssh_timeout              = "60m"
   qemu_agent               = true
   cores                    = 2
   memory                   = 4096
