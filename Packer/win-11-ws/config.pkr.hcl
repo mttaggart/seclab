@@ -16,6 +16,11 @@ variable "keepass_database" {
   default = "../../seclab.kdbx"
 }
 
+variable "ca_cert_path" {
+  type = string
+  default = "../../pki/ca.crt"
+}
+
 variable "keepass_password" {
   type = string
   sensitive = true
@@ -82,7 +87,7 @@ source "proxmox-iso" "seclab-win-ws" {
     "<space><space><space><space><space><space>",
     "<space><space><space><space><space><space>",
     "<space><space><space><space><space><space>",
-    "<wait30s><enter>"
+    "<wait60s><enter>"
   ]
   efi_config {
     efi_storage_pool  = "${var.storage_pool}"
@@ -93,21 +98,20 @@ source "proxmox-iso" "seclab-win-ws" {
     tpm_storage_pool = "${var.storage_pool}"
     tpm_version      = "v2.0"
   }
+
   additional_iso_files {
     index        = 2
     type         = "sata"
-    iso_file     = "local:iso/virtio.iso"
-    iso_checksum = "sha256:57b0f6dc8dc92dc2ae8621f8b1bfbd8a873de9bedc788c4c4b305ea28acc77cd"
-    unmount      = true
+    iso_file     = "local:iso/Autounattend-win-11-ws.iso"
+    iso_checksum = "sha256:2893ca8f6d1f420436b6c213fa618710e7689a67d4bf924263361f07cced3b34"
   }
-
+  
   additional_iso_files {
     index        = 3
     type         = "sata"
-    iso_file     = "local:iso/Autounattend-Win-11.iso"
-    iso_checksum = "sha256:2893ca8f6d1f420436b6c213fa618710e7689a67d4bf924263361f07cced3b34"
+    iso_file     = "local:iso/virtio.iso"
+    iso_checksum = "sha256:57b0f6dc8dc92dc2ae8621f8b1bfbd8a873de9bedc788c4c4b305ea28acc77cd"
   }
-
 
   network_adapters {
     bridge = "vmbr2"
@@ -125,9 +129,14 @@ source "proxmox-iso" "seclab-win-ws" {
 
 build {
   sources = ["sources.proxmox-iso.seclab-win-ws"]
+  provisioner "file" {
+    source = "${var.ca_cert_path}"
+    destination = "C:/Windows/Temp/ca.crt"
+  }
   provisioner "windows-shell" {
     inline = [
-      "powershell.exe -c Rename-Computer ${var.hostname}"
+      "powershell.exe -c Import-Certificate -FilePath C:\\Windows\\Temp\\ca.crt -CertStore Cert:\\LocalMachine\\Root",
+      "powershell.exe -c Rename-Computer ${var.hostname}",
       "ipconfig"
     ]
   }
