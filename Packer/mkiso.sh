@@ -5,7 +5,7 @@ KPXC_DB_PATH=~/seclab/seclab.kdbx
 [[ -z $1 ]] && echo '[!] No directory target provided! Please provide a valid directory (e.g. scripts)' && exit 127
 
 echo "[+] Extracting KPXC Secrets"
-echo "[+] You'll be asked for your KeePassXC database password four times."
+echo "[+] You'll be asked for your KeePassXC database password three times."
 seclab_user=$(keepassxc-cli show -s $KPXC_DB_PATH Seclab/seclab_windows | grep UserName | cut -d " " -f 2)
 windows_pw=$(keepassxc-cli show -s $KPXC_DB_PATH Seclab/seclab_windows | grep Password | cut -d " " -f 2)
 windows_domain_pw=$(keepassxc-cli show -s $KPXC_DB_PATH Seclab/seclab_windows_da | grep Password | cut -d " " -f 2)
