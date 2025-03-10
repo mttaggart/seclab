@@ -21,6 +21,11 @@ variable "keepass_password" {
   sensitive = true
 }
 
+variable "ca_cert_path" {
+  type = string
+  default = "../../pki/ca.crt"
+}
+
 data "keepass-credentials" "kpxc" {
   keepass_file = "${var.keepass_database}"
   keepass_password = "${var.keepass_password}"
@@ -35,7 +40,6 @@ variable "proxmox_node" {
   type    = string
   default = "proxmox"
 }
-
 
 variable "storage_pool" {
   type    = string
@@ -74,16 +78,17 @@ source "proxmox-iso" "seclab-win-server" {
   template_description     = "Base Seclab Windows Server 2022"
   os                       = "win11"
   bios                     = "ovmf"
-  boot                     = "order=sata1;sata0"
+  boot                     = "order=sata0;virtio0"
   boot_wait                = "5s"
   boot_command             = [
     "<space><space><space><space><space><space>",
     "<space><space><space><space><space><space>",
     "<space><space><space><space><space><space>",
     "<space><space><space><space><space><space>",
-    "<space><space><space><space><space><space><enter><wait>"
+    "<space><space><space><space><space><space>",
+    "<wait60s><enter>"
   ]
-    efi_config {
+  efi_config {
     efi_storage_pool  = "${var.storage_pool}"
     efi_type          = "4m"
     pre_enrolled_keys = true
@@ -94,29 +99,25 @@ source "proxmox-iso" "seclab-win-server" {
   }
 
   additional_iso_files {
+    index        = 1
+    type         = "sata"
+    iso_file     = "local:iso/Autounattend-win-server-2022.iso"
+    iso_checksum = "sha256:c2c6bb24e262673fa903d8b1c277a5e6d6344779a324e65aae7206be4ab40297"
+  }
+  
+  additional_iso_files {
     index        = 2
     type         = "sata"
     iso_file     = "local:iso/virtio.iso"
     iso_checksum = "sha256:57b0f6dc8dc92dc2ae8621f8b1bfbd8a873de9bedc788c4c4b305ea28acc77cd"
-    unmount      = true
   }
-
-  additional_iso_files {
-    index        = 3
-    type         = "sata"
-    iso_file     = "local:iso/Autounattend-win-server-2022.iso"
-    iso_checksum = "sha256:c2c6bb24e262673fa903d8b1c277a5e6d6344779a324e65aae7206be4ab40297"
-    unmount      = true
-  }
-
-
 
   network_adapters {
     bridge = "vmbr2"
   }
 
   disks {
-    type         = "sata"
+    type         = "virtio"
     disk_size    = "60G"
     storage_pool = "${var.storage_pool}"
     format       = "raw"
@@ -127,11 +128,15 @@ source "proxmox-iso" "seclab-win-server" {
 
 build {
   sources = ["sources.proxmox-iso.seclab-win-server"]
+  provisioner "file" {
+    source = "${var.ca_cert_path}"
+    destination = "C:/Windows/Temp/ca.crt"
+  }
   provisioner "windows-shell" {
     inline = [
-      "powershell.exe -c Rename-Computer ${var.hostname}"
-      "ipconfig",
+      "powershell.exe -c Import-Certificate -FilePath C:\\Windows\\Temp\\ca.crt -CertStore Cert:\\LocalMachine\\Root",
+      "powershell.exe -c Rename-Computer ${var.hostname}",
+      "ipconfig"
     ]
   }
-
 }
