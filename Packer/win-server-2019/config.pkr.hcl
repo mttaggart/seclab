@@ -80,8 +80,13 @@ source "proxmox-iso" "seclab-win-server" {
   cpu_type                 = "x86-64-v2-AES"
   boot                     = "order=sata0;virtio0"
   boot_wait                = "30s"
-  boot_command = [
-    "<tab><tab><tab><enter><wait5s><enter>"
+  boot_command             = [
+    "<space><space><space><space><space><space>",
+    "<space><space><space><space><space><space>",
+    "<space><space><space><space><space><space>",
+    "<space><space><space><space><space><space>",
+    "<space><space><space><space><space><space>",
+    "<wait60s><enter>"
   ]
 
   efi_config {
