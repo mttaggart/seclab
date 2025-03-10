@@ -83,6 +83,7 @@ source "proxmox-iso" "seclab-ubuntu-server" {
     bridge = "vmbr1"
   }
   disks {
+    type         = "virtio"
     disk_size    = "30G"
     storage_pool = "${var.storage_pool}"
     format       = "raw"
