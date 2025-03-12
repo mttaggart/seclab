@@ -1,9 +1,10 @@
 #!/bin/bash
 
+SECLAB_PATH="~/seclab"
 VSCODE_URL='https://update.code.visualstudio.com/latest/linux-deb-x64/stable'
-VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_7.1.3570.50-1_amd64.deb'
+VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_7.1.3570.60-1_amd64.deb'
 KPXC_DB_PATH="~/seclab/seclab.kdbx"
-PKI_PATH="~/seclab/pki"
+PKI_PATH="$SECLAB_PATH/pki"
 PKI_DOMAIN="sec.lab"
 PW_LENGTH=32
 
@@ -160,12 +161,14 @@ initialize_pki() {
 	echo "[+] Linking easyrsa"
 	sudo ln -s /usr/share/easy-rsa/easyrsa /usr/local/bin/easyrsa
 	echo "[+] Setting up PKI"
+	pushd $SECLAB_PATH
 	easyrsa init-pki
 	cat <<EOF > pki/vars
 set_var EASYRSA_DN "cn_only"
 set_var EASYRSA_NO_PASS 1
 EOF
 	easyrsa build-ca
+	popd
 }
 
 initialize_caddy() {
@@ -202,11 +205,11 @@ EOF
 }
 
 append_rcs() {
-	echo "export PATH=$PATH:~/.local/bin" >>~/.bashrc
+	echo "export PATH=$PATH:~/.local/bin:$SECLAB_PATH/Scripts" >>~/.bashrc
 	echo "export KEEPASS_DATABASE=$KPXC_DB_PATH" >>~/.bashrc
 	if [[ $fish_confirm == "" ]] || [[ $fish_confirm == "Y" ]] || [[ $fish_confirm == "y" ]]; then
 		mkdir ~/.config/fish
-		echo "set -x PATH $PATH ~/.local/bin" >> ~/.config/fish/config.fish
+		echo "set -x PATH $PATH ~/.local/bin $SECLAB_PATH/Scripts" >> ~/.config/fish/config.fish
 		echo "set -x KEEPASS_DATABASE $KPXC_DB_PATH" >> ~/.config/fish/config.fish
 	fi
 	source ~/.bashrc
@@ -227,7 +230,6 @@ printf "Continue [Y/n]? "
 read confirm
 
 if [[ $confirm == "" ]] || [[ $confirm == "Y" ]]; then
-	echo "Doing it"
 	echo "[+] Beginning installation"
 	install_tools
 	install_vscode
@@ -240,7 +242,7 @@ if [[ $confirm == "" ]] || [[ $confirm == "Y" ]]; then
 	initialize_pki
 	intialize_caddy
 	append_rcs
-	echo "[+] Setup finished! Time to configure Proxmox credentials!"
+	echo "[+] Setup finished!"
 else
 	exit 0
 fi
