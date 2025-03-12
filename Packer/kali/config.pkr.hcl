@@ -21,6 +21,11 @@ variable "keepass_password" {
   sensitive = true
 }
 
+variable "ca_cert_path" {
+  type = string
+  default = "../../pki/ca.crt"
+}
+
 data "keepass-credentials" "kpxc" {
   keepass_file = "${var.keepass_database}"
   keepass_password = "${var.keepass_password}"
@@ -81,7 +86,7 @@ source "proxmox-iso" "seclab-kali" {
   }
 
   disks {
-    type         = "ide"
+    type         = "virtio"
     disk_size    = "50G"
     storage_pool = "${var.storage_pool}"
     format       = "raw"
@@ -101,8 +106,14 @@ source "proxmox-iso" "seclab-kali" {
 
 build {
   sources = ["sources.proxmox-iso.seclab-kali"]
+  provisioner "file" {
+    source = "${var.ca_cert_path}"
+    destination = "/tmp/ca.crt"
+  }
   provisioner "shell" {
     inline = [
+      "sudo cp /tmp/ca.crt /usr/local/share/ca-certificates",
+      "sudo rm /tmp/ca.crt",
       "sudo update-ca-certificates"
     ]
   }

@@ -104,7 +104,7 @@ d-i partman-auto/expert_recipe string \
             use_filesystem{ }               \
             $default_filesystem{ }          \
             mountpoint{ / } .
-d-i partman-auto/disk string /dev/sda
+d-i partman-auto/disk string /dev/vda
 d-i partman/confirm_write_new_label boolean true
 d-i partman/choose_partition select finish
 d-i partman/confirm boolean true
@@ -130,7 +130,7 @@ d-i passwd/user-password-crypted password SECLAB_PASSWORD
 # Grub
 d-i grub-installer/only_debian boolean true
 d-i grub-installer/with_other_os boolean false
-d-i grub-installer/bootdev string /dev/sda
+d-i grub-installer/bootdev string /dev/vda
 
 # Automatically reboot after installation
 d-i finish-install/reboot_in_progress note
@@ -141,11 +141,10 @@ d-i cdrom-detect/eject boolean true
 # Post-install commands
 d-i preseed/late_command string \
     mkdir -pm 700 /target/home/SECLAB_USER/.ssh; \
-    in-target sh -c 'systemctl enable ssh; \
-    systemctl enable xrdp; \
-    echo "SECLAB_SSH_KEY" > /home/SECLAB_USER/.ssh/authorized_keys; \
-    chown --recursive SECLAB_USER: /home/SECLAB_USER/.ssh; \
-    chmod 0644 /home/SECLAB_USER/.ssh/authorized_keys; \
-    echo "SECLAB_USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/SECLAB_USER; \
-    echo "Defaults:SECLAB_USER !requiretty" >> /etc/sudoers.d/SECLAB_USER; \
-    curl -k https://ca.sec.lab/ca.crt > /usr/local/share/ca-certificates/ca.crt;'
+    in-target systemctl enable ssh; \
+    in-target systemctl enable xrdp; \
+    in-target sh -c 'echo "SECLAB_SSH_KEY" > /home/SECLAB_USER/.ssh/authorized_keys'; \
+    in-target sh -c 'chown --recursive SECLAB_USER: /home/SECLAB_USER/.ssh'; \
+    in-target sh -c 'chmod 0644 /home/SECLAB_USER/.ssh/authorized_keys'; \
+    in-target sh -c 'echo "SECLAB_USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/SECLAB_USER'; \
+    in-target sh -c 'echo "Defaults:SECLAB_USER !requiretty" >> /etc/sudoers.d/SECLAB_USER'; 
