@@ -173,15 +173,30 @@ EOF
 
 initialize_caddy() {
 	echo "[+] Initializing PKI Server"
-	sudo mkdir -p /var/www/html/ca
 	cat <<EOF | sudo tee /etc/caddy/Caddyfile 1>/dev/null
-https://ca.sec.lab {
-	root * /var/www/html/ca
-    file_server {
-	    browse
-    }
+{
+	pki {
+		ca seclab {
+			root {
+				format pem_file
+				cert /etc/caddy/ca.crt
+				key /etc/caddy/ca.key
+			}
+		}
+	}
+}
 
-  tls /etc/caddy/ca.$PKI_DOMAIN /etc/caddy/ca.$PKI_DOMAIN.key
+https://ca.$PKI_DOMAIN {
+
+	tls {
+		issuer internal {
+			ca seclab
+		}
+	}
+
+	acme_server {
+		ca seclab
+	}
 
   log {
 	  output file /var/log/caddy/caddy.json
@@ -194,10 +209,7 @@ EOF
 	easyrsa --batch sign-req ca.$PKI_DOMAIN
   echo "[+] Installing certificates"
   sudo cp $PKI_PATH/ca.crt /var/www/html/ca/
-  sudo chown -R caddy: /var/www/html/ca
-  sudo cp $PKI_PATH/issued/ca.$PKI_DOMAIN.crt /etc/caddy/
-  sudo cp $PKI_PATH/private/ca.$PKI_DOMAIN.key /etc/caddy/
-  sudo chown caddy: /etc/caddy/ca.*
+  sudo chown caddy: /etc/caddy/ca.crt
   echo "[+] Enabling/Starting Caddy Server"
   sudo systemctl enable caddy.service
   sudo systemctl restart caddy.service
