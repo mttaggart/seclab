@@ -13,6 +13,7 @@ network:
           metric: 99
     ens19:
       dhcp4: true
+      dhcp-identifier: mac
       routes:
         - to: 10.1.99.0/24
           via: 10.1.99.1
