@@ -176,6 +176,7 @@ initialize_caddy() {
 {
 	pki {
 		ca seclab {
+			intermediate_cn "Seclab Caddy Intermediate"
 			root {
 				format pem_file
 				cert /etc/caddy/ca.crt
