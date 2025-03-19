@@ -216,11 +216,11 @@ EOF
 }
 
 append_rcs() {
-	echo "export PATH=$PATH:~/.local/bin:$SECLAB_PATH/Scripts" >>~/.bashrc
+	echo "export PATH=$PATH:~/.local/bin:$SECLAB_PATH/Scripts:/usr/share/easyrsa" >>~/.bashrc
 	echo "export KEEPASS_DATABASE=$KPXC_DB_PATH" >>~/.bashrc
 	if [[ $fish_confirm == "" ]] || [[ $fish_confirm == "Y" ]] || [[ $fish_confirm == "y" ]]; then
 		mkdir ~/.config/fish
-		echo "set -x PATH $PATH ~/.local/bin $SECLAB_PATH/Scripts" >> ~/.config/fish/config.fish
+		echo "set -x PATH $PATH ~/.local/bin $SECLAB_PATH/Scripts /usr/share/easyrsa" >> ~/.config/fish/config.fish
 		echo "set -x KEEPASS_DATABASE $KPXC_DB_PATH" >> ~/.config/fish/config.fish
 	fi
 	source ~/.bashrc
