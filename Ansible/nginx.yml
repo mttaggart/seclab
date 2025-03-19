@@ -1,0 +1,11 @@
+---
+- name: Install Nginx with HTTPS Cert
+  hosts: infrastructure
+  vars_prompt:
+    - name: domain_name
+      prompt: Domain Name for Host
+      private: false
+  vars:
+    ca_host: ca.sec.lab
+  roles:
+    - nginx

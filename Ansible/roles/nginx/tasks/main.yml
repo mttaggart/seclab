@@ -1,0 +1,69 @@
+---
+- name: Install Nginx
+  become: true
+  vars:
+    ansible_become_pass: "{{ ansible_password }}"
+  ansible.builtin.apt:
+    pkg:
+      - nginx
+      - certbot
+      - python3-certbot-nginx
+    state: latest
+    update_cache: true
+- name: Stop Nginx
+  become: true
+  vars:
+    ansible_become_pass: "{{ ansible_password }}"
+  ansible.builtin.systemd:
+    name: nginx
+    state: stopped
+- name: Retrieve Cert
+  become: true
+  vars:
+    ansible_become_pass: "{{ ansible_password }}"
+  ansible.builtin.shell: 
+    cmd: "certbot certonly --standalone -d {{ domain_name }} --server https://{{ ca_host }}/acme/seclab/directory -n -m root@{{ ca_host }}"
+    creates: /etc/letsencrypt/live
+- name: Add Nginx Template
+  become: true
+  vars:
+    ansible_become_pass: "{{ ansible_password }}"
+  ansible.builtin.template:
+    src: site-config.j2
+    dest: /etc/nginx/sites-available/default
+    owner: root
+    group: root
+- name: Add Index Template
+  become: true
+  vars:
+    ansible_become_pass: "{{ ansible_password }}"
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    owner: www-data
+    group: www-data
+- name: Fix webroot permissions
+  ansible.builtin.file:
+    path: /var/www/html
+    owner: www-data
+    group: www-data
+    recurse: true
+- name: Start/Enable Nginx
+  become: true
+  vars:
+    ansible_become_pass: "{{ ansible_password }}"
+  ansible.builtin.systemd:
+    daemon-reload: true
+    name: nginx
+    state: started
+    enabled: true
+- name: Install Cronjob for Renewal
+  become: true
+  vars:
+    ansible_become_pass: "{{ ansible_password }}"
+  ansible.builtin.template:
+    src: certbot-cron
+    dest: /etc/cron.d/certbot
+    owner: root
+    group: root  
+     
