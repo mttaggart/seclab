@@ -7,5 +7,5 @@ KPXC_DB_PATH=~/seclab/seclab.kdbx
 
 echo "[+] Enter KeePass database password: "
 read -s keepass_password
-echo "[+] Running packer $@ ."
-PKR_VAR_keepass_password=$keepass_password packer $@ .
+echo "[+] Running packer $@"
+PKR_VAR_keepass_password=$keepass_password packer $@
