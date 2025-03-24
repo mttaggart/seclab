@@ -26,11 +26,6 @@ variable "keepass_password" {
   sensitive = true
 }
 
-data "keepass-credentials" "kpxc" {
-  keepass_file = "${var.keepass_database}"
-  keepass_password = "${var.keepass_password}"
-}
-
 variable "hostname" {
   type    = string
   default = "seclab-ubuntu-server"
@@ -44,6 +39,11 @@ variable "proxmox_node" {
 variable "storage_pool" {
   type    = string
   default = "local-lvm"
+}
+
+data "keepass-credentials" "kpxc" {
+  keepass_file = "${var.keepass_database}"
+  keepass_password = "${var.keepass_password}"
 }
 
 locals {
