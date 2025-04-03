@@ -204,13 +204,13 @@ https://ca.$PKI_DOMAIN {
   }
 }
 EOF
-  echo "[+] Generating cert for ca.$PKI_DOMAIN"
-	easyrsa --batch --req-cn=ca.$PKI_DOMAIN --dn-mode=cn_only gen-req ca.$PKI_DOMAIN
-	easyrsa --batch sign-req ca.$PKI_DOMAIN
-  echo "[+] Installing certificates"
-  sudo cp $PKI_PATH/ca.crt /var/www/html/ca/
-  sudo chown caddy: /etc/caddy/ca.crt
+  echo "[+] Installing CA certificate for Caddy"
+  sudo cp $PKI_PATH/ca.crt /etc/caddy/ca.crt
+  openssl -in $PKI_PATH/private/ca.key | sudo tee /etc/caddy/ca.key
+  sudo chown caddy: /etc/caddy/ca.*
   echo "[+] Enabling/Starting Caddy Server"
+  sudo mkdir /var/log/caddy
+  sudo chown caddy: /var/log/caddy
   sudo systemctl enable caddy.service
   sudo systemctl restart caddy.service
 		
