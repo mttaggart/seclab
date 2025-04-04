@@ -14,6 +14,8 @@ terraform {
 variable "keepass_password" {
   type       = string
   sensitive  = true
+  ephemeral  = true
+
 }
 
 variable "keepass_database" {
