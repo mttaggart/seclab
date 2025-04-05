@@ -96,7 +96,7 @@ source "proxmox-iso" "seclab-kali" {
     "<esc><wait>",
     "/install.amd/vmlinuz noapic ",
     "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/kali.preseed ",
-    "hostname=seclab-kali ",
+    "hostname=kali ",
     "auto=true ",
     "interface=auto ",
     "domain=vm ",
