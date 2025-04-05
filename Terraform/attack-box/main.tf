@@ -82,7 +82,7 @@ resource "proxmox_virtual_environment_vm" "seclab-kali" {
   }
 
   network_device {
-    bridge = "vmbr2"
+    bridge = "vmbr1"
     model  = "e1000"
   }
 
