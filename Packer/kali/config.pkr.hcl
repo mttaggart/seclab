@@ -33,7 +33,7 @@ data "keepass-credentials" "kpxc" {
 
 variable "hostname" {
   type    = string
-  default = "seclab-kali"
+  default = "kali"
 }
 
 variable "proxmox_node" {
@@ -82,7 +82,7 @@ source "proxmox-iso" "seclab-kali" {
 
 
   network_adapters {
-    bridge = "vmbr2"
+    bridge = "vmbr1"
   }
 
   disks {
@@ -96,7 +96,7 @@ source "proxmox-iso" "seclab-kali" {
     "<esc><wait>",
     "/install.amd/vmlinuz noapic ",
     "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/kali.preseed ",
-    "hostname=kali ",
+    "hostname=${var.hostname} ",
     "auto=true ",
     "interface=auto ",
     "domain=vm ",
