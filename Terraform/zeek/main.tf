@@ -107,7 +107,7 @@ resource "proxmox_virtual_environment_vm" "seclab-zeek" {
       "sudo mv /etc/netplan/00-installer-config.yaml /etc/netplan/00-installer-config.yaml.bak",
       "sudo mv /tmp/00-netplan.yaml /etc/netplan/00-netplan.yaml",
       "sudo hostnamectl hostname ${var.hostname}",
-      "sudo netplan apply && sudo ip addr add dev ens18 ${self.ipv4_addresses[1][0]}",
+      "sudo netplan apply && sudo ip addr add dev enp6s18 ${self.ipv4_addresses[1][0]}",
       "ip a s"
     ]
   }
