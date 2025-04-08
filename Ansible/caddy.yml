@@ -1,0 +1,8 @@
+---
+- name: Install Caddy
+  hosts: infrastructure
+  roles:
+    - role: caddy
+      become: true
+      become_user: root
+      

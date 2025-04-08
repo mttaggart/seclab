@@ -1,0 +1,11 @@
+{
+	acme_ca https://{{ ca_hostname }}.{{ domain }}/acme/{{ acme_root }}/directory
+	acme_ca_root {{ ca_cert_dest  }}
+}
+
+https://{{ caddy_hostname }}.{{ domain }} {
+  root * {{ webroot }}
+	file_server {
+		browse
+	}
+}

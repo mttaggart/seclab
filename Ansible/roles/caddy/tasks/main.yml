@@ -1,0 +1,38 @@
+---
+- name: Install Caddy
+  ansible.builtin.apt:
+    name: caddy
+    state: present
+- name: Install Caddyfile
+  ansible.builtin.template:
+    src: Caddyfile.j2
+    dest: /etc/caddy/Caddyfile
+- name: Install CA Cert
+  ansible.builtin.shell:
+    cmd: cp "{{ ca_cert_src }}" "{{ ca_cert_dest }}"
+    creates: "{{ ca_cert_dest }}"
+- name: Fix cert permission
+  ansible.builtin.file:
+    name: "{{ ca_cert_dest }}"    
+    owner: caddy
+    group: caddy
+    mode: 0400
+- name: Restart/Enable Caddy
+  ansible.builtin.systemd_service:
+    name: caddy
+    enabled: true
+    state: restarted
+- name: Ensure webroot permissions
+  ansible.builtin.file:
+    state: directory
+    path: "{{ webroot }}"
+    owner: caddy
+    group: caddy
+- name: Add web content
+  ansible.builtin.template:
+    src: index.html.j2 
+    dest: "{{ webroot }}/index.html"
+    owner: caddy
+    group: caddy
+    mode: 0644
+    
