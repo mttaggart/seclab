@@ -1,6 +1,6 @@
 ---
 - name: Install ELK Stack
-  hosts: seclab-siem
+  hosts: siem.sec.lab
   vars_prompt:
     - name: siem_password
       prompt: SIEM password
