@@ -9,25 +9,24 @@
     repo: "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main"
     filename: elastic-8.x
     state: present
-    update_cache: no
+    update_cache: false
 
 - name: Install Elasticsearch
   ansible.builtin.apt:
-    update_cache: yes
+    update_cache: true
     name: elasticsearch
 
 - name: Start/Enable Elasticsearch Systemd Service
   ansible.builtin.systemd:
-    daemon-reload: yes
+    daemon-reload: true
     name: elasticsearch
     state: started
-    enabled: yes
+    enabled: true
 
 - name: Reset elastic user password
   ansible.builtin.shell:
     cmd: /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
     stdin: "y"
-    warn: no
   register: ep
   notify: Print Elastic Password
 
@@ -44,16 +43,15 @@
 - name: Create Kibana Enrollment Token
   ansible.builtin.shell:
     cmd: /usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
-    warn: no
   register: kibana_token
   notify: Print Kibana Enrollment Token
 
 - name: Start/Enable Kibana Systemd Service
   ansible.builtin.systemd:
-    daemon-reload: yes
+    daemon-reload: true
     name: kibana
     state: started
-    enabled: yes
+    enabled: true
 
 - name: Get Elastic Agent
   ansible.builtin.apt:
@@ -61,7 +59,7 @@
 
 - name: Start/Enable Elastic Agent Systemd Service
   ansible.builtin.systemd:
-    daemon-reload: yes
+    daemon-reload: true
     name: elastic-agent
     state: started
-    enabled: yes
+    enabled: true
