@@ -1,6 +1,6 @@
 ---
 - name: Install Splunk Enterprise Server
-  hosts: seclab-siem
+  hosts: siem.sec.lab
   vars_prompt:
     - name: siem_password
       prompt: "Enter Splunk Admin Password"
@@ -8,5 +8,14 @@
   become: true
   become_user: root
   roles:
-    - docker
-    - splunk-server
+    - role: splunk-server
+      become: true
+      become_user: root
+      tags: [install]
+    - role: caddy-reverse-proxy
+      become: true
+      become_user: root
+      vars:
+        proxy_port: 8000
+      tags: [reverse-proxy]
+    

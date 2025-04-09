@@ -1,19 +1,28 @@
----
-- name: Pull Splunk Docker Image
-  community.docker.docker_image:
-    name: splunk/splunk
-    source: pull
-
-- name: Run Splunk Container
-  community.docker.docker_container:
-    name: splunk
-    image: splunk/splunk
+- name: Download Splunk .deb
+  ansible.builtin.get_url:
+    url: https://download.splunk.com/products/splunk/releases/9.4.1/linux/splunk-9.4.1-e3bdab203ac8-linux-amd64.deb
+    dest: /tmp/splunk.deb
+- name: Install Splunk
+  ansible.builtin.apt:
+    deb: /tmp/splunk.deb
+- name: Remove Splunk .deb
+  ansible.builtin.file:
+    path: /tmp/splunk.deb
+    state: absent
+- name: Install User Seed
+  ansible.builtin.template:
+    src: user-seed.conf.j2
+    dest: /opt/splunk/etc/system/local/user-seed.conf
+    owner: splunk
+    group: splunk
+- name: Create Splunk Systemd Service
+  ansible.builtin.shell:
+    cmd: /opt/splunk/bin/splunk --accept-license --answer-yes --no-prompt enable boot-start -user splunk -systemd-managed 1
+    creates: /etc/systemd/system/Splunkd.service
+- name: Enable/Start Splunk Service
+  ansible.builtin.systemd_service:
+    name: Splunkd
     state: started
-    restart: true
-    restart_policy: unless-stopped
-    ports:
-      - "8000:8000"
-      - "9997:9997"
-    env:
-      SPLUNK_START_ARGS: "--accept-license"
-      SPLUNK_PASSWORD: "{{ siem_password }}"
+    enabled: true
+  
+    
