@@ -1,0 +1,15 @@
+---
+- name: Import Caddy Role
+  import_role: 
+    name: caddy
+- name: Override Caddyfile
+  ansible.builtin.template:
+    src: Caddyfile.j2
+    dest: /etc/caddy/Caddyfile
+    owner: caddy
+    group: caddy
+- name: Restart Caddy
+  ansible.builtin.systemd_service:
+    name: caddy
+    state: restarted
+  
