@@ -1,12 +1,16 @@
 ---
 - name: Install ELK Stack
   hosts: siem.sec.lab
-  vars_prompt:
-    - name: siem_password
-      prompt: SIEM password
-      private: false
+  vars:
+    caddy_hostname: siem
   roles:
-    - role: docker
+    - role: elk-stack
       become: true
       become_user: root
-    - elk-docker
+      tags: [always, elk-stack]
+    - role: caddy-reverse-proxy
+      become: true
+      become_user: root
+      vars:
+        proxy_port: 5601
+      tags: [never, reverse-proxy]
