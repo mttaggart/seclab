@@ -53,10 +53,6 @@
     state: started
     enabled: true
 
-- name: Get Elastic Agent
-  ansible.builtin.apt:
-    name: elastic-agent
-
 - name: Start/Enable Elastic Agent Systemd Service
   ansible.builtin.systemd:
     daemon-reload: true
