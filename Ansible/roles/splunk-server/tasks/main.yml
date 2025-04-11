@@ -15,6 +15,12 @@
     dest: /opt/splunk/etc/system/local/user-seed.conf
     owner: splunk
     group: splunk
+- name: Install inputs.conf
+  ansible.builtin.template:
+    src: inputs.conf.j2
+    dest: /opt/splunk/etc/system/local/inputs.conf
+    owner: splunk
+    group: splunk
 - name: Create Splunk Systemd Service
   ansible.builtin.shell:
     cmd: /opt/splunk/bin/splunk --accept-license --answer-yes --no-prompt enable boot-start -user splunk -systemd-managed 1
