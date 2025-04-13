@@ -1,8 +1,5 @@
 ---
 - name: Install Nginx
-  become: true
-  vars:
-    ansible_become_pass: "{{ ansible_password }}"
   ansible.builtin.apt:
     pkg:
       - nginx
@@ -10,60 +7,54 @@
       - python3-certbot-nginx
     state: latest
     update_cache: true
+  tags: [always]
 - name: Stop Nginx
-  become: true
-  vars:
-    ansible_become_pass: "{{ ansible_password }}"
   ansible.builtin.systemd:
     name: nginx
     state: stopped
+  tags: [always]
 - name: Retrieve Cert
-  become: true
-  vars:
-    ansible_become_pass: "{{ ansible_password }}"
   ansible.builtin.shell: 
-    cmd: "certbot certonly --standalone -d {{ domain_name }} --server https://{{ ca_host }}/acme/seclab/directory -n -m root@{{ ca_host }}"
+    cmd: "certbot certonly --standalone -d {{ nginx_hostname }}.{{ domain }} --server https://{{ ca_host }}/acme/seclab/directory -n -m root@{{ ca_host }}"
     creates: /etc/letsencrypt/live
+  tags: [always]
 - name: Add Nginx Template
-  become: true
-  vars:
-    ansible_become_pass: "{{ ansible_password }}"
   ansible.builtin.template:
     src: site-config.j2
     dest: /etc/nginx/sites-available/default
     owner: root
     group: root
+  tags: [always]
 - name: Add Index Template
-  become: true
-  vars:
-    ansible_become_pass: "{{ ansible_password }}"
   ansible.builtin.template:
     src: index.html.j2
     dest: /var/www/html/index.html
     owner: www-data
     group: www-data
+  tags: [always]
 - name: Fix webroot permissions
   ansible.builtin.file:
     path: /var/www/html
     owner: www-data
     group: www-data
     recurse: true
+  tags: [always]
 - name: Start/Enable Nginx
-  become: true
-  vars:
-    ansible_become_pass: "{{ ansible_password }}"
   ansible.builtin.systemd:
     daemon-reload: true
     name: nginx
     state: started
     enabled: true
+  tags: [always]
 - name: Install Cronjob for Renewal
-  become: true
-  vars:
-    ansible_become_pass: "{{ ansible_password }}"
   ansible.builtin.template:
     src: certbot-cron
     dest: /etc/cron.d/certbot
     owner: root
     group: root  
-     
+  tags: [always]
+- name: Enable PHP
+  import_tasks: php.yml
+  tags: [php]
+
+  

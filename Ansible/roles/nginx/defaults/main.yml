@@ -1,0 +1,8 @@
+acme_root: seclab
+ca_hostname: ca
+ca_cert_src: /usr/local/share/ca-certificates/ca.crt
+ca_cert_dest: /etc/caddy/ca.crt
+domain: sec.lab
+nginx_hostname: "{{ ansible_facts['nodename'] }}"
+webroot: /var/www/html
+php_version: "8.3"

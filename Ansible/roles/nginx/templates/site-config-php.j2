@@ -13,6 +13,33 @@ server {
     access_log              /var/log/nginx/access.log combined buffer=512k flush=1m;
     error_log               /var/log/nginx/error.log warn;
 
+    # index.php
+    index                   index.php;
+
+    # index.php fallback
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    # handle .php
+    location ~ \.php$ {
+        fastcgi_pass 127.0.0.1:9000;
+        # 404
+        try_files                     $fastcgi_script_name =404;
+
+        # default fastcgi_params
+        include                       fastcgi_params;
+
+        # fastcgi settings
+        fastcgi_index                 index.php;
+        fastcgi_buffers               8 16k;
+        fastcgi_buffer_size           32k;
+
+        # fastcgi params
+        fastcgi_param DOCUMENT_ROOT   $realpath_root;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+    }
+
 }
 
 # HTTP redirect
