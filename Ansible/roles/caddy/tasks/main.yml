@@ -11,7 +11,7 @@
   tags: [always]
 - name: Create log destination
   ansible.builtin.file:
-    name: /var/log/caddy
+    name: "{{ log_path }}"
     state: directory
     owner: caddy
     group: caddy
