@@ -5,3 +5,4 @@ ca_cert_dest: /etc/caddy/ca.crt
 domain: sec.lab
 caddy_hostname: "{{ ansible_facts['nodename'] }}"
 webroot: /var/www/html
+php_version: "8.3"

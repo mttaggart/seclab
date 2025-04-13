@@ -4,10 +4,9 @@
 }
 
 https://{{ caddy_hostname }}.{{ domain }} {
+	encode gzip
+	php_fastcgi 127.0.0.1:9000
   root * {{ webroot }}
-	file_server {
-		browse
-	}
 
 	log {
 		format json

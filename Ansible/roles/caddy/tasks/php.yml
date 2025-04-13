@@ -1,0 +1,37 @@
+---
+- name: Install PHP Packages
+  ansible.builtin.apt:
+    name:
+      - php-fpm
+      - php-mysql
+      - php-curl
+      - php-json
+      - php-cgi
+      - unzip
+- name: Convert Caddyfile
+  ansible.builtin.template:
+    src: Caddyfile-php.j2
+    dest: /etc/caddy/Caddyfile
+- name: Add index.php
+  ansible.builtin.template:
+    src: index.php.j2
+    dest: "{{ webroot }}/index.php"
+    owner: caddy
+    group: caddy
+- name: Remove index.html
+  ansible.builtin.file:
+    path: "{{ webroot }}/index.html"
+    state: absent
+- name: Modify FPM config
+  ansible.builtin.replace:
+    path: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
+    regexp: "^listen = .+"
+    replace: "listen = 127.0.0.1:9000"
+- name: Restart FPM
+  ansible.builtin.systemd_service:
+    name: "php{{ php_version }}-fpm"
+    state: restarted
+- name: Restart Caddy
+  ansible.builtin.systemd_service:
+    name: caddy
+    state: restarted
