@@ -1,0 +1,29 @@
+---
+- name: Install Dependencies
+  ansible.builtin.apt:
+    name:
+      - mysql-server
+      - python3-pymysql
+- name: Download Wordpress Zip
+  ansible.builtin.get_url:
+    url: https://wordpress.org/latest.zip
+    dest: /tmp/latest.zip
+- name: Unzip Wordpress
+  ansible.builtin.unarchive:
+    src: /tmp/latest.zip
+    dest: /tmp
+    remote_src: true
+- name: Move Wordpress to webroot
+  ansible.builtin.copy:
+    src: /tmp/wordpress/
+    dest: "{{ webroot }}"
+    owner: "{{ web_user }}"
+    remote_src: true
+- name: Remove tmp zip
+  ansible.builtin.file:
+    path: /tmp/latest.zip
+    state: absent
+- name: Remove tmp Wordpress
+  ansible.builtin.file:
+    path: /tmp/wordpress
+    state: absent

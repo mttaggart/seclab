@@ -1,0 +1,3 @@
+webroot: /var/www/html
+web_user: caddy
+

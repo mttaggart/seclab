@@ -1,7 +1,24 @@
 ---
 - name: Set up Wordpress
-  hosts: seclab-docker
+  hosts: infrastructure
   become: true
   roles:
-    - docker
-    - wordpress
+    - role: caddy
+      tags: php
+      become: true
+      become_user: root
+    - role: wordpress
+      become: true
+      become_user: root
+    - role: geerlingguy.mysql
+      become: true
+      become_user: root
+      vars:
+        mysql_user_password: "{{ lookup('ansible.builtin.password', '/dev/null', length=20, chars=['ascii_letters', 'digits', 'punctuation']) }}"
+        mysql_root_password_update: true
+        mysql_databases:
+          - name: wordpress
+        mysql_users:
+          - name: wp_user
+            password: "{{ lookup('ansible.builtin.password', '/dev/null', length=20, chars=['ascii_letters', 'digits', 'punctuation']) }}"
+            priv: "wordpress.*:ALL"
