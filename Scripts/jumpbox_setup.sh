@@ -69,6 +69,7 @@ install_ansible() {
   	community.windows \
   	community.general \
   	microsoft.ad
+	ansible-galaxy role install geerlingguy.mysql
 }
 
 install_nerdfont() {
