@@ -22,11 +22,21 @@
   ansible.builtin.file:
     path: "{{ webroot }}/index.html"
     state: absent
-- name: Modify FPM config
+- name: Modify FPM config - Listen
   ansible.builtin.replace:
     path: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
     regexp: "^listen = .+"
     replace: "listen = 127.0.0.1:9000"
+- name: Modify FPM config - User
+  ansible.builtin.replace:
+    path: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
+    regexp: "^user = www-data"
+    replace: "user = caddy"
+- name: Modify FPM config - Group
+  ansible.builtin.replace:
+    path: "/etc/php/{{ php_version }}/fpm/pool.d/www.conf"
+    regexp: "^group = www-data"
+    replace: "group = caddy"
 - name: Restart FPM
   ansible.builtin.systemd_service:
     name: "php{{ php_version }}-fpm"
