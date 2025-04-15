@@ -4,7 +4,8 @@
   become: true
   roles:
     - role: caddy
-      tags: php
+      vars: 
+        mode: php
       become: true
       become_user: root
     - role: wordpress

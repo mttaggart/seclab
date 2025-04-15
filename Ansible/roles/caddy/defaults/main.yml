@@ -1,3 +1,4 @@
+caddy_mode: normal
 acme_root: seclab
 ca_hostname: ca
 ca_cert_src: /usr/local/share/ca-certificates/ca.crt
@@ -7,3 +8,4 @@ caddy_hostname: "{{ ansible_facts['nodename'] }}"
 log_path: /var/log/caddy
 webroot: /var/www/html
 php_version: "8.3"
+proxy_port: 8000

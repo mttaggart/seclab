@@ -12,10 +12,10 @@
       become: true
       become_user: root
       tags: [install]
-    - role: caddy-reverse-proxy
+    - role: caddy
       become: true
       become_user: root
       vars:
+        mode: reverse_proxy
         proxy_port: 8000
-      tags: [reverse-proxy]
     

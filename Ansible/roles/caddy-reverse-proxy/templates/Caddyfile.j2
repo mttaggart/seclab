@@ -1,8 +1,0 @@
-{
-	acme_ca https://{{ ca_hostname }}.{{ domain }}/acme/{{ acme_root }}/directory
-	acme_ca_root {{ ca_cert_dest  }}
-}
-
-https://{{ caddy_hostname }}.{{ domain }} {
-	reverse_proxy localhost:{{ proxy_port }}  
-}

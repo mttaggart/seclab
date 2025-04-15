@@ -3,44 +3,32 @@
   ansible.builtin.apt:
     name: caddy
     state: present
-  tags: [always]
 - name: Install Caddyfile
   ansible.builtin.template:
     src: Caddyfile.j2
     dest: /etc/caddy/Caddyfile
-  tags: [always]
 - name: Create log destination
   ansible.builtin.file:
     name: "{{ log_path }}"
     state: directory
     owner: caddy
     group: caddy
-  tags: [always]
 - name: Install CA Cert
   ansible.builtin.shell:
     cmd: cp "{{ ca_cert_src }}" "{{ ca_cert_dest }}"
     creates: "{{ ca_cert_dest }}"
-  tags: [always]
 - name: Fix cert permission
   ansible.builtin.file:
     name: "{{ ca_cert_dest }}"    
     owner: caddy
     group: caddy
     mode: 0400
-  tags: [always]
-- name: Restart/Enable Caddy
-  ansible.builtin.systemd_service:
-    name: caddy
-    enabled: true
-    state: restarted
-  tags: [always]
 - name: Ensure webroot permissions
   ansible.builtin.file:
     state: directory
     path: "{{ webroot }}"
     owner: caddy
     group: caddy
-  tags: [always]
 - name: Add web content
   ansible.builtin.template:
     src: index.html.j2 
@@ -48,7 +36,8 @@
     owner: caddy
     group: caddy
     mode: 0644
-  tags: [always]
+  when: "{{ mode == 'normal' }}"
+  notify: Restart/Enable Caddy
 - name: Convert to PHP
   import_tasks: php.yml
-  tags: [php]
+  when: "{{ mode == 'php' }}"

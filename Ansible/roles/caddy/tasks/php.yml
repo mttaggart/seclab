@@ -8,10 +8,6 @@
       - php-json
       - php-cgi
       - unzip
-- name: Convert Caddyfile
-  ansible.builtin.template:
-    src: Caddyfile-php.j2
-    dest: /etc/caddy/Caddyfile
 - name: Add index.php
   ansible.builtin.template:
     src: index.php.j2
@@ -41,7 +37,4 @@
   ansible.builtin.systemd_service:
     name: "php{{ php_version }}-fpm"
     state: restarted
-- name: Restart Caddy
-  ansible.builtin.systemd_service:
-    name: caddy
-    state: restarted
+  notify: Restart/Enable Caddy
