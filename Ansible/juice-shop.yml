@@ -1,6 +1,9 @@
 ---
 - name: Deploy OWASP Juice Shop
-  hosts: seclab-docker
+  hosts: infrastructure
+  roles:
+    - role: docker
+      tags: [docker]
   tasks:
     - name: Pull Juice Shop Image
       community.docker.docker_image:
