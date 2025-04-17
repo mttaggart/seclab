@@ -29,6 +29,12 @@
     path: "{{ webroot }}"
     owner: caddy
     group: caddy
+- name: Restart/Enable Caddy (reverse proxy)
+  ansible.builtin.systemd_service:
+    name: caddy
+    enabled: true
+    state: restarted
+  when: mode == 'reverse_proxy'
 - name: Add web content
   ansible.builtin.template:
     src: index.html.j2 
@@ -36,8 +42,9 @@
     owner: caddy
     group: caddy
     mode: 0644
-  when: "{{ mode == 'normal' }}"
-  notify: Restart/Enable Caddy
+  when: "mode == 'normal'"
+  notify: 
+    - Restart/Enable Caddy
 - name: Convert to PHP
   import_tasks: php.yml
-  when: "{{ mode == 'php' }}"
+  when: "mode == 'php'"
