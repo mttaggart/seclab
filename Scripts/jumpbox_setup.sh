@@ -6,6 +6,7 @@ VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_7.1.3570.60-1_a
 KPXC_DB_PATH="~/seclab/seclab.kdbx"
 PKI_PATH="$SECLAB_PATH/pki"
 PKI_DOMAIN="sec.lab"
+PKI_ISO_DOMAIN="iso.sec.lab"
 PW_LENGTH=32
 
 install_tools() {
@@ -185,6 +186,11 @@ initialize_caddy() {
 			}
 		}
 	}
+
+  log default {
+	  output file /var/log/caddy/caddy.json
+    format json
+  }
 }
 
 https://ca.$PKI_DOMAIN {
@@ -199,10 +205,20 @@ https://ca.$PKI_DOMAIN {
 		ca seclab
 	}
 
-  log {
-	  output file /var/log/caddy/caddy.json
-    format json
-  }
+}
+
+https://ca.$PKI_ISO_DOMAIN {
+
+	tls {
+		issuer internal {
+			ca seclab
+		}
+	}
+
+	acme_server {
+		ca seclab
+	}
+
 }
 EOF
   echo "[+] Installing CA certificate for Caddy"
