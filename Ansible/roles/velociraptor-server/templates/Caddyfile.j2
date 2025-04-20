@@ -1,0 +1,25 @@
+{
+	acme_ca https://{{ ca_hostname }}.{{ domain }}/acme/{{ acme_root }}/directory
+	acme_ca_root {{ ca_cert_dest  }}
+
+	log default {
+		format json
+		output file /var/log/caddy/caddy.json
+	}
+}
+
+https://{{ caddy_hostname }}.{{ domain }} {
+	reverse_proxy https://localhost:{{ proxy_port }} {
+		transport http {
+			tls
+			tls_insecure_skip_verify
+		}
+	} 
+}
+
+http://{{ caddy_hostname }}.{{ domain }}:{{ fileserver_port  }} {
+  root * {{ webroot }}
+	file_server {
+		browse
+	}
+}

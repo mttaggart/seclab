@@ -2,13 +2,14 @@
 - name: Install Velociraptor Client
   hosts: all
   vars:
-    velociraptor_version: "0.72"
-    velociraptor_version_long: "0.72.0"
+    velociraptor_version: "0.74"
+    velociraptor_version_long: "0.74.1"
+    velociraptor_port: 8000
     temp_dir: /tmp/Velociraptor
     windows_temp_dir: C:\Windows\Temp\Velociraptor
   vars_prompt:
     - name: velociraptor_server
-      prompt: Velociraptor Server IP
+      prompt: Velociraptor Server Domain Name
       private: false
   tasks: 
     - name: Create Temp Directory (Linux)
@@ -46,22 +47,13 @@
       when: ansible_facts["os_family"] == "Windows"
     - name: Download Client Config (Windows)
       ansible.windows.win_get_url:
-        url: "http://{{ velociraptor_server }}/client.config.yaml"
+        url: "http://{{ velociraptor_server }}:{{ velociraptor_port }}/client.config.yaml"
         dest: "{{windows_temp_dir}}\\client.config.yaml"
       when: ansible_facts["os_family"] == "Windows"
     - name: Start Velociraptor (Windows)
-      community.windows.win_scheduled_task:
-        name: Velociraptor
-        run_level: highest
-        user_id: NT AUTHORITY\SYSTEM
-        actions:
-          - working_directory: "{{ windows_temp_dir }}"
-            path: "{{ windows_temp_dir }}\\velociraptor.exe"
-            arguments: "-c client.config.yaml client --quiet"
-        triggers:
-          - type: registration
-            delay: PT5S
-        allow_demand_start: true
+      ansible.windows.win_shell: .\velociraptor.exe service install --runas=SYSTEM -c client.config.yaml
+      args:
+        chdir: "{{ windows_temp_dir }}"
       when: ansible_facts["os_family"] == "Windows"
 
 

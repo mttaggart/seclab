@@ -1,0 +1,4 @@
+velociraptor_port: 8002
+linux_tempdir: /tmp/Velociraptor
+darwin_tempdir: /tmp/Velociraptor
+windows_tempdir: C:\\Windows\\Temp\\Velociraptor
