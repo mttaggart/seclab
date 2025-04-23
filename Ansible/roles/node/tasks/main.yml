@@ -1,0 +1,18 @@
+---
+- name: Download Nodesource Install Script
+  ansible.builtin.get_url:
+    url: "https://deb.nodesource.com/setup_{{ node_version }}.x"
+    dest: /tmp/nodesource_setup.sh
+    mode: 0755
+- name: Run Nodesource Install
+  ansible.builtin.shell:
+    cmd: ./nodesource_setup.sh
+    chdir: /tmp
+- name: Install NodeJS
+  ansible.builtin.apt:
+    name: nodejs
+    update_cache: true    
+- name: Cleanup
+  ansible.builtin.file:
+    path: /tmp/nodesource_setup.sh
+    state: absent
