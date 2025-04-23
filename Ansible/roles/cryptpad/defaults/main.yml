@@ -1,0 +1,5 @@
+cryptpad_version: 2025.3.0
+sandbox_domain: "sandbox.{{ ansible_facts['nodename'] }}"
+cryptpad_user: cryptpad
+cryptpad_path: "/home/{{ cryptpad_user }}/cryptpad"
+cryptpad_data_path: /opt/cryptpad

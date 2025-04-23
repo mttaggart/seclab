@@ -1,0 +1,71 @@
+---
+- name: Confirm prereqs
+  ansible.builtin.apt:
+    name: unzip
+- name: Create CryptPad User
+  ansible.builtin.user:
+    name: "{{ cryptpad_user }}"
+    create_home: true
+- name: Clone CryptPad Repo
+  ansible.builtin.git:
+    repo: https://github.com/cryptpad/cryptpad.git 
+    dest: "{{ cryptpad_path }}"
+    version: "{{ cryptpad_version }}"
+- name: NPM Setup
+  ansible.builtin.shell:
+    cmd: npm ci
+    chdir: "{{ cryptpad_path }}"
+- name: NPM Setup
+  ansible.builtin.shell:
+    cmd: npm run install:components
+    chdir: "{{ cryptpad_path }}"
+- name: Install Onlyoffice
+  ansible.builtin.shell:
+    cmd: ./install-onlyoffice.sh -a
+    chdir: "{{ cryptpad_path }}"
+- name: Install Config
+  ansible.builtin.template:
+    src: config.js.j2
+    dest: "{{ cryptpad_path }}/config/config.js"
+    owner: "{{ cryptpad_user }}"
+    group: "{{ cryptpad_user }}"
+- name: Fix Cryptpad dir permissions
+  ansible.builtin.file:
+    path: "{{ cryptpad_path }}"
+    state: directory
+    owner: "{{ cryptpad_user }}"
+    group: "{{ cryptpad_user }}"
+    recurse: true
+- name: Fix Cryptpad data dir permissions
+  ansible.builtin.file:
+    path: "{{ cryptpad_data_path }}"
+    state: directory
+    owner: "{{ cryptpad_user }}"
+    group: "{{ cryptpad_user }}"
+    recurse: true
+- name: Install Cryptpad Service
+  ansible.builtin.template:
+    src: cryptpad.service.j2
+    dest: /usr/lib/systemd/system/cryptpad.service
+- name: Replace Caddyfile
+  ansible.builtin.template:
+    src: Caddyfile.j2
+    dest: /etc/caddy/Caddyfile
+    mode: 0644
+- name: Start Cryptpad
+  ansible.builtin.systemd_service:
+    name: cryptpad
+    state: started
+    enabled: true  
+- name: Restart Caddy
+  ansible.builtin.systemd_service:
+    name: caddy
+    state: restarted
+    daemon_reload: true
+- name: Get Cryptpad Install URL
+  ansible.builtin.shell:
+    cmd: systemctl status cryptpad --no-pager
+  register: cryptpad_status
+- name: Print Cryptpad Status
+  ansible.builtin.debug:
+    msg: "{{ cryptpad_status['stdout'].split('\n') }}"

@@ -1,0 +1,15 @@
+---
+- name: Setup Cryptpad
+  hosts: infrastructure
+  vars:
+    caddy_hostname: cryptpad
+    caddy_domain: sec.lab
+  roles:
+    - role: node
+      become: true
+    - role: caddy
+      mode: reverse_proxy
+      become: true
+    - role: cryptpad
+      become: true
+    

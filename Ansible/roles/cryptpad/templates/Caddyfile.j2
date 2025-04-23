@@ -1,0 +1,52 @@
+{
+	acme_ca https://{{ ca_hostname }}.{{ domain }}/acme/{{ acme_root }}/directory
+	acme_ca_root {{ ca_cert_dest  }}
+
+	log default {
+		format json
+		output file /var/log/caddy/caddy.json
+	}
+}
+
+https://{{ caddy_hostname }}.{{ domain }},
+https://{{ sandbox_domain }}.{{ domain }} {
+
+	# Enable HSTS.
+	# Do not enable this line when configuring over mixnet, e.g. Tor.
+	header Strict-Transport-Security "max-age=63072000; includeSubDomains"
+	
+	# Specify the relative path to root of your custom error page.
+	# This error page won't only be served for 404 errors.
+	handle_errors {
+		rewrite * /error.htm
+		header Cache-Control "no-cache, no-store"
+		file_server
+		templates
+	}
+	
+	# The Node.js process can handle all traffic, whether accessed over websocket or as static assets.
+	reverse_proxy /cryptpad_websocket/* {
+		to 127.0.0.1:3003
+		header_up Host "{host}"
+		header_up X-Real-IP "{remote_host}"
+		
+		# Caddy supports WebSockets directly. No additional headers are needed.
+
+	}
+	reverse_proxy * {
+		to 127.0.0.1:3000
+		header_up Host "{host}"
+		header_up X-Real-IP "{remote_host}"
+		
+		# These settings prevent both Caddy and the API server from setting duplicate headers.
+		header_down Cross-Origin-Resource-Policy cross-origin
+		header_down Cross-Origin-Embedder-Policy require-corp
+	}
+	
+	# Enable file serving
+	file_server {
+		index index.html index.htm default.html default.htm
+	}
+
+}
+
