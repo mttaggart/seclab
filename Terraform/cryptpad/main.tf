@@ -18,7 +18,7 @@ variable "keepass_password" {
 }
 
 variable "keepass_database" {
-  type     = string
+  type    = string
   default = "../../seclab.kdbx"
 }
 
@@ -37,6 +37,11 @@ variable "hostname" {
 variable "template_id" {
   type        = string
   description = "Template ID for clone"
+}
+
+variable "data_disk_size" {
+  type    = number
+  default = 50
 }
 
 provider "keepass" {
@@ -84,8 +89,8 @@ resource "proxmox_virtual_environment_vm" "seclab-cryptpad" {
 
   disk {
     interface = "virtio1"
-    size = 80
-    backup = false
+    size      = var.data_disk_size
+    backup    = false
     replicate = false
   }
 
