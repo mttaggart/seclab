@@ -1,9 +1,9 @@
 ---
 - name: Setup Cryptpad
-  hosts: infrastructure
+  hosts: cryptpad.sec.lab
   vars:
     caddy_hostname: cryptpad
-    caddy_domain: sec.lab
+    domain: sec.lab
   roles:
     - role: node
       become: true
