@@ -33,14 +33,26 @@ variable "dc_template_id" {
   description = "Template ID for DC clone"
 }
 
-variable "fs_template_id" {
+variable "server_template_id" {
   type        = string
-  description = "Template ID for Server clone"
+  description = "Template ID for Server clones"
 }
 
-variable "ws_template_id" {
+variable "workstation_template_id" {
   type        = string
   description = "Template ID for Workstation clones"
+}
+
+variable "domain" {
+  type        = string
+  description = "AD Lab Domain"
+  default     = "zeroday.local"
+}
+
+variable "pool_name" {
+  type        = string
+  description = "Resource pool label"
+  default     = "ZeroDay"
 }
 
 variable "num_servers" {
@@ -55,13 +67,8 @@ variable "num_workstations" {
   default     = 2
 }
 
-variable "pool_name" {
-  type        = string
-  description = "Resource pool label"
-  default     = "ZeroDay"
-}
-
 provider "keepass" {
+  database = var.keepass_database
   password = var.keepass_password
 }
 

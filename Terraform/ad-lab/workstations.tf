@@ -1,17 +1,14 @@
-variable "ws_hostname" {
-  type        = string
-  default     = "ZD-WS-01"
-  description = "username"
-}
-
-resource "proxmox_virtual_environment_vm" "zd-ws" {
-  name      = "ZD-WS-01"
+resource "proxmox_virtual_environment_vm" "lab-workstation" {
+  for_each  = toset([
+    for i in range(1, var.num_workstations+1): "${ upper(split(".", var.domain)[0]) }-WS-${i}"
+  ])
+  name      = each.key
   node_name = var.proxmox_host
   on_boot   = true
   pool_id   = proxmox_virtual_environment_pool.zeroday_pool.pool_id
   
   clone {
-    vm_id = var.ws_template_id
+    vm_id = var.workstation_template_id
     full  = false
   }
 
@@ -43,15 +40,17 @@ resource "proxmox_virtual_environment_vm" "zd-ws" {
 
   provisioner "remote-exec" {
     inline = [
-      "powershell.exe -c Rename-Computer '${var.ws_hostname}'",
+      "powershell.exe -c Rename-Computer '${each.key}'",
       "ipconfig"
     ]
   }
 
 }
 
-output "zd_ws_ip" {
-  value       = proxmox_virtual_environment_vm.zd-ws.ipv4_addresses
+output "workstation_ips" {
+  value = {
+    for k,v in proxmox_virtual_environment_vm.lab-workstation : k => v.ipv4_addresses
+  }
   sensitive   = false
-  description = "AD Lab Workstation IP"
+  description = "Windows Hosts IPs"
 }
