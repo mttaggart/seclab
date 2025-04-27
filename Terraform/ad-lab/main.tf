@@ -2,7 +2,7 @@ terraform {
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.71.0"
+      version = "0.76.0"
     }
     keepass = {
       source  = "iSchluff/keepass"
@@ -15,6 +15,11 @@ variable "keepass_password" {
   type      = string
   sensitive = true
   ephemeral = true
+}
+
+variable "keepass_database" {
+  type    = string
+  default = "../../seclab.kdbx"
 }
 
 variable "proxmox_host" {
@@ -36,6 +41,24 @@ variable "fs_template_id" {
 variable "ws_template_id" {
   type        = string
   description = "Template ID for Workstation clones"
+}
+
+variable "num_servers" {
+  type        = number
+  description = "Number of servers to generate"
+  default     = 2
+}
+
+variable "num_workstations" {
+  type        = number
+  description = "Number of workstations to generate"
+  default     = 2
+}
+
+variable "pool_name" {
+  type        = string
+  description = "Resource pool label"
+  default     = "ZeroDay"
 }
 
 provider "keepass" {
@@ -67,6 +90,6 @@ provider "proxmox" {
 
 
 resource "proxmox_virtual_environment_pool" "zeroday_pool" {
-  comment = "ZeroDay Pool"
-  pool_id = "ZeroDay"
+  comment = "AD Lab Pool"
+  pool_id = "${var.pool_name}"
 }

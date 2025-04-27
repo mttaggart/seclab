@@ -10,8 +10,8 @@ variable "dc_ip" {
   description = "DC IP Address"
 }
 
-resource "proxmox_virtual_environment_vm" "zd-dc" {
-  name      = "ZD-DC-01"
+resource "proxmox_virtual_environment_vm" "dc" {
+  name      = "${var.dc_hostname}"
   node_name = var.proxmox_host
   on_boot   = true
   pool_id   = proxmox_virtual_environment_pool.zeroday_pool.pool_id
@@ -62,8 +62,8 @@ resource "proxmox_virtual_environment_vm" "zd-dc" {
 
 }
 
-output "zd_dc_ip" {
-  value       = proxmox_virtual_environment_vm.zd-dc.ipv4_addresses
+output "dc_ip" {
+  value       = proxmox_virtual_environment_vm.dc.ipv4_addresses
   sensitive   = false
   description = "AD Lab DC IP"
 }
