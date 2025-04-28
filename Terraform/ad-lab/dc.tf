@@ -6,7 +6,7 @@ variable "dc_ip" {
 }
 
 locals {
-  dc_hostname = "${upper(split(".", var.domain)[0])}-DC-01"
+  dc_hostname = "${upper(split(".", var.domain)[0])}-DC"
 }
 
 resource "proxmox_virtual_environment_vm" "dc" {
