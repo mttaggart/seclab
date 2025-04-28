@@ -217,8 +217,8 @@
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <Order>11</Order>
-                    <Description>Enable Private Profile</Description>
-                    <CommandLine>powershell.exe -c Set-NetConnectionProfile -NetworkCategory Private</CommandLine>
+                    <Description>Ensure SSH Rule on all Profiles</Description>
+                    <CommandLine>powershell.exe -c Set-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -Profile Any</CommandLine>
                     <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
             </FirstLogonCommands>
