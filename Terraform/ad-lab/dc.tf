@@ -1,17 +1,16 @@
-variable "dc_hostname" {
-  type        = string
-  default     = "ZD-DC-01"
-  description = "description"
-}
 
 variable "dc_ip" {
-  type       = string
-  default = "10.1.99.3"
+  type        = string
+  default     = "10.1.99.3"
   description = "DC IP Address"
 }
 
+locals {
+  dc_hostname = "${upper(split(".", var.domain)[0])}-DC-01"
+}
+
 resource "proxmox_virtual_environment_vm" "dc" {
-  name      = "${var.dc_hostname}"
+  name      = local.dc_hostname
   node_name = var.proxmox_host
   on_boot   = true
   pool_id   = proxmox_virtual_environment_pool.zeroday_pool.pool_id
@@ -27,6 +26,7 @@ resource "proxmox_virtual_environment_vm" "dc" {
 
   cpu {
     cores = 2
+    type  = "x86-64-v2-AES"
   }
 
   memory {
@@ -54,7 +54,7 @@ resource "proxmox_virtual_environment_vm" "dc" {
 
   provisioner "remote-exec" {
     inline = [
-      "powershell.exe -c Rename-Computer '${var.dc_hostname}'",
+      "powershell.exe -c Rename-Computer '${local.dc_hostname}'",
       "powershell.exe -c New-NetIpAddress -InterfaceAlias 'Ethernet 2' -IpAddress ${var.dc_ip} -PrefixLength 24",
       "ipconfig"
     ]

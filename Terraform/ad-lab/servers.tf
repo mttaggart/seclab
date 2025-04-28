@@ -1,6 +1,6 @@
 resource "proxmox_virtual_environment_vm" "lab-server" {
-  for_each  = toset([
-    for i in range(1, var.num_servers+1): "${ upper(split(".", var.domain)[0]) }-SERV-${i}"
+  for_each = toset([
+    for i in range(1, var.num_servers + 1) : "${upper(split(".", var.domain)[0])}-SERV-${i}"
   ])
   name      = each.key
   node_name = var.proxmox_host
@@ -18,6 +18,7 @@ resource "proxmox_virtual_environment_vm" "lab-server" {
 
   cpu {
     cores = 2
+    type  = "x86-64-v2-AES"
   }
 
   memory {
@@ -51,7 +52,7 @@ resource "proxmox_virtual_environment_vm" "lab-server" {
 
 output "server_ips" {
   value = {
-    for k,v in proxmox_virtual_environment_vm.lab-server : k => v.ipv4_addresses
+    for k, v in proxmox_virtual_environment_vm.lab-server : k => v.ipv4_addresses
   }
   sensitive   = false
   description = "Windows Hosts IPs"

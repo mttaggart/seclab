@@ -98,5 +98,5 @@ provider "proxmox" {
 
 resource "proxmox_virtual_environment_pool" "zeroday_pool" {
   comment = "AD Lab Pool"
-  pool_id = "${var.pool_name}"
+  pool_id = var.pool_name
 }

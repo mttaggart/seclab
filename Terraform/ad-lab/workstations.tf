@@ -1,12 +1,12 @@
 resource "proxmox_virtual_environment_vm" "lab-workstation" {
-  for_each  = toset([
-    for i in range(1, var.num_workstations+1): "${ upper(split(".", var.domain)[0]) }-WS-${i}"
+  for_each = toset([
+    for i in range(1, var.num_workstations + 1) : "${upper(split(".", var.domain)[0])}-WS-${i}"
   ])
   name      = each.key
   node_name = var.proxmox_host
   on_boot   = true
   pool_id   = proxmox_virtual_environment_pool.zeroday_pool.pool_id
-  
+
   clone {
     vm_id = var.workstation_template_id
     full  = false
@@ -49,7 +49,7 @@ resource "proxmox_virtual_environment_vm" "lab-workstation" {
 
 output "workstation_ips" {
   value = {
-    for k,v in proxmox_virtual_environment_vm.lab-workstation : k => v.ipv4_addresses
+    for k, v in proxmox_virtual_environment_vm.lab-workstation : k => v.ipv4_addresses
   }
   sensitive   = false
   description = "Windows Hosts IPs"
