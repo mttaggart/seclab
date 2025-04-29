@@ -1,6 +1,7 @@
 ---
 - name: Initialize Domain Controller
-  hosts: zd-dc-01
+  hosts: zeroday-dc
   roles:
     - rdp
+    - sysmon
     - domain-controller
