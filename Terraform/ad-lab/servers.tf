@@ -1,6 +1,6 @@
 resource "proxmox_virtual_environment_vm" "lab-server" {
   for_each = toset([
-    for i in range(1, var.num_servers + 1) : "${upper(split(".", var.domain)[0])}-SERV-${i}"
+    for i in range(1, var.num_servers + 1) : "${upper(split(".", var.domain)[0])}-SERV-${format("%02s",i)}"
   ])
   name      = each.key
   node_name = var.proxmox_host

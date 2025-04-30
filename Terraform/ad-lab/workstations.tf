@@ -1,6 +1,6 @@
 resource "proxmox_virtual_environment_vm" "lab-workstation" {
   for_each = toset([
-    for i in range(1, var.num_workstations + 1) : "${upper(split(".", var.domain)[0])}-WS-${i}"
+    for i in range(1, var.num_workstations + 1) : "${upper(split(".", var.domain)[0])}-WS-${format("%02s",i)}"
   ])
   name      = each.key
   node_name = var.proxmox_host
