@@ -55,7 +55,7 @@ resource "proxmox_virtual_environment_vm" "dc" {
   provisioner "remote-exec" {
     inline = [
       "powershell.exe -c Rename-Computer '${local.dc_hostname}'",
-      "powershell.exe -c New-NetIpAddress -InterfaceAlias 'Ethernet 2' -IpAddress ${var.dc_ip} -PrefixLength 24",
+      "powershell.exe -c Set-NetIpAddress -InterfaceAlias 'Ethernet 2' -IpAddress ${var.dc_ip} -PrefixLength 24",
       "ipconfig"
     ]
   }
