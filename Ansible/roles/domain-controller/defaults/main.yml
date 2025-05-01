@@ -1,11 +1,10 @@
-ansible_user: administrator
-ansible_password: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=seclab/data/seclab url=http://127.0.0.1:8200')['seclab_windows_password'] }}"
+da_user: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_windows_da', 'username') }}"
+da_password: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_windows_da', 'password') }}"
 ansible_connection: ssh
 ansible_shell_type: cmd
-recovery_password: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=seclab/data/seclab url=http://127.0.0.1:8200')['seclab_windows_domain_password'] }}"
-dc_hostname: "zd-dc-01"
+recovery_password: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_windows_da', 'password') }}"
+dc_hostname: "ZERODAY-DC-1"
 domain_name: "zeroday.local"
-upstream_dns_1: 8.8.8.8
-upstream_dns_2: 8.8.4.4
+upstream_dns: 10.1.99.1
 reverse_dns_zone: "10.1.99.0/24"
 ntp_servers: "0.us.pool.ntp.org,1.us.pool.ntp.org"
