@@ -1,11 +1,19 @@
 - name: Join Machine to a Domain
   hosts: windows-hosts
   gather_facts: true
+  vars:
+    domain: zeroday.local
+    dns_server: 10.1.99.4
   tasks:
   - name: Pause Windows updates
     ansible.windows.win_updates:
       reject_list:
         - ".*"
+  - name: Set DNS server to DC
+    win_dns_client:
+      adapter_names: 'Ethernet'
+      ipv4_addresses:
+       - '{{ dns_server }}'
   - name: Reboot Machine for Rename
     ansible.windows.win_reboot:
       msg: "Rebooting for Provisioning Name Change"
@@ -14,8 +22,8 @@
     ansible.windows.win_domain_membership:
       dns_domain_name: zeroday.local
       hostname: "{{ ansible_facts['hostname'] }}"
-      domain_admin_user: Administrator@zeroday.local
-      domain_admin_password: "{{ lookup('community.hashi_vault.hashi_vault', 'secret=seclab/data/seclab url=http://127.0.0.1:8200')['seclab_windows_domain_password'] }}"
+      domain_admin_user: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_windows', 'username') }}@{{ domain }}"
+      domain_admin_password: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_windows', 'password') }}"
       state: domain
     register: domain_state
   - name: Reboot Machine
@@ -25,3 +33,4 @@
     when: domain_state.changed
   roles:
     - rdp
+    - sysmon
