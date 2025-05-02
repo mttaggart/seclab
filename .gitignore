@@ -18,3 +18,4 @@ user-data.bak
 *.preseed.bak
 *.kdbx
 pki/
+users.json
