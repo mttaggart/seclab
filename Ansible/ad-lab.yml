@@ -1,0 +1,62 @@
+---
+- name: Generate users
+  hosts: localhost
+  connection: local
+  vars:
+    # ansible_user: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_windows_da', 'username') }}"
+    # ansible_password: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_windows_da', 'password') }}"
+    num_users: 10
+  tasks:
+    - name: Run script
+      ansible.builtin.command:
+        cmd: ad-lab/generate_users.py
+      register: g_u
+    - name: Print FirstName
+      ansible.builtin.debug:
+        msg: "{{ g_u.stdout }}"
+    # - name: Print FirstName
+    #   ansible.builtin.debug:
+    #     msg: "{{ first_names | random }}"
+    #   with_sequence: "start=0 end={{ num_users }}"
+    # - name: Print FirstNames
+    #   ansible.builtin.debug:
+    #     msg: "{{ lookup('ansible.builtin.random_choice', first_names) }}"
+    #   with_sequence: "start=0 end={{ num_users }}"
+    
+- name: Create Domain Users
+  vars:
+    domain: zeroday.local
+    dc_hostname: zeroday-dc
+    da_user: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_windows_da', 'username') }}"
+    da_password: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_windows_da', 'password') }}"
+    users_file: ad-lab/users.json
+    users: "{{ lookup('ansible.builtin.file', users_file) | from_json }}"
+    
+  hosts: "{{ dc_hostname }}"
+  tasks:
+    - name: Create users
+      microsoft.ad.user:
+        domain_server: "{{ domain }}"
+        domain_username: "{{ da_user }}"
+        domain_password: "{{ da_password }}"
+        name: "{{ item['username'] }}"
+        display_name: "{{ item['display_name'] }}"
+        firstname: "{{ item['first_name'] }}"
+        surname: "{{ item['last_name'] }}"
+        password: "{{ item['password'] }}"
+        state: present
+      with_items: "{{ users }}"
+    - name: Create DCSync Vulnerability
+      vars:
+        user: "{{ users | random }}"
+      microsoft.ad.user:
+        domain_server: "{{ domain }}"
+        domain_username: "{{ da_user }}"
+        domain_password: "{{ da_password }}"
+        name: "{{ user['username'] }}"
+        groups:
+          add:
+            - Key Admins
+      tags:
+        - dcsync
+
