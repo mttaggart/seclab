@@ -9,9 +9,22 @@
     domain_username: "{{ da_user }}"
     domain_password: "{{ da_password }}"
     name: "{{ user['username'] }}"
-    password: "{{ bad_passwords | random }}"
+    display_name: "{{ user['display_name'] }}"
+    firstname: "{{ user['first_name'] }}"
+    surname: "{{ user['last_name'] }}"
+    password_never_expires: true
+    password: "{{ user['password'] }}"
     spn:
       set:
         - "{{ spn_service['name']}}/{{ spn_server }}:{{ spn_service['port'] }}"
+  register: kerb_user
   tags: ["kerberoast"]
+- name: Display Kerberoast User
+  ansible.builtin.debug:
+    msg: "{{ kerb_user }}"
+- name: Set Insecure Password
+  ansible.windows.win_powershell:
+    script: | 
+      Set-ADAccountPassword -Identity {{ kerb_user['distinguished_name']}} -NewPassword (ConvertTo-SecureString -AsPlainText {{ bad_passwords | random }} -Force)
+      
   

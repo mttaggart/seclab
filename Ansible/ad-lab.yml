@@ -36,6 +36,8 @@
         firstname: "{{ item['first_name'] }}"
         surname: "{{ item['last_name'] }}"
         password: "{{ item['password'] }}"
+        password_never_expires: true
+        upn: "{{ item['username']}}@{{ domain }}"
         state: present
       with_items: "{{ users }}"
 
@@ -48,6 +50,15 @@
       ansible.builtin.import_tasks:
         file: ad-lab/dcsync.yml
       tags: [dcsync]
+    - name: Weaken Password Policy
+      ansible.windows.win_powershell:
+        script: |
+          Set-ADDefaultDomainPasswordPolicy -Identity {{ domain }} -MinPasswordLength 6 -ComplexityEnabled $false
+      tags: [kerberoast]
+    - name: Enable Kerberoast Vulnerability
+      ansible.builtin.import_tasks:
+        file: ad-lab/kerberoast.yml
+      tags: [kerberoast]
     - name: Debug Task
       ansible.builtin.debug:
         msg: "{{ servers }}"

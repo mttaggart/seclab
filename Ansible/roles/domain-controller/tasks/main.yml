@@ -30,15 +30,10 @@
     state=present
   register: result
 - name: Create Domain
-  win_domain:
+  microsoft.ad.domain:
     dns_domain_name: '{{ domain_name }}'
     safe_mode_password: '{{ recovery_password }}'
-  register: ad
-- name: Reboot Server
-  win_reboot:
-    msg: "Install AD. Rebooting"
-    pre_reboot_delay: 15
-  when: ad.changed
+    reboot: true
 - name: Set internal DNS server
   win_dns_client:
     adapter_names: "Ethernet"
