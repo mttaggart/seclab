@@ -1,0 +1,13 @@
+---
+- name: Create DCSync User
+  vars:
+    user: "{{ users | random }}"
+  microsoft.ad.user:
+    domain_server: "{{ domain }}"
+    domain_username: "{{ da_user }}"
+    domain_password: "{{ da_password }}"
+    name: "{{ user['username'] }}"
+    groups:
+      add:
+        - Key Admins
+  register: dcsync_user

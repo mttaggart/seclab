@@ -1,0 +1,17 @@
+---
+- name: Create Kerberoastable User
+  vars:
+    user: "{{ users | random }}"
+    spn_server: "{{ servers | random }}"
+    spn_service: "{{ services | random  }} "
+  microsoft.ad.user:
+    domain_server: "{{ domain }}"
+    domain_username: "{{ da_user }}"
+    domain_password: "{{ da_password }}"
+    name: "{{ user['username'] }}"
+    password: "{{ bad_passwords | random }}"
+    spn:
+      set:
+        - "{{ spn_service['name']}}/{{ spn_server }}:{{ spn_service['port'] }}"
+  tags: ["kerberoast"]
+  

@@ -1,0 +1,18 @@
+domain: zeroday.local
+dc_hostname: zeroday-dc
+servers: "{{ groups['ad-lab'] | select('search', '-serv-') }}"
+workstations: "{{ groups['ad-lab'] | select('search', '-ws-') }}"
+da_user: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_windows_da', 'username') }}"
+da_password: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_windows_da', 'password') }}"
+users_file: users.json
+users: "{{ lookup('ansible.builtin.file', users_file) | from_json }}"
+bad_passwords: "{{ lookup('ansible.builtin.file', 'bad_passwords.txt') }}"
+services:
+  - name: LDAP
+    port: 389
+  - name: CIFS
+    port: 445
+  - name: HTTP
+    port: 80
+  - name: MSSQL
+    port: 1433 
