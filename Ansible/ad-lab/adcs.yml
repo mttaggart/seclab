@@ -1,0 +1,7 @@
+---
+- name: Install ADCS
+  ansible.windows.win_powershell:
+    script: |
+      Install-WindowsFeature ADCS-Cert-Authority -IncludeManagementTools
+      Install-WindowsFeature RSAT-ADCS
+- name: Create Vulnerable Cert Template
