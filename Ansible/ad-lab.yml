@@ -26,6 +26,10 @@
     - ad-lab/vars.yml
   hosts: "{{ dc_hostname }}"
   tasks:
+    - name: Create Groups
+      microsoft.ad.group:
+        name: "{{ item }}"
+      with_items: groups
     - name: Create users
       microsoft.ad.user:
         domain_server: "{{ domain }}"
@@ -38,6 +42,9 @@
         password: "{{ item['password'] }}"
         password_never_expires: true
         upn: "{{ item['username']}}@{{ domain }}"
+        groups:
+          add:
+            - "{{ groups | random }}"
         state: present
       with_items: "{{ users }}"
 

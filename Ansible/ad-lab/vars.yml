@@ -6,6 +6,8 @@ da_user: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_windows_da', 'usern
 da_password: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_windows_da', 'password') }}"
 users_file: users.json
 users: "{{ lookup('ansible.builtin.file', users_file) | from_json }}"
+groups_file: groups.txt
+groups: "{{ lookup('ansible.builtin.file', users_file) }}"
 bad_passwords: "{{ lookup('ansible.builtin.file', 'bad_passwords.txt') }}"
 services:
   - name: LDAP
