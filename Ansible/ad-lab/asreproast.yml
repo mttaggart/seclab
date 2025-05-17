@@ -1,7 +1,7 @@
 ---
-- name: Create Kerberoastable User
+- name: Create ASREP-Roastable User
   vars:
-    user: "{{ users['kerberoast'] }}"
+    user: "{{ users['asreproast'] }}"
     spn_server: "{{ servers | random }}"
     spn_service: "{{ services | random  }} "
   microsoft.ad.user:
@@ -14,16 +14,15 @@
     surname: "{{ user['last_name'] }}"
     password_never_expires: true
     password: "{{ user['password'] }}"
-    spn:
-      set:
-        - "{{ spn_service['name']}}/{{ spn_server }}:{{ spn_service['port'] }}"
-  register: kerb_user
-- name: Display Kerberoast User
+  register: asrep_user
+- name: Display ASREP-Roast User
   ansible.builtin.debug:
-    msg: "{{ kerb_user }}"
-- name: Set Insecure Password
+    msg: "{{ asrep_user }}"
+- name: Make User ASREP-Roastable
   ansible.windows.win_powershell:
     script: | 
-      Set-ADAccountPassword -Identity {{ kerb_user['distinguished_name']}} -NewPassword (ConvertTo-SecureString -AsPlainText {{ bad_passwords | random }} -Force)
+      Set-ADAccountPassword -Identity {{ asrep_user['distinguished_name']}} -NewPassword (ConvertTo-SecureString -AsPlainText {{ bad_passwords | random }} -Force)
+      Set-ADAccountControl -Identity {{ user['username'] }} -DoesNotRequirePreAuth $true
       
   
+

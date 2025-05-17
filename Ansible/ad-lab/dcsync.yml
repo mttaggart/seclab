@@ -1,7 +1,7 @@
 ---
 - name: Create DCSync User
   vars:
-    user: "{{ users | random }}"
+    user: "{{ users['dcsync'] }}"
   microsoft.ad.user:
     domain_server: "{{ domain }}"
     domain_username: "{{ da_user }}"

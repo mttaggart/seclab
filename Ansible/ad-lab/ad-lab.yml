@@ -1,0 +1,120 @@
+---
+- name: Generate users
+  hosts: localhost
+  connection: local
+  vars:
+    num_users: 10
+  tasks:
+    - name: Run generation script
+      ansible.builtin.command:
+        cmd: "./generate_users.py {{ num_users }}"
+      tags: ["setup"]
+    # - name: Print FirstName
+    #   ansible.builtin.debug:
+    #     msg: "{{ first_names | random }}"
+    #   with_sequence: "start=0 end={{ num_users }}"
+    # - name: Print FirstNames
+    #   ansible.builtin.debug:
+    #     msg: "{{ lookup('ansible.builtin.random_choice', first_names) }}"
+    #   with_sequence: "start=0 end={{ num_users }}"
+    
+- name: Create Domain Users
+  vars_files:
+    - vars.yml
+  hosts: "{{ dc_hostname }}"
+  tags: ["setup"]
+  tasks:
+    - name: Create Groups
+      microsoft.ad.group:
+        name: "{{ item }}"
+        scope: global
+      with_items: "{{ ad_groups }}"
+    - name: Create users
+      microsoft.ad.user:
+        domain_server: "{{ domain }}"
+        domain_username: "{{ da_user }}"
+        domain_password: "{{ da_password }}"
+        identity: "{{ item['username'] }}"
+        display_name: "{{ item['display_name'] }}"
+        firstname: "{{ item['first_name'] }}"
+        surname: "{{ item['last_name'] }}"
+        password: "{{ item['password'] }}"
+        password_never_expires: true
+        upn: "{{ item['username']}}@{{ domain }}"
+        groups:
+          add:
+            - "{{ ad_groups | random }}"
+        state: present
+      with_items: "{{ users['all'] }}"
+
+- name: Enable starter admin
+  vars_files:
+    - vars.yml
+  hosts: "{{ workstations | random }}"
+  tags: ["setup"]
+  tasks:
+    - name: Add Starter User to Workstation
+      vars:
+        username: "{{ users['starter']['username'] }}"
+      ansible.builtin.import_tasks:
+        file: local-admin.yml
+
+- name: Enable Kerberoast admin
+  vars_files:
+    - vars.yml
+  hosts: "{{ servers | random }}"
+  tasks:
+    - name: Add Kerberoast User to Server
+      vars:
+        username: "{{ users['kerberoast']['username'] }}"
+      ansible.builtin.import_tasks:
+        file: local-admin.yml
+  tags: ["kerberoast", "never"]
+
+- name: Enable ASREP-roast admin
+  vars_files:
+    - vars.yml
+  hosts: "{{ servers | random }}"
+  tasks:
+    - name: Add ASREP-roast User to Server
+      vars:
+        username: "{{ users['asreproast']['username'] }}"
+      ansible.builtin.import_tasks:
+        file: local-admin.yml
+  tags: ["asreproast","never"]
+
+
+- name: Enable DCSync admin
+  vars_files:
+    - vars.yml
+  hosts: "{{ servers | random }}"
+  tasks:
+    - name: Add DCSync User to Server
+      vars:
+        username: "{{ users['dcsync']['username'] }}"
+      ansible.builtin.import_tasks:
+        file: local-admin.yml
+  tags: ["dcsync", "never"]
+
+- name: Enable vulnerabilities
+  vars_files:
+    - vars.yml
+  hosts: "{{ dc_hostname }}"
+  tasks:
+    - name: Enable DCSync Vulnerability
+      ansible.builtin.import_tasks:
+        file: dcsync.yml
+      tags: [dcsync]
+    - name: Weaken Password Policy
+      ansible.windows.win_powershell:
+        script: |
+          Set-ADDefaultDomainPasswordPolicy -Identity {{ domain }} -MinPasswordLength 6 -ComplexityEnabled $false
+      tags: [kerberoast]
+    - name: Enable Kerberoast Vulnerability
+      ansible.builtin.import_tasks:
+        file: kerberoast.yml
+      tags: [kerberoast, never]
+    - name: Enable ASREP-Roast Vulnerability
+      ansible.builtin.import_tasks:
+        file: asreproast.yml
+      tags: [asreproast, never]

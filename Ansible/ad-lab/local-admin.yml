@@ -1,0 +1,6 @@
+---
+- name: Add User to Group
+  ansible.windows.win_group_membership:
+    name: Administrators
+    members:
+      "{{ domain }}\\{{ username }}"

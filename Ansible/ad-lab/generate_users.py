@@ -6,8 +6,6 @@ import json
 import secrets
 import os
 
-os.chdir("ad-lab")
-
 FIRST_NAMES_FILE = "./first_names.txt"
 LAST_NAMES_FILE = "./last_names.txt"
 USERS_OUTFILE = "./users.json"
@@ -41,7 +39,14 @@ def gen_user():
     }
 
 users = [gen_user() for i in range(num_users)]
+users_dict = {
+    "all": users,
+    "starter": random.choice(users),
+    "kerberoast": random.choice(users),
+    "asreproast": random.choice(users),
+    "dcsync": random.choice(users)
+}
 
 # Write users
 with open(USERS_OUTFILE, "w") as f:
-    json.dump(users, f, indent=4)
+    json.dump(users_dict, f, indent=4)
