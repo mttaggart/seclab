@@ -1,0 +1,15 @@
+---
+- name: Bloodhound Server
+  hosts: infrastructure
+  vars:
+    domain: sec.lab
+    caddy_hostname: bloodhound
+    proxy_port: 8080
+  roles:
+    - role: docker
+      become: true
+    - role: bloodhound
+      become: true
+    - role: caddy
+      mode: reverse_proxy
+      become: true

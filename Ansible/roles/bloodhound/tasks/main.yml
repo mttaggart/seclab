@@ -1,0 +1,20 @@
+---
+- name: Download Bloodhound CE Repo
+  ansible.builtin.get_url:
+    url: https://github.com/SpecterOps/bloodhound-cli/releases/latest/download/bloodhound-cli-linux-amd64.tar.gz
+    dest: "/home/{{ ansible_user }}"
+- name: Unpack Archive
+  ansible.builtin.unarchive:
+    src: "/home/{{ ansible_user }}/bloodhound-cli-linux-amd64.tar.gz"
+    dest: "/home/{{ ansible_user }}"
+    remote_src: true
+- name: Run installer
+  ansible.builtin.shell:
+    cmd: ./bloodhound-cli install
+    chdir: "/home/{{ ansible_user }}"
+  register: bloodhound_install
+- name: Print Install Info
+  ansible.builtin.debug:
+    msg: "{{ bloodhound_install['stdout'].split('\n') }}"
+    
+     
