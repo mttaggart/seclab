@@ -77,8 +77,6 @@
   hosts: "{{ servers | random }}"
   tasks:
     - name: Add ASREP-roast User to Server
-      vars:
-        username: "{{ users['asreproast']['username'] }}"
       ansible.builtin.import_tasks:
         file: local-admin.yml
   tags: ["asreproast","never"]

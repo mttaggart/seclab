@@ -1,28 +1,28 @@
 ---
 - name: Create ASREP-Roastable User
   vars:
-    user: "{{ users['asreproast'] }}"
-    spn_server: "{{ servers | random }}"
-    spn_service: "{{ services | random  }} "
+    asrep_user: "{{ users['asreproast'] }}"
   microsoft.ad.user:
     domain_server: "{{ domain }}"
     domain_username: "{{ da_user }}"
     domain_password: "{{ da_password }}"
-    name: "{{ user['username'] }}"
-    display_name: "{{ user['display_name'] }}"
-    firstname: "{{ user['first_name'] }}"
-    surname: "{{ user['last_name'] }}"
+    name: "{{ asrep_user['username'] }}"
+    display_name: "{{ asrep_user['display_name'] }}"
+    firstname: "{{ asrep_user['first_name'] }}"
+    surname: "{{ asrep_user['last_name'] }}"
     password_never_expires: true
-    password: "{{ user['password'] }}"
-  register: asrep_user
+    password: "{{ asrep_user['password'] }}"
+  register: asrep_user_created
 - name: Display ASREP-Roast User
   ansible.builtin.debug:
-    msg: "{{ asrep_user }}"
+    msg: "{{ asrep_user_created }}"
 - name: Make User ASREP-Roastable
+  vars:
+    asrep_user: "{{ users['asreproast'] }}"
   ansible.windows.win_powershell:
     script: | 
-      Set-ADAccountPassword -Identity {{ asrep_user['distinguished_name']}} -NewPassword (ConvertTo-SecureString -AsPlainText {{ bad_passwords | random }} -Force)
-      Set-ADAccountControl -Identity {{ user['username'] }} -DoesNotRequirePreAuth $true
+      Set-ADAccountPassword -Identity "{{ asrep_user_created['distinguished_name']}}" -NewPassword (ConvertTo-SecureString -AsPlainText "{{ bad_passwords | random }}" -Force)
+      Set-ADAccountControl -Identity "{{ asrep_user['username'] }}" -DoesNotRequirePreAuth $true
       
   
 
