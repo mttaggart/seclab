@@ -1,13 +1,47 @@
 ---
 - name: Create DCSync User
-  vars:
-    user: "{{ users['dcsync'] }}"
   microsoft.ad.user:
     domain_server: "{{ domain }}"
     domain_username: "{{ da_user }}"
     domain_password: "{{ da_password }}"
-    name: "{{ user['username'] }}"
+    name: "{{ dcsync_user['username'] }}"
+    password: "{{ bad_passwords | random }}"
     groups:
       add:
         - Key Admins
-  register: dcsync_user
+  register: dcsync_user_dn
+
+- name: Show DCSync user
+  ansible.builtin.debug:
+    msg: "{{ dcsync_user }}"
+
+- name: Add DCSync Permissions
+  ansible.windows.win_powershell:
+    script: |
+      Import-Module ActiveDirectory
+
+      $account = "{{ domain }}\\{{ dcsync_user['username'] }}"
+      $domain = Get-ADDomain
+      $rootDSE = $domain.DistinguishedName
+
+      $acl = Get-Acl "AD:$rootDSE"
+
+      $replicateChangesGuid = New-Object Guid 1131f6aa-9c07-11d1-f79f-00c04fc2dcd2
+      $replicateChangesAllGuid = New-Object Guid 1131f6ad-9c07-11d1-f79f-00c04fc2dcd2
+      $replicateChangesFilteredGuid = New-Object Guid 89e95b76-444d-4c62-991a-0facbeda640c
+      $guids = (
+        $replicateChangesGuid,
+        $replicateChangesAllGuid,
+        $replicateChangesFilteredGuid
+      )
+      $identity = New-Object System.Security.Principal.NTAccount($account)
+      $adRights = [System.DirectoryServices.ActiveDirectoryRights]::ExtendedRight
+      $type = [System.Security.AccessControl.AccessControlType]::Allow
+      $inheritanceType = [System.DirectoryServices.ActiveDirectorySecurityInheritance]::All
+
+      foreach ($g in $guids) {
+        $ace = New-Object System.DirectoryServices.ActiveDirectoryAccessRule($identity, $adRights, $type, $objectGuid, $inheritanceType)
+        $acl.AddAccessRule($ace)
+      }
+
+      Set-Acl -AclObject $acl -Path "AD:$rootDSE"

@@ -59,6 +59,32 @@
       ansible.builtin.import_tasks:
         file: local-admin.yml
 
+
+- name: Enable vulnerabilities
+  vars_files:
+    - vars.yml
+  hosts: "{{ dc_hostname }}"
+  tasks:
+    - name: Weaken Password Policy
+      ansible.windows.win_powershell:
+        script: |
+          Set-ADDefaultDomainPasswordPolicy -Identity {{ domain }} -MinPasswordLength 6 -ComplexityEnabled $false
+      tags: [never, kerberoast, asreproast, dcsync]
+    - name: Enable DCSync Vulnerability
+      vars:
+        dcsync_user: "{{ users['dcsync'] }}"
+      ansible.builtin.import_tasks:
+        file: dcsync.yml
+      tags: [never, dcsync]
+    - name: Enable Kerberoast Vulnerability
+      ansible.builtin.import_tasks:
+        file: kerberoast.yml
+      tags: [kerberoast, never]
+    - name: Enable ASREP-Roast Vulnerability
+      ansible.builtin.import_tasks:
+        file: asreproast.yml
+      tags: [asreproast, never]
+
 - name: Enable Kerberoast admin
   vars_files:
     - vars.yml
@@ -66,7 +92,7 @@
   tasks:
     - name: Add Kerberoast User to Server
       vars:
-        username: "{{ users['kerberoast']['username'] }}"
+        user: "{{ users['kerberoast'] }}"
       ansible.builtin.import_tasks:
         file: local-admin.yml
   tags: ["kerberoast", "never"]
@@ -77,10 +103,11 @@
   hosts: "{{ servers | random }}"
   tasks:
     - name: Add ASREP-roast User to Server
+      vars:
+        user: "{{ users['asreproast'] }}"
       ansible.builtin.import_tasks:
         file: local-admin.yml
   tags: ["asreproast","never"]
-
 
 - name: Enable DCSync admin
   vars_files:
@@ -89,30 +116,7 @@
   tasks:
     - name: Add DCSync User to Server
       vars:
-        username: "{{ users['dcsync']['username'] }}"
+        user: "{{ users['dcsync'] }}"
       ansible.builtin.import_tasks:
         file: local-admin.yml
   tags: ["dcsync", "never"]
-
-- name: Enable vulnerabilities
-  vars_files:
-    - vars.yml
-  hosts: "{{ dc_hostname }}"
-  tasks:
-    - name: Enable DCSync Vulnerability
-      ansible.builtin.import_tasks:
-        file: dcsync.yml
-      tags: [dcsync]
-    - name: Weaken Password Policy
-      ansible.windows.win_powershell:
-        script: |
-          Set-ADDefaultDomainPasswordPolicy -Identity {{ domain }} -MinPasswordLength 6 -ComplexityEnabled $false
-      tags: [kerberoast]
-    - name: Enable Kerberoast Vulnerability
-      ansible.builtin.import_tasks:
-        file: kerberoast.yml
-      tags: [kerberoast, never]
-    - name: Enable ASREP-Roast Vulnerability
-      ansible.builtin.import_tasks:
-        file: asreproast.yml
-      tags: [asreproast, never]

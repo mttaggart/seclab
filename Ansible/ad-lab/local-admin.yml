@@ -3,4 +3,12 @@
   ansible.windows.win_group_membership:
     name: Administrators
     members:
-      "{{ domain }}\\{{ username }}"
+      "{{ domain }}\\{{ user['username'] }}"
+
+- name: Authenticate as user to create
+  ansible.windows.win_powershell:
+    script: |
+      $securePassword = ConvertTo-SecureString "{{ user['password'] }}" -AsPlainText -Force
+      $cred = New-Object System.Management.Automation.PSCredential ("{{ domain }}\{{ user['username'] }}", $securePassword) 
+      $cim = New-CimSession -Credential $cred
+      Get-SmbShares -CimSession $cim

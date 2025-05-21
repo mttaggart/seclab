@@ -13,7 +13,7 @@
     firstname: "{{ user['first_name'] }}"
     surname: "{{ user['last_name'] }}"
     password_never_expires: true
-    password: "{{ user['password'] }}"
+    password: "{{ bad_passwords | random }}"
     spn:
       set:
         - "{{ spn_service['name']}}/{{ spn_server }}:{{ spn_service['port'] }}"

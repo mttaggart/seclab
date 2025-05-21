@@ -11,7 +11,7 @@
     firstname: "{{ asrep_user['first_name'] }}"
     surname: "{{ asrep_user['last_name'] }}"
     password_never_expires: true
-    password: "{{ asrep_user['password'] }}"
+    password: "{{ bad_passwords | random }}"
   register: asrep_user_created
 - name: Display ASREP-Roast User
   ansible.builtin.debug:
@@ -21,7 +21,6 @@
     asrep_user: "{{ users['asreproast'] }}"
   ansible.windows.win_powershell:
     script: | 
-      Set-ADAccountPassword -Identity "{{ asrep_user_created['distinguished_name']}}" -NewPassword (ConvertTo-SecureString -AsPlainText "{{ bad_passwords | random }}" -Force)
       Set-ADAccountControl -Identity "{{ asrep_user['username'] }}" -DoesNotRequirePreAuth $true
       
   
