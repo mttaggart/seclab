@@ -84,6 +84,24 @@
       ansible.builtin.import_tasks:
         file: asreproast.yml
       tags: [asreproast, never]
+    - name: Enable Unconstrained Delegation
+      vars:
+        server: "{{ servers | random }}"
+      ansible.builtin.import_tasks:
+        file: unconstrained-delegation.yml
+      tags: [ucd, never]
+    - name: Enable Constrained Delegation
+      vars:
+        server: "{{ servers | random }}"
+      ansible.builtin.import_tasks:
+        file: constrained-delegation.yml
+      tags: [cd, never]
+    - name: Enable Resource-Based Constrained Delegation
+      vars:
+        server: "{{ servers | random }}"
+      ansible.builtin.import_tasks:
+        file: resource-based-constrained-delegation.yml
+      tags: [rbcd, never]
 
 - name: Enable Kerberoast admin
   vars_files:

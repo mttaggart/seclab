@@ -1,0 +1,7 @@
+---
+- name: Enable Constrained Delegation (Kerberos only)
+  ansible.windows.win_powershell:
+    script: |
+      Get-ADComputer -Identity "{{ server }}" | Set-ADAccountControl ‑TrustedToAuthForDelegation $true
+      Set-ADComputer -Identity "{{ server }}" -Add @{'msDS-AllowedToDelegateTo'=@('ldap/{{ dc_hostname }}.{{ domain }}','TERMSRV/{{ dc_hostname }}.{{ domain }}')}             
+ 

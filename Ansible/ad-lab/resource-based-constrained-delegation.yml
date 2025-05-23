@@ -1,0 +1,6 @@
+---
+- name: Enable Resource-Based Constrained Delegation
+  ansible.windows.win_powershell:
+    script: |
+      Set-ADComputer "{{ dc_hostname }}" -PrincipalsAllowedToDelegateToAccount (Get-ADComputer "{{ server }}")
+ 

@@ -1,0 +1,5 @@
+---
+- name: Enable Unconstrained Delegation
+  microsoft.ad.computer:
+    identity: "{{ server }}"
+    trusted_for_delegation: true
