@@ -3,5 +3,5 @@
   ansible.windows.win_powershell:
     script: |
       Get-ADComputer -Identity "{{ server }}" | Set-ADAccountControl ‑TrustedToAuthForDelegation $true
-      Set-ADComputer -Identity "{{ server }}" -Add @{'msDS-AllowedToDelegateTo'=@('ldap/{{ dc_hostname }}.{{ domain }}','TERMSRV/{{ dc_hostname }}.{{ domain }}')}             
+      Set-ADComputer -Identity "{{ server }}" -Add @{'msDS-AllowedToDelegateTo'=@('ldap/{{ dc_hostname }}','TERMSRV/{{ dc_hostname }}','ldap/{{ dc_hostname }}.{{ domain }}','TERMSRV/{{ dc_hostname }}.{{ domain }}')}             
  
