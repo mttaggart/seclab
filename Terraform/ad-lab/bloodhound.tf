@@ -20,11 +20,11 @@ resource "proxmox_virtual_environment_vm" "ad-lab-bloodhound" {
   }
 
   cpu {
-    cores = 4
+    cores = 2
   }
 
   memory {
-    dedicated = 8192
+    dedicated = 4096
   }
 
   network_device {
