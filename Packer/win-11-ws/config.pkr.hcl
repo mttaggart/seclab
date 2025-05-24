@@ -43,6 +43,11 @@ locals {
   proxmox_api_token = data.keepass-credentials.kpxc.map["/Passwords/Seclab/proxmox_api-Password"]
 }
 
+variable "proxmox_api_host" {
+  type    = string
+  default = "proxmox"
+}
+
 variable "proxmox_node" {
   type    = string
   default = "proxmox"
@@ -54,7 +59,7 @@ variable "storage_pool" {
 }
 
 source "proxmox-iso" "seclab-win-ws" {
-  proxmox_url  = "https://${var.proxmox_node}:8006/api2/json"
+  proxmox_url  = "https://${var.proxmox_api_host}:8006/api2/json"
   node         = "${var.proxmox_node}"
   username     = "${local.proxmox_api_id}"
   token        = "${local.proxmox_api_token}"

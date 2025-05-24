@@ -31,6 +31,11 @@ variable "hostname" {
   default = "seclab-ubuntu-server"
 }
 
+variable "proxmox_api_host" {
+  type    = string
+  default = "proxmox"
+}
+
 variable "proxmox_node" {
   type    = string
   default = "proxmox"
@@ -55,7 +60,7 @@ locals {
 
 
 source "proxmox-iso" "seclab-ubuntu-server" {
-  proxmox_url = "https://${var.proxmox_node}:8006/api2/json"
+  proxmox_url = "https://${var.proxmox_api_host}:8006/api2/json"
   node        = "${var.proxmox_node}"
   username    = "${local.proxmox_api_id}"
   token       = "${local.proxmox_api_token}"
