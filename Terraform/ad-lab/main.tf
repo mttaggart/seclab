@@ -43,6 +43,11 @@ variable "workstation_template_id" {
   description = "Template ID for Workstation clones"
 }
 
+variable "bloodhound_template_id" {
+  type        = string
+  description = "Template ID for Bloodhound server"
+}
+
 variable "domain" {
   type        = string
   description = "AD Lab Domain"
