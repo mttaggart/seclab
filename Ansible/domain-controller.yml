@@ -1,6 +1,6 @@
 ---
 - name: Initialize Domain Controller
-  hosts: zeroday-dc
+  hosts: windows-hosts
   roles:
     - rdp
     - sysmon
