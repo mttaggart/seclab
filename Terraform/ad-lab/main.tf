@@ -54,6 +54,12 @@ variable "domain" {
   default     = "zeroday.local"
 }
 
+variable "dc_ip" {
+  type        = string
+  default     = "10.1.99.4"
+  description = "DC IP Address"
+}
+
 variable "pool_name" {
   type        = string
   description = "Resource pool label"

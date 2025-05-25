@@ -1,10 +1,3 @@
-
-variable "dc_ip" {
-  type        = string
-  default     = "10.1.99.4"
-  description = "DC IP Address"
-}
-
 locals {
   dc_hostname = "${upper(split(".", var.domain)[0])}-DC"
 }
