@@ -3,8 +3,8 @@ da_password: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_windows_da', 'p
 ansible_connection: ssh
 ansible_shell_type: cmd
 recovery_password: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_windows_da', 'password') }}"
-dc_hostname: "ZERODAY-DC-1"
 domain_name: "zeroday.local"
+dc_hostname: "{{ domain_name.split(".")[0].upper()}}-DC"
 upstream_dns: 10.1.99.1
 reverse_dns_zone: "10.1.99.0/24"
 ntp_servers: "0.us.pool.ntp.org,1.us.pool.ntp.org"
