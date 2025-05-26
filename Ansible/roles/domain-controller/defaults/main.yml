@@ -4,7 +4,7 @@ ansible_connection: ssh
 ansible_shell_type: cmd
 recovery_password: "{{ lookup('viczem.keepass.keepass', 'Seclab/seclab_windows_da', 'password') }}"
 domain_name: "zeroday.local"
-dc_hostname: "{{ domain_name.split(".")[0].upper()}}-DC"
+dc_hostname: "zeroday-dc"
 upstream_dns: 10.1.99.1
 reverse_dns_zone: "10.1.99.0/24"
 ntp_servers: "0.us.pool.ntp.org,1.us.pool.ntp.org"

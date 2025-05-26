@@ -4,10 +4,10 @@
     name: "{{ da_user }}"
     password: "{{ da_password }}"
 - name: Set upstream DNS server 
-  win_dns_client:
-    adapter_names: 'Ethernet'
+  ansible.windows.win_dns_client:
+    adapter_names: Ethernet
     ipv4_addresses:
-     - '{{ upstream_dns }}'
+      - "{{ upstream_dns }}"
 - name: Disable Firewall
   win_firewall:
     state: disabled
@@ -16,14 +16,14 @@
       - Private
       - Public
 - name: Change the hostname
-  win_hostname:
-    name: '{{ dc_hostname }}'
+  ansible.windows.win_hostname:
+    name: "{{ dc_hostname }}"
   register: res
 - name: Reboot
-  win_reboot:
+  ansible.windows.win_reboot:
   when: res.reboot_required
 - name: Install Active Directory
-  win_feature: >
+  ansible.windows.win_feature: >
     name=AD-Domain-Services
     include_management_tools=yes
     include_sub_features=yes
@@ -31,16 +31,18 @@
   register: result
 - name: Create Domain
   microsoft.ad.domain:
-    dns_domain_name: '{{ domain_name }}'
-    safe_mode_password: '{{ recovery_password }}'
+    dns_domain_name: "{{ domain_name }}"
+    safe_mode_password: "{{ recovery_password }}"
     reboot: true
 - name: Set internal DNS server
-  win_dns_client:
-    adapter_names: "Ethernet"
+  ansible.windows.win_dns_client:
+    adapter_names: Ethernet
     ipv4_addresses:
     - '127.0.0.1'
 - name: Create reverse DNS zone
-  win_shell: "Add-DnsServerPrimaryZone -NetworkID {{ reverse_dns_zone }} -ReplicationScope Forest"
+  ansible.windows.win_powershell: 
+    script: |
+      Add-DnsServerPrimaryZone -NetworkID "{{ reverse_dns_zone }}" -ReplicationScope Forest
   retries: 30
   delay: 60
   register: result
