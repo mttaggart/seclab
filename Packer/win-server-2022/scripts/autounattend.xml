@@ -200,25 +200,25 @@
                 <SynchronousCommand wcm:action="add">
                     <Order>6</Order>
                     <Description>Enable RDP</Description>
-                    <CommandLine>powershell.exe -c Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0</CommandLine>
+                    <CommandLine>powershell.exe -c "Set-ItemProperty -Path 'Registry::HKLM\System\CurrentControlSet\Control\Terminal Server' -name fDenyTSConnections -value 0"</CommandLine>
                     <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <Order>7</Order>
                     <Description>Enable RDP Firewall Rules</Description>
-                    <CommandLine>powershell.exe -c Enable-NetFirewallRule -DisplayGroup "Remote Desktop"</CommandLine>
+                    <CommandLine>powershell.exe -c "Enable-NetFirewallRule -DisplayGroup 'Remote Desktop'"</CommandLine>
                     <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <Order>8</Order>
                     <Description>Disable Edge First-Run Crap</Description>
-                    <CommandLine>powershell.exe -c Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Edge' -name "HideFirstRunExperience" -value 0</CommandLine>
+                    <CommandLine>powershell.exe -c "New-Item -Path 'Registry::HKLM\SOFTWARE\Policies\Microsoft\Edge'"</CommandLine>
                     <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <Order>9</Order>
-                    <!-- Enable SSH service -->
-                    <CommandLine>powershell.exe -c New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22</CommandLine>
+                    <Description>Disable Edge First-Run Crap</Description>
+                    <CommandLine>powershell.exe -c "Set-ItemProperty -Path 'Registry::HKLM\SOFTWARE\Policies\Microsoft\Edge' -name HideFirstRunExperience -value 1"</CommandLine>
                     <RequiresUserInput>false</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
@@ -226,6 +226,35 @@
                     <!-- Enable SSH service -->
                     <CommandLine>powershell.exe -c Start-Service sshd</CommandLine>
                     <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Order>11</Order>
+                    <!-- Enable SSH service -->
+                    <CommandLine>powershell.exe -c New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22</CommandLine>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <!-- END WITHOUT WINDOWS UPDATES -->
+                <!-- WITH WINDOWS UPDATES -->
+                <!--
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c a:\microsoft-updates.bat</CommandLine>
+                    <Order>98</Order>
+                    <Description>Enable Microsoft Updates</Description>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\disable-screensaver.ps1</CommandLine>
+                    <Description>Disable Screensaver</Description>
+                    <Order>99</Order>
+                    <RequiresUserInput>true</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\win-updates.ps1</CommandLine>
+                    <Description>Install Windows Updates</Description>
+                    <Order>100</Order>
+                    <RequiresUserInput>true</RequiresUserInput>
+                </SynchronousCommand>
+                 -->
+                <!-- END WITH WINDOWS UPDATES -->
                 </SynchronousCommand>
             </FirstLogonCommands>
             <OOBE>
