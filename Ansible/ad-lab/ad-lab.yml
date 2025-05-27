@@ -8,7 +8,7 @@
     - name: Run generation script
       ansible.builtin.command:
         cmd: "./generate_users.py {{ num_users }}"
-      tags: ["setup"]
+      tags: [all, setup]
     # - name: Print FirstName
     #   ansible.builtin.debug:
     #     msg: "{{ first_names | random }}"
@@ -22,7 +22,7 @@
   vars_files:
     - vars.yml
   hosts: "{{ dc_hostname }}"
-  tags: ["setup"]
+  tags: [all, setup]
   tasks:
     - name: Create Groups
       microsoft.ad.group:
@@ -51,7 +51,7 @@
   vars_files:
     - vars.yml
   hosts: "{{ workstations | random }}"
-  tags: ["setup"]
+  tags: [all, setup]
   tasks:
     - name: Add Starter User to Workstation
       vars:
@@ -69,39 +69,39 @@
       ansible.windows.win_powershell:
         script: |
           Set-ADDefaultDomainPasswordPolicy -Identity {{ domain }} -MinPasswordLength 6 -ComplexityEnabled $false
-      tags: [never, kerberoast, asreproast, dcsync]
+      tags: [all, never, kerberoast, asreproast, dcsync]
     - name: Enable DCSync Vulnerability
       vars:
         dcsync_user: "{{ users['dcsync'] }}"
       ansible.builtin.import_tasks:
         file: dcsync.yml
-      tags: [never, dcsync]
+      tags: [all, never, dcsync]
     - name: Enable Kerberoast Vulnerability
       ansible.builtin.import_tasks:
         file: kerberoast.yml
-      tags: [kerberoast, never]
+      tags: [all, kerberoast, never]
     - name: Enable ASREP-Roast Vulnerability
       ansible.builtin.import_tasks:
         file: asreproast.yml
-      tags: [asreproast, never]
+      tags: [all, asreproast, never]
     - name: Enable Unconstrained Delegation
       vars:
         server: "{{ servers | random }}"
       ansible.builtin.import_tasks:
         file: unconstrained-delegation.yml
-      tags: [ucd, never]
+      tags: [all, ucd, never]
     - name: Enable Constrained Delegation
       vars:
         server: "{{ servers | random }}"
       ansible.builtin.import_tasks:
         file: constrained-delegation.yml
-      tags: [cd, never]
+      tags: [all, cd, never]
     - name: Enable Resource-Based Constrained Delegation
       vars:
         server: "{{ servers | random }}"
       ansible.builtin.import_tasks:
         file: resource-based-constrained-delegation.yml
-      tags: [rbcd, never]
+      tags: [all, rbcd, never]
 
 - name: Enable Kerberoast admin
   vars_files:
@@ -113,7 +113,7 @@
         user: "{{ users['kerberoast'] }}"
       ansible.builtin.import_tasks:
         file: local-admin.yml
-  tags: ["kerberoast", "never"]
+  tags: [all, "kerberoast", "never"]
 
 - name: Enable ASREP-roast admin
   vars_files:
@@ -125,7 +125,7 @@
         user: "{{ users['asreproast'] }}"
       ansible.builtin.import_tasks:
         file: local-admin.yml
-  tags: ["asreproast","never"]
+  tags: [all, "asreproast","never"]
 
 - name: Enable DCSync admin
   vars_files:
@@ -137,4 +137,4 @@
         user: "{{ users['dcsync'] }}"
       ansible.builtin.import_tasks:
         file: local-admin.yml
-  tags: ["dcsync", "never"]
+  tags: [all, "dcsync", "never"]
