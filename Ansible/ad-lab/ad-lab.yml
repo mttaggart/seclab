@@ -55,9 +55,12 @@
   tasks:
     - name: Add Starter User to Workstation
       vars:
-        username: "{{ users['starter']['username'] }}"
+        user: "{{ users['starter'] }}"
       ansible.builtin.import_tasks:
         file: local-admin.yml
+    - name: Print Starter Creds
+      ansible.builtin.debug:
+        msg: "{{ users['starter'] }}"
 
 
 - name: Enable vulnerabilities
