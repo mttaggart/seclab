@@ -12,6 +12,7 @@
   ansible.builtin.shell:
     cmd: ./bloodhound-cli install
     chdir: "/home/{{ ansible_user }}"
+    creates: bloodhound.config.json
   register: bloodhound_install
 - name: Print Install Info
   ansible.builtin.debug:
