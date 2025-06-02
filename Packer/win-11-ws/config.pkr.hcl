@@ -58,6 +58,11 @@ variable "storage_pool" {
   default = "local-lvm"
 }
 
+variable "iso_storage" {
+  type    = string
+  defautl = "local"
+}
+
 source "proxmox-iso" "seclab-win-ws" {
   proxmox_url  = "https://${var.proxmox_api_host}:8006/api2/json"
   node         = "${var.proxmox_node}"
@@ -66,7 +71,7 @@ source "proxmox-iso" "seclab-win-ws" {
   bios         = "ovmf"
   boot_iso {
     type         = "sata"
-    iso_file     = "local:iso/Win-11-Enterprise.iso"
+    iso_file     = "${var.iso_storage}:iso/Win-11-Enterprise.iso"
     iso_checksum = "sha256:ebbc79106715f44f5020f77bd90721b17c5a877cbc15a3535b99155493a1bb3f"
     unmount      = true
   }
@@ -107,14 +112,14 @@ source "proxmox-iso" "seclab-win-ws" {
   additional_iso_files {
     index        = 1
     type         = "sata"
-    iso_file     = "local:iso/Autounattend-win-11-ws.iso"
+    iso_file     = "${var.iso_storage}:iso/Autounattend-win-11-ws.iso"
     iso_checksum = "sha256:2893ca8f6d1f420436b6c213fa618710e7689a67d4bf924263361f07cced3b34"
   }
   
   additional_iso_files {
     index        = 2
     type         = "sata"
-    iso_file     = "local:iso/virtio.iso"
+    iso_file     = "${var.iso_storage}:iso/virtio.iso"
     iso_checksum = "sha256:57b0f6dc8dc92dc2ae8621f8b1bfbd8a873de9bedc788c4c4b305ea28acc77cd"
   }
 

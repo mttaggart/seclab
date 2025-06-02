@@ -51,6 +51,11 @@ variable "storage_pool" {
   default = "local-lvm"
 }
 
+variable "iso_storage" {
+  type    = string
+  defautl = "local"
+}
+
 locals {
   username          = data.keepass-credentials.kpxc.map["/Passwords/Seclab/seclab_windows-UserName"]
   password          = data.keepass-credentials.kpxc.map["/Passwords/Seclab/seclab_windows-Password"]
@@ -66,7 +71,7 @@ source "proxmox-iso" "seclab-win-server" {
   token       = "${local.proxmox_api_token}"
   boot_iso {
     type         = "sata"
-    iso_file     = "local:iso/Win-Server-2025.iso"
+    iso_file     = "${var.iso_storage}:iso/Win-Server-2025.iso"
     iso_checksum = "sha256:d0ef4502e350e3c6c53c15b1b3020d38a5ded011bf04998e950720ac8579b23d"
     unmount      = true
   }
@@ -107,14 +112,14 @@ source "proxmox-iso" "seclab-win-server" {
   additional_iso_files {
     index        = 1
     type         = "sata"
-    iso_file     = "local:iso/Autounattend-win-server-2025.iso"
+    iso_file     = "${var.iso_storage}:iso/Autounattend-win-server-2025.iso"
     iso_checksum = "sha256:da461a34c9fac48763b22b1bf7dfc7f1a607868c3f5d6b2249c0d81396938d71"
   }
   
   additional_iso_files {
     index        = 2
     type         = "sata"
-    iso_file     = "local:iso/virtio.iso"
+    iso_file     = "${var.iso_storage}:iso/virtio.iso"
     iso_checksum = "sha256:57b0f6dc8dc92dc2ae8621f8b1bfbd8a873de9bedc788c4c4b305ea28acc77cd"
   }
 
