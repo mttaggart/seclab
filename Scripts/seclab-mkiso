@@ -1,8 +1,16 @@
 #!/bin/bash
 
-PROXMOX_NODE=proxmox
-KPXC_DB_PATH=~/seclab/seclab.kdbx
-STORAGE_PATH=/var/lib/vz/template/iso
+if [[ -z $PROXMOX_NODE ]]; then 
+  PROXMOX_NODE=proxmox
+fi
+
+if [[ -z $KPXC_DB_PATH ]]; then
+  KPXC_DB_PATH=~/seclab/seclab.kdbx
+fi
+
+if [[ -z $ISO_STORAGE_PATH ]]; then
+  STORAGE_PATH=/var/lib/vz/template/iso
+fi
 
 [[ -z $1 ]] && echo '[!] No directory target provided! Please provide a valid directory (e.g. scripts)' && exit 127
 
@@ -42,6 +50,6 @@ echo "[+] Obtaining SHA256 Hash of New ISO"
 sha256sum ../$new_iso
 echo "[+] Pushing all ISOs to Proxmox"
 pushd ..
-scp *.iso root@$PROXMOX_NODE:$STORAGE_PATH
+scp *.iso root@$PROXMOX_NODE:$ISO_STORAGE_PATH
 popd
 exit 0
