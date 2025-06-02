@@ -53,7 +53,7 @@ variable "storage_pool" {
 
 variable "iso_storage" {
   type    = string
-  defautl = "local"
+  default = "local"
 }
 
 locals {
