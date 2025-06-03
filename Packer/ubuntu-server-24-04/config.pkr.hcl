@@ -51,6 +51,11 @@ variable "iso_storage" {
   default = "local"
 }
 
+variable "nics" {
+  type    = list(string)
+  default = ["vmbr1"]
+}
+
 data "keepass-credentials" "kpxc" {
   keepass_file = "${var.keepass_database}"
   keepass_password = "${var.keepass_password}"
@@ -71,7 +76,7 @@ source "proxmox-iso" "seclab-ubuntu-server" {
   token       = "${local.proxmox_api_token}"
   boot_iso {
     type         = "scsi"
-    iso_file     = "${var.iso_storage}:iso/ubuntu-24.04.2-live-server-amd64.iso"
+    iso_file     = "${var.iso_storage}:iso/ubuntu-24.04.1-live-server-amd64.iso"
     iso_checksum = "sha256:e240e4b801f7bb68c20d1356b60968ad0c33a41d00d828e74ceb3364a0317be9"
     unmount      = true
   }
@@ -90,7 +95,7 @@ source "proxmox-iso" "seclab-ubuntu-server" {
   cpu_type                 = "x86-64-v2-AES"
 
   network_adapters {
-    bridge = "vmbr1"
+    bridge = "${var.nics[0]}"
   }
   disks {
     type         = "virtio"

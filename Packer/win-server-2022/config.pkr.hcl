@@ -56,6 +56,11 @@ variable "iso_storage" {
   default = "local"
 }
 
+variable "nics" {
+  type    = list(string)
+  default = ["vmbr2"]
+}
+
 locals {
   username          = data.keepass-credentials.kpxc.map["/Passwords/Seclab/seclab_windows-UserName"]
   password          = data.keepass-credentials.kpxc.map["/Passwords/Seclab/seclab_windows-Password"]
@@ -123,7 +128,7 @@ source "proxmox-iso" "seclab-win-server" {
   }
 
   network_adapters {
-    bridge = "vmbr2"
+    bridge = "${var.nics[0]}"
   }
 
   disks {

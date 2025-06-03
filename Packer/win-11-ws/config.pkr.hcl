@@ -63,6 +63,11 @@ variable "iso_storage" {
   default = "local"
 }
 
+variable "nics" {
+  type    = list(string)
+  default = ["vmbr2"]
+}
+
 source "proxmox-iso" "seclab-win-ws" {
   proxmox_url  = "https://${var.proxmox_api_host}:8006/api2/json"
   node         = "${var.proxmox_node}"
@@ -124,7 +129,7 @@ source "proxmox-iso" "seclab-win-ws" {
   }
 
   network_adapters {
-    bridge = "vmbr2"
+    bridge = "${var.nics[0]}"
   }
 
   disks {
