@@ -51,6 +51,16 @@ variable "storage_pool" {
   default = "local-lvm"
 }
 
+variable "iso_storage" {
+  type    = string
+  default = "local"
+}
+
+variable "nics" {
+  type    = list(string)
+  default = ["vmbr1"]
+}
+
 locals {
   username          = data.keepass-credentials.kpxc.map["/Passwords/Seclab/seclab_user-UserName"]
   password          = data.keepass-credentials.kpxc.map["/Passwords/Seclab/seclab_user-Password"]
@@ -66,7 +76,7 @@ source "proxmox-iso" "seclab-kali" {
   token       = "${local.proxmox_api_token}"
   boot_iso {
     type         = "ide"
-    iso_file     = "local:iso/kali.iso"
+    iso_file     = "${iso_storage}:iso/kali.iso"
     iso_checksum = "sha256:0b0f5560c21bcc1ee2b1fef2d8e21dca99cc6efa938a47108bbba63bec499779"
     unmount      = true
 
@@ -87,7 +97,7 @@ source "proxmox-iso" "seclab-kali" {
 
 
   network_adapters {
-    bridge = "vmbr1"
+    bridge = "${var.nics[0]}"
   }
 
   disks {
