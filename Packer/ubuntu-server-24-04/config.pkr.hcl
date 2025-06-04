@@ -51,9 +51,9 @@ variable "iso_storage" {
   default = "local"
 }
 
-variable "nics" {
-  type    = list(string)
-  default = ["vmbr1"]
+variable "network_adapter" {
+  type    = string
+  default = "vmbr1"
 }
 
 data "keepass-credentials" "kpxc" {
@@ -95,7 +95,7 @@ source "proxmox-iso" "seclab-ubuntu-server" {
   cpu_type                 = "x86-64-v2-AES"
 
   network_adapters {
-    bridge = "${var.nics[0]}"
+    bridge = "${var.network_adapter}"
   }
   disks {
     type         = "virtio"

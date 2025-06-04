@@ -63,9 +63,9 @@ variable "iso_storage" {
   default = "local"
 }
 
-variable "nics" {
-  type    = list(string)
-  default = ["vmbr2"]
+variable "network_adapter" {
+  type    = string
+  default = "vmbr2"
 }
 
 source "proxmox-iso" "seclab-win-ws" {
@@ -129,7 +129,7 @@ source "proxmox-iso" "seclab-win-ws" {
   }
 
   network_adapters {
-    bridge = "${var.nics[0]}"
+    bridge = "${var.network_adapter}"
   }
 
   disks {
