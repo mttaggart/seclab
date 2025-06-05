@@ -19,3 +19,4 @@ user-data.bak
 *.kdbx
 pki/
 users.json
+dmz-relay/
