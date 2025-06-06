@@ -2,7 +2,7 @@
   hosts: infrastructure
   vars_prompt:
     - name: wg_network_name
-      prompt: Wireguard Network Name
+      prompt: Wireguard Network Name (no spaces!)
       private: false
     - name: wg_address
       prompt: Wireguard IP Address (CIDR)
