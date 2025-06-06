@@ -94,7 +94,7 @@ install_fish() {
 		echo "[!] This is going to kick you into a fish shell. Type 'exit' to close it and continue installation. The final step will mess up this terminal session. Once it's finished, close it and open a new one."
 		echo "[!] To enter Fish automatically, log out and back in."
 		chsh -s /usr/bin/fish
-		insall_nerdfont
+		install_nerdfont
 		echo "[+] Configuring Terminator"
 		cp ./terminatorconfig ~/.config/terminator/config
 		echo "[+] Configuring Fish"
