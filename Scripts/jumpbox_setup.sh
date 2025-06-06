@@ -3,7 +3,7 @@
 SECLAB_PATH="~/seclab"
 VSCODE_URL='https://update.code.visualstudio.com/latest/linux-deb-x64/stable'
 VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_7.1.3570.60-1_amd64.deb'
-KPXC_DB_PATH="~/seclab/seclab.kdbx"
+KPXC_DB_PATH="$SECLAB_PATH/seclab.kdbx"
 PKI_PATH="$SECLAB_PATH/pki"
 PKI_DOMAIN="sec.lab"
 PKI_ISO_DOMAIN="iso.sec.lab"
@@ -112,7 +112,7 @@ initialize_keepassxc() {
 	echo "[+] You will be asked to set your database password."
 	echo "[!] DO NOT LOSE THIS; it will not be stored for you."
 	echo "[+] Database will be stored at $KPXC_DB_PATH"
-	keepassxc-cli db-create $KPXC_DB_PATH -p
+	keepassxc-cli db-create -p $KPXC_DB_PATH
 	echo "[+] Creating Seclab group to Database; password required"
 	keepassxc-cli mkdir $KPXC_DB_PATH Seclab
 }
