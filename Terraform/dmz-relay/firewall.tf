@@ -57,7 +57,7 @@ resource "digitalocean_firewall" "dmz-relay-fw" {
 
   outbound_rule {
     protocol              = "tcp"
-    port_range            = "51888"
+    port_range            = var.wg_port
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
 
