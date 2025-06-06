@@ -153,6 +153,21 @@ create_creds() {
  	keepassxc-cli add -g -L $PW_LENGTH -lUns -u $seclab_user $KPXC_DB_PATH Seclab/seclab_windows
  	echo "[+] Setting Seclab Windows domain admin"
  	keepassxc-cli add -g -L $PW_LENGTH -lUns -u $seclab_user $KPXC_DB_PATH Seclab/seclab_windows_da
+ 	# SSH Key add
+	ssh_privkey=$(cat ~/.ssh/id_rsa | base64 -w 0)
+	ssh_pubkey=$(cat ~/.ssh/id_rsa.pub | base64 -w 0)
+	echo -n "Enter password to unlock $KPXC_DB_PATH: "
+	read -s kpxc_pass
+	expect << EOF
+spawn keepassxc-cli add -u $ssh_pubkey -p "$KPXC_DATABASE" Seclab/seclab_ssh_key
+expect "Enter password to unlock $KPXC_DB_PATH:"
+send {$kpxc_pass}
+send "\n"
+expect "Enter password for new entry:"
+send "$ssh_privkey\n"
+expect eof
+EOF
+ 	
  	echo "[+] Secrets generated. You can change them using KeePassXC and your database password."
  	echo "[!] Make sure you change secrets BEFORE running init-cloud-init.sh!"
 
