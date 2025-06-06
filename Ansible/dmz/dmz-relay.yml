@@ -1,0 +1,5 @@
+- name: Create Wireguard DMZ Relay
+  hosts: dmz-relay
+  roles:
+    - role: dmz-relay
+      become: true

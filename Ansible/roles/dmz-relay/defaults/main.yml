@@ -1,0 +1,2 @@
+listen_port: 51888
+server_wg_address: 172.16.200.1/24
