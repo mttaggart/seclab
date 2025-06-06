@@ -1,0 +1,54 @@
+---
+- name: Add Wireguard Peer
+  vars:
+    wg_port: 51888
+    wg_keepalive: 25
+  vars_prompt:
+    - name: wg_pubkey
+      prompt: Peer public key
+      private: false
+    - name: wg_peer_hostname
+      prompt: Peer Hostname
+      private: false 
+    - name: wg_endpoint
+      prompt: Endpoint Address (blank for adding clients to servers)
+      private: false
+    - name: wg_peer_allowed_ips
+      prompt: Client Wireguard Allowed IPs (comma-separated CIDRs)
+      private: false 
+    - name: wg_network_name
+      prompt: Wireguard Network (config file) name
+      private: false 
+  hosts: infrastructure
+  tasks:
+    - name: Append Peer Block
+      become: true
+      ansible.builtin.blockinfile:
+        path: "/etc/wireguard/{{ wg_network_name }}.conf"
+        marker: ""
+        insertafter: EOF
+        prepend_newline: true
+        append_newline: false
+        block: |
+          # {{ wg_peer_hostname }}
+          [Peer]
+          PublicKey = {{ wg_pubkey }}
+          AllowedIPs = {{ wg_peer_allowed_ips }}
+    - name: Modify for Endpoints
+      become: true
+      ansible.builtin.blockinfile:
+        path: "/etc/wireguard/{{ wg_network_name }}.conf"
+        marker: ""
+        insertafter: EOF
+        append_newline: false
+        block: |
+          Endpoint = {{ wg_endpoint }}:{{ wg_port }}
+          PersistentKeepalive = {{ wg_keepalive }}
+      when: wg_endpoint != ""
+    - name: Restart Wireguard
+      become: true
+      ansible.builtin.systemd_service: 
+        name: "wg-quick@{{ wg_network_name }}"
+        state: restarted
+          
+          

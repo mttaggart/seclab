@@ -21,13 +21,13 @@
             }}"
 - name: Install WG Config
   ansible.builtin.template:
-    src: dmz-relay.conf.j2
-    dest: /etc/wireguard/dmz-relay.conf
+    src: wg.conf.j2
+    dest: /etc/wireguard/{{ wg_network_name }}.conf
     owner: root
     group: root
     mode: 0600
 - name: Enable/Start WG service
   ansible.builtin.systemd_service:
-    name: wg-quick@dmz-relay
+    name: "wg-quick@{{ wg_network_name }}"
     enabled: true
     state: started

@@ -1,0 +1,12 @@
+- name: Initialize Wireguard
+  hosts: infrastructure
+  vars_prompt:
+    - name: wg_network_name
+      prompt: Wireguard Network Name
+      private: false
+    - name: wg_address
+      prompt: Wireguard IP Address (CIDR)
+      private: false
+  roles:
+    - role: wireguard
+      become: true
