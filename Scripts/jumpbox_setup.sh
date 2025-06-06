@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SECLAB_PATH="~/seclab"
+SECLAB_PATH="$HOME/seclab"
 VSCODE_URL='https://update.code.visualstudio.com/latest/linux-deb-x64/stable'
 VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_7.1.3570.60-1_amd64.deb'
 KPXC_DB_PATH="$SECLAB_PATH/seclab.kdbx"
@@ -33,10 +33,14 @@ install_tools() {
 }
 
 install_vscode() {
-	echo "[+] Installing Visual Studio Code"
-	wget -O code.deb $VSCODE_URL
-	sudo dpkg -i code.deb
-	rm code.deb
+	echo "[?] Install Visual Studio Code [y/N]? "
+	read vscode_confirm
+	if [[ $vscode_confirm == "y" ]] || [[ $vscode_confirm == "Y" ]]; then
+		echo "[+] Installing Visual Studio Code"
+		wget -O code.deb $VSCODE_URL
+		sudo dpkg -i code.deb
+		rm code.deb
+	fi
 }
 
 install_vivaldi() {
