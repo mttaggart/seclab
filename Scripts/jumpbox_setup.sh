@@ -2,7 +2,7 @@
 
 SECLAB_PATH="$HOME/seclab"
 VSCODE_URL='https://update.code.visualstudio.com/latest/linux-deb-x64/stable'
-VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_7.1.3570.60-1_amd64.deb'
+VIVALDI_URL='https://downloads.vivaldi.com/stable/vivaldi-stable_7.4.3684.46-1_amd64.deb'
 KPXC_DB_PATH="$SECLAB_PATH/seclab.kdbx"
 PKI_PATH="$SECLAB_PATH/pki"
 PKI_DOMAIN="sec.lab"
