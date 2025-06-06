@@ -121,9 +121,9 @@ create_creds() {
 
 	create_ssh_key() {
 		echo "[+] Creating Lab Credentials"
-		if [ ! -f ~/.ssh/id_rsa.pub ]; then
+		if [ ! -f ~/.ssh/id_ed25519.pub ]; then
 			echo "[+] Generating SSH Key"
-			ssh-keygen -f ~/.ssh/id_rsa -b 4096
+			ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519
 		else
 			echo "[!] SSH Key exists!"
 		fi
