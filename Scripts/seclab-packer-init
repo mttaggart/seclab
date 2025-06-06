@@ -1,12 +1,11 @@
 #! /bin/bash
 KPXC_DB_PATH=~/seclab/seclab.kdbx
-SSH_KEY_PATH=~/.ssh/id_rsa.pub
 
 echo "[+] Extracting KPXC Secrets"
-echo "[+] You'll be asked for your KeePassXC database password twice."
+echo "[+] You'll be asked for your KeePassXC database password three times."
 seclab_user=$(keepassxc-cli show -s $KPXC_DB_PATH Seclab/seclab_user | grep UserName | cut -d " " -f 2)
 seclab_pw=$(keepassxc-cli show -s $KPXC_DB_PATH Seclab/seclab_user | grep Password | cut -d " " -f 2)
-seclab_ssh_key=$(cat $SSH_KEY_PATH)
+seclab_ssh_key=$(keepassxc-cli show -s $KPXC_DB_PATH Seclab/seclab_ssh_key | grep UserName | cut -d " " -f 2 | base64 -d -w 0)
 encrypted_pw=$(openssl passwd -6 $seclab_pw)
 echo "[+] Moving example files to active files"
 for f in $(find ./ -name "user-data.example" -or -name "*.preseed.example"); do
