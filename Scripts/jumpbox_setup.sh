@@ -62,6 +62,13 @@ install_hashicorp() {
 	sudo apt update
 	echo "[+] Installing Hashicorp Tools"
 	sudo apt install -y packer terraform
+	echo "[+] Installing/Fixing Keepass plugin"
+	packer plugin install github.com/chunqi/keepass
+	pushd ~/.config/packer/plugins/github.com/chunqi/keepass
+	for f in $(ls); do
+		mv $f $(echo $f | sed "s/_5/_x5/")
+	done
+	popd
 }
 
 install_ansible() {
