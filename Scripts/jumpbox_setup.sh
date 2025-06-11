@@ -158,8 +158,8 @@ create_creds() {
  	echo "[+] Setting Seclab Windows domain admin"
  	keepassxc-cli add -g -L $PW_LENGTH -lUns -u $seclab_user $KPXC_DB_PATH Seclab/seclab_windows_da
  	# SSH Key add
-	ssh_privkey=$(cat ~/.ssh/id_rsa | base64 -w 0)
-	ssh_pubkey=$(cat ~/.ssh/id_rsa.pub | base64 -w 0)
+	ssh_privkey=$(cat ~/.ssh/id_ed25519 | base64 -w 0)
+	ssh_pubkey=$(cat ~/.ssh/id_ed25519.pub | base64 -w 0)
 	echo -n "Enter password to unlock $KPXC_DB_PATH: "
 	read -s kpxc_pass
 	expect << EOF
@@ -242,7 +242,7 @@ https://ca.$PKI_ISO_DOMAIN {
 EOF
   echo "[+] Installing CA certificate for Caddy"
   sudo cp $PKI_PATH/ca.crt /etc/caddy/ca.crt
-  openssl -in $PKI_PATH/private/ca.key | sudo tee /etc/caddy/ca.key
+  openssl rsa -in $PKI_PATH/private/ca.key | sudo tee /etc/caddy/ca.key
   sudo chown caddy: /etc/caddy/ca.*
   echo "[+] Enabling/Starting Caddy Server"
   sudo mkdir /var/log/caddy
