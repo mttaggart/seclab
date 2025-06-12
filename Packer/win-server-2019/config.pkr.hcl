@@ -75,7 +75,7 @@ source "proxmox-iso" "seclab-win-server" {
   token       = "${local.proxmox_api_token}"
   boot_iso {
     type         = "sata"
-    iso_file     = "${var.iso_storae}:iso/Win-Server-2019.iso"
+    iso_file     = "${var.iso_storage}:iso/Win-Server-2019.iso"
     iso_checksum = "sha256:549bca46c055157291be6c22a3aaaed8330e78ef4382c99ee82c896426a1cee1"
     unmount      = true
   }
@@ -116,7 +116,7 @@ source "proxmox-iso" "seclab-win-server" {
   additional_iso_files {
     index        = 1
     type         = "sata"
-    iso_file     = "${var.iso_storae}:iso/Autounattend-win-server-2019.iso"
+    iso_file     = "${var.iso_storage}:iso/Autounattend-win-server-2019.iso"
     iso_checksum = "sha256:bf44c536d84e62ae5b1d83eca44b4725644578ddeb11d55f78fe0f4e5849f196"
     unmount      = true
   }
@@ -124,7 +124,7 @@ source "proxmox-iso" "seclab-win-server" {
   additional_iso_files {
     index        = 2
     type         = "sata"
-    iso_file     = "${var.iso_storae}:iso/virtio.iso"
+    iso_file     = "${var.iso_storage}:iso/virtio.iso"
     iso_checksum = "sha256:57b0f6dc8dc92dc2ae8621f8b1bfbd8a873de9bedc788c4c4b305ea28acc77cd"
     unmount      = true
   }
