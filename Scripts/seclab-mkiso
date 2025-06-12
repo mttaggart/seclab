@@ -9,7 +9,7 @@ if [[ -z $KPXC_DB_PATH ]]; then
 fi
 
 if [[ -z $ISO_STORAGE_PATH ]]; then
-  STORAGE_PATH=/var/lib/vz/template/iso
+  ISO_STORAGE_PATH=/var/lib/vz/template/iso
 fi
 
 [[ -z $1 ]] && echo '[!] No directory target provided! Please provide a valid directory (e.g. scripts)' && exit 127
