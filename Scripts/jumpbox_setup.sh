@@ -74,6 +74,7 @@ install_hashicorp() {
 install_ansible() {
 	echo "[+] Installing Ansible"
 	pipx install --include-deps ansible
+	pipx runpip ansible install pykeepass
 	echo "[+] Installing Ansible Galaxy Plugins"
   ansible-galaxy collection install \
   	community.docker \
