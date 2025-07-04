@@ -13,6 +13,7 @@ install_tools() {
 	echo "[+] Installing baseline tools"
 	sudo apt update
 	sudo apt install -y \
+		expect \
 		tmux \
 		vim-gtk3 \
 		terminator \
@@ -171,7 +172,7 @@ create_creds() {
 	echo -n "Enter password to unlock $KPXC_DB_PATH: "
 	read -s kpxc_pass
 	expect << EOF
-spawn keepassxc-cli add -u $ssh_pubkey -p "$KPXC_DATABASE" Seclab/seclab_ssh_key
+spawn keepassxc-cli add -u $ssh_pubkey -p "$KPXC_DB_PATH" Seclab/seclab_ssh_key
 expect "Enter password to unlock $KPXC_DB_PATH:"
 send {$kpxc_pass}
 send "\n"
@@ -296,7 +297,7 @@ if [[ $confirm == "" ]] || [[ $confirm == "Y" ]]; then
 	create_creds
 	install_fish
 	initialize_pki
-	intialize_caddy
+	initialize_caddy
 	append_rcs
 	echo "[+] Setup finished!"
 else
