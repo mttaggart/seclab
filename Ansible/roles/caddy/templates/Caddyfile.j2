@@ -4,12 +4,12 @@
 }
 
 https://{{ caddy_hostname }}.{{ domain }} {
-{% if mode == "php" %}
+{% if caddy_mode == "php" %}
 	encode gzip
 	php_fastcgi 127.0.0.1:9000
   root * {{ webroot }}
 	file_server
-{% elif mode == "reverse_proxy" %}
+{% elif caddy_mode == "reverse_proxy" %}
 	reverse_proxy localhost:{{ proxy_port }}  
 {% else %}
   root * {{ webroot }}
