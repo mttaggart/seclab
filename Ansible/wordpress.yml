@@ -5,7 +5,7 @@
   roles:
     - role: caddy
       vars: 
-        mode: php
+        caddy_mode: php
       become: true
       become_user: root
     - role: wordpress
