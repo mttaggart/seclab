@@ -1,4 +1,4 @@
-caddy_mode: normal
+mode: normal
 acme_root: seclab
 ca_hostname: ca
 ca_cert_src: /usr/local/share/ca-certificates/ca.crt
