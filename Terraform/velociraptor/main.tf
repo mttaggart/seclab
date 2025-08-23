@@ -102,15 +102,9 @@ resource "proxmox_virtual_environment_vm" "seclab-velociraptor" {
   }
 
 
-  provisioner "file" {
-    source      = "./00-netplan.yaml"
-    destination = "/tmp/00-netplan.yaml"
-  }
-
   provisioner "remote-exec" {
     inline = [
       "sudo hostnamectl hostname ${var.hostname}",
-      "sudo netplan apply",
       "ip a s"
     ]
   }
