@@ -1,6 +1,6 @@
 ---
 - name: Configure Attack Box
-  hosts: seclab-kali
+  hosts: kali.sec.lab
   roles:
     - rdp
     - attack-box
