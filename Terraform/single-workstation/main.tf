@@ -75,6 +75,7 @@ resource "proxmox_virtual_environment_vm" "seclab-ws" {
 
   cpu {
     cores = 2
+    type  = "x86-64-v2-AES"
   }
 
   memory {
