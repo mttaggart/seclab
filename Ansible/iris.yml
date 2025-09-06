@@ -1,6 +1,6 @@
 ---
 - name: Initialize Iris
-  hosts: seclab-docker
+  hosts: docker.sec.lab
   vars:
     repo_path: /home/{{ ansible_user }}/iris-web
   roles:

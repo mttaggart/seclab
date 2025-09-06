@@ -1,5 +1,5 @@
 - name: Install Zeek
-  hosts: seclab-zeek
+  hosts: zeek.sec.lab
   vars:
     siem_ip: 192.168.99.2  
     zeek_base: /opt/zeek

@@ -1,6 +1,6 @@
 ---
 - name: Configure Tailscale Router
-  hosts: seclab-tailscale
+  hosts: tailscale.sec.lab
   vars_prompt:
     - name: tailscale_auth_key
       prompt: Tailscale Auth Key
