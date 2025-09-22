@@ -1,6 +1,6 @@
 - name: Download Splunk .deb
   ansible.builtin.get_url:
-    url: https://download.splunk.com/products/splunk/releases/9.4.1/linux/splunk-9.4.1-e3bdab203ac8-linux-amd64.deb
+    url: https://download.splunk.com/products/splunk/releases/10.0.0/linux/splunk-10.0.0-e8eb0c4654f8-linux-amd64.deb
     dest: /tmp/splunk.deb
 - name: Install Splunk
   ansible.builtin.apt:
