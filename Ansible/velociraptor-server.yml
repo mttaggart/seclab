@@ -16,5 +16,5 @@
       become: true
       become_user: root
       vars:
-        velociraptor_version: "0.74"
-        velociraptor_version_long: "0.74.1"
+        velociraptor_version: "0.76"
+        velociraptor_version_long: "0.76.3"
