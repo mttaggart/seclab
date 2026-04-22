@@ -49,7 +49,9 @@
     deb: "/home/{{ ansible_user }}/{{ deb_created['stdout'].split(' ')[5] }}"
 - name: Add Seclab User
   ansible.builtin.shell: 
-    cmd: "sudo -u velociraptor /usr/local/bin/velociraptor user add --role=administrator {{ ansible_user }} {{ ansible_password }}"
+    cmd: "sudo -u velociraptor /usr/local/bin/velociraptor \
+          -c /etc/velociraptor/server.config.yaml \
+          user add --role=administrator {{ ansible_user }} {{ ansible_password }}"
 - name: Restart Velociraptor
   become: true
   ansible.builtin.systemd_service:
