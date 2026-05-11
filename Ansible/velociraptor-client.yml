@@ -2,8 +2,8 @@
 - name: Install Velociraptor Client
   hosts: all
   vars:
-    velociraptor_version: "0.74"
-    velociraptor_version_long: "0.74.1"
+    velociraptor_version: "0.76"
+    velociraptor_version_long: "0.76.3"
     velociraptor_port: 8000
     temp_dir: /tmp/Velociraptor
     windows_temp_dir: C:\Windows\Temp\Velociraptor
